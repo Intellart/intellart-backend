@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../../../assets/images/veritheum_logo.png';
+import Logo from '../../../assets/logo/veritheum_logo.png';
 import NavigationFilter from '../NavigationFilter/NavigationFilter';
 import './Navigation.scss';
 

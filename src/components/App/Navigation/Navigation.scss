@@ -8,6 +8,7 @@ nav {
   position: fixed;
   top: 0;
   width: calc(100vw - 40px);
+  z-index: 999;
 
   .nav-items-wrapper {
     align-items: center;
@@ -93,6 +94,10 @@ nav {
                 background: #475b71;
                 border: solid 2px #475b71;
               }
+            }
+
+            &:last-child {
+              margin-right: 0;
             }
           }
         }
