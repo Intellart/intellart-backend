@@ -3,6 +3,99 @@
     background: #fff;
     box-shadow: 0px -2px 6.7px 0.3px rgba(0, 0, 0, 0.1);
     position: relative;
+
+    .home-cta-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 75px 0 0;
+
+      @media screen and (max-width: 767px) {
+        margin: 40px 0 0;
+      }
+
+      .home-cta-btn {
+        background-color: #16365a;
+        border-radius: 4px;
+        box-shadow: 0px 1px 3px 0 rgba(0, 0, 0, 0.14);
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 16px;
+        padding: 16px 50px;
+        text-align: center;
+        text-decoration: none;
+        transition: 0.3s;
+
+        &:hover {
+          background: #475b71;
+          transition: 0.3s;
+        }
+
+        @media screen and (max-width: 767px) {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .info-section {
+      align-items: flex-start;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 0 auto;
+      max-width: 1300px;
+
+      .item {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        margin: 0 50px 30px 50px;
+        max-width: 330px;
+
+        @media screen and (max-width: 600px) {
+          margin: 0 0 30px;
+        }
+
+        .item-image {
+          height: 50px;
+          margin-bottom: 15px;
+
+          @media screen and (max-width: 767px) {
+            height: 40px;
+          }
+
+          img {
+            height: 100%;
+            width: auto;
+          }
+        }
+
+        .item-title {
+          color: #11273f;
+          font-family: "SoraBold";
+          font-size: 24px;
+          line-height: 1.4;
+          letter-spacing: -0.24px;
+          margin-bottom: 10px;
+          text-align: center;
+
+          @media screen and (max-width: 767px) {
+            font-size: 18px;
+          }
+        }
+
+        .item-text {
+          color: rgba(17, 39, 63, 0.8);
+          font-family: "MontserratRegular";
+          font-size: 16px;
+          letter-spacing: -0.16px;
+          line-height: 1.5;
+          text-align: center;
+
+          @media screen and (max-width: 767px) {
+            font-size: 14px;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -15,6 +108,10 @@ section {
 
   @media screen and (max-width: 767px) {
     padding: 60px 20px;
+  }
+
+  &.grey {
+    background: #fbfcfd;
   }
 
   .section-header {
@@ -84,5 +181,25 @@ section {
         font-size: 14px;
       }
     }
+  }
+
+  .section-content {
+    max-width: 1340px;
+    margin: 0 auto;
+
+    &.mt-40 {
+      margin-top: 40px;
+    }
+
+    &.mt-80 {
+      margin-top: 80px;
+    }
+  }
+
+  .nft-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: -10px;
   }
 }
