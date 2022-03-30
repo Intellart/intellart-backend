@@ -4,6 +4,7 @@ import HeroCta from '../HeroCta/HeroCta';
 import NftItem from '../NftItem/NftItem';
 import NftListTabs from '../NftListTabs/NftListTabs';
 import TopRanking from '../TopRanking/TopRanking';
+import Footer from '../Footer/Footer';
 import WalletIcon from '../../../assets/graphics/wallet.svg';
 import NoteIcon from '../../../assets/graphics/note-plus.svg';
 import WebIcon from '../../../assets/graphics/web.svg';
@@ -143,6 +144,7 @@ class Home extends React.Component {
             </div>
           </section>
         </div>
+        <Footer />
       </div>
     );
   }

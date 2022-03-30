@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../../../assets/logo/veritheum_logo.png';
+import Logo from '../../../assets/logo/veritheum_logo.svg';
 import NavigationFilter from '../NavigationFilter/NavigationFilter';
 import './Navigation.scss';
 
@@ -10,9 +10,9 @@ class Navigation extends React.Component {
       <nav>
         <div className="nav-items-wrapper">
           <div className="item-group">
-            <div className="logo">
+            <Link to="/" className="logo">
               <img src={Logo} alt="Veritheum Logo" />
-            </div>
+            </Link>
             <NavigationFilter />
           </div>
           <div className="item-group">

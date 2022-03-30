@@ -70,7 +70,7 @@
 
         .item-title {
           color: #11273f;
-          font-family: "SoraBold";
+          font-family: "SoraMedium";
           font-size: 24px;
           line-height: 1.4;
           letter-spacing: -0.24px;
@@ -201,5 +201,17 @@ section {
     flex-wrap: wrap;
     justify-content: center;
     margin: -10px;
+  }
+}
+
+.gallery-content-area {
+  padding: 25px 15px 0 15px;
+
+  .nft-list {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+    margin: 0 auto;
+    max-width: 1360px;
   }
 }
