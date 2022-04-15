@@ -1,33 +1,15 @@
 class UsersController < ApplicationController
   # before_action :authorize!
-  # before_action :is_valid?
+  before_action :is_valid?
   # before_action :authenticate_super_admin!#, only: [:create]
   # before_action :set_user, only: [:show, :destroy]
-  layout 'admin'
-
-  def index
-    @users = User.all
-    respond_to do |format|
-      if @users
-        format.html { @users }
-        format.json { render json: @users }
-      else
-        format.html { redirect_to new_user_registration_path, notice: 'No users found, please register first.' }
-        format.json { render json: { status: 500, errors: ['no users found'] } }
-      end
-    end
-  end
 
   def show
-    respond_to do |format|
-      @user = User.find(params[:id])
-      if @user
-        format.html { @user }
-        format.json { render json: @user }
-      else
-        format.html { redirect_to users_path, notice: 'User not found.' }
-        format.json { render json: { status: 500, errors: ['user not found'] } }
-      end
+    @user = User.find_by_email(params[:email])
+    if @user
+      render json: @user
+    else
+      render json: { status: 500, errors: ['user not found'] }
     end
   end
 

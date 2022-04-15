@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root to: 'home#index'
+
   devise_for :admins, controllers: {
     sessions: 'admins/sessions'
   }, skip: [:registrations]
@@ -9,16 +11,9 @@ Rails.application.routes.draw do
     end
   end
 
-  root to: 'home#index'
-
-  devise_for :users, controllers: {
-    registrations: 'users/registrations',
-    confirmations: 'users/confirmations'
-  }
-
   resources :users do
     collection do
-      get :index
+      get :show
     end
   end
 end

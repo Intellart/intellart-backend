@@ -1,5 +1,6 @@
 class Admins::SessionsController < Devise::SessionsController
   def new
+    @admin = Admin.new
   end
 
   protected

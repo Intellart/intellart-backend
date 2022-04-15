@@ -4,11 +4,8 @@ class AdminsController < ApplicationController
 
   def dashboard
     respond_to do |format|
-      format.json do
-        render json: {}, status: 200
-      end
-      format.html do
-      end
+      format.html {}
+      format.json { render json: { status: 200 } }
     end
   end
 end

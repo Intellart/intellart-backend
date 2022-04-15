@@ -1,16 +1,9 @@
 class ApplicationController < ActionController::Base
   require 'dotenv/load'
-  before_action :authenticate_user!
-  #before_action :configure_permitted_parameters, if: :devise_controller?
-  helper_method :logged_in?, :is_valid?, :authorize!
-
-  def authenticate_user_or_super_admin!
-    if user_signed_in?
-      authenticate_user!
-    else
-      authenticate_super_admin!
-    end
-  end
+  # before_action :authenticate_user!
+  # before_action :configure_permitted_parameters, if: :devise_controller?
+  # helper_method :logged_in?, :is_valid?, :authorize!
+  API_KEY = ENV.fetch('API_KEY')
 
   def authenticate_super_admin!
     authenticate_admin!
@@ -23,9 +16,7 @@ class ApplicationController < ActionController::Base
   private
 
   def after_sign_in_path_for(resource)
-    if resource.instance_of? User
-      users_path
-    elsif resource.instance_of? Admin
+    if resource.instance_of? Admin
       root_path
     else
       root_path
@@ -34,12 +25,11 @@ class ApplicationController < ActionController::Base
 
   # API AUTHORIZATION
   def is_valid?
-    puts 'provjeravam da li je auth token valid'
-    ENV['API_KEY'] == request.headers["Authorization"].sub("Bearer ", "")
+    API_KEY == request.headers["Authorization"].sub("Bearer ", "")
   end
 
-  def authorize!
-    request.headers['Authorization'] = "Bearer #{ENV['API_KEY']}"
+  def authorize?
+    request.headers['Authorization'] = "Bearer #{API_KEY}"
   end
 
   # HELPERS

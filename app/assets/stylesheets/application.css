@@ -13,14 +13,3 @@
  *= require_tree .
  *= require_self
  */
-
- .container-centered {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 90%;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin: 0 auto;
-    flex-direction: column;
- }
