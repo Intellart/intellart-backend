@@ -1,0 +1,112 @@
+<div class="graph-area admin">
+  <div class="graphs-row">
+    <div class="graph-wrapper box">
+      <div class="graph-title">
+        Total token sale LADA balance
+      </div>
+      <div class="info-item-wrapper">
+        <div id="total-token-balance" class="info-item">
+          <%= number_with_precision(1, precision: 6, delimiter: '.', separator: ',') %>
+        </div>
+      </div>
+    </div>
+    <div class="graph-wrapper box">
+      <div class="graph-title">
+        Total token sale ADA balance
+      </div>
+      <div class="info-item-wrapper">
+        <div id="total-ada-balance" class="info-item">
+          <%= number_with_precision(2, precision: 6, delimiter: '.', separator: ',') %>
+        </div>
+        <% if 2 > 0 %>
+          <div class="info-item-secondary">
+            <span><%= number_with_precision(3, precision: 6, delimiter: '.', separator: ',') %> ADA</span>
+            for refund
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="graph-wrapper box">
+      <div class="graph-title">
+        Total Referral LADA balance
+      </div>
+      <div class="info-item-wrapper">
+        <div id="total-token-balance" class="info-item">
+          <%= number_with_precision(4, precision: 6, delimiter: '.', separator: ',') %>
+        </div>
+      </div>
+    </div>
+    <div class="graph-wrapper box">
+      <div class="graph-title">
+        Total / Verified users count
+      </div>
+      <div class="info-item-wrapper">
+        <div id="total-users-count" class="info-item">
+          <%= number_with_delimiter(5, delimiter: '.', separator: ',') %> / <%= number_with_delimiter(5, delimiter: '.', separator: ',') %>
+        </div>
+      </div>
+    </div>
+    <div class="graph-wrapper box">
+      <div class="graph-title">
+        Total / Sale eligible users count
+      </div>
+      <div class="info-item-wrapper">
+        <div id="used-addresses-count" class="info-item">
+          <%= number_with_delimiter(6, delimiter: '.', separator: ',') %> / <%= number_with_delimiter(6, delimiter: '.', separator: ',') %>
+        </div>
+      </div>
+    </div>
+    <div class="graph-wrapper box">
+      <div class="graph-title">
+        Used / Available addresses count
+      </div>
+      <div class="info-item-wrapper">
+        <div id="used-addresses-count" class="info-item">
+          <%= number_with_delimiter(7, delimiter: '.', separator: ',') %> / <%= number_with_delimiter(7, delimiter: '.', separator: ',') %>
+        </div>
+      </div>
+    </div>
+    <div class="graph-wrapper box">
+      <div class="graph-title">
+        Total "Pre-sale 1" LADA sold
+      </div>
+      <div class="info-item-wrapper">
+        <div id="tier-t1-results" class="info-item">
+          <%= number_with_precision(8, precision: 6, delimiter: '.', separator: ',') %>
+        </div>
+        <div class="info-item-secondary">
+          <span><%= number_with_precision(9, precision: 6, delimiter: '.', separator: ',') %> ADA</span><br>
+          <span><%= number_with_precision((9 * 9).floor(2), precision: 2, delimiter: '.', separator: ',') %> USD</span>
+        </div>
+      </div>
+    </div>
+    <div class="graph-wrapper box">
+      <div class="graph-title">
+        Total "Pre-sale 2" LADA sold
+      </div>
+      <div class="info-item-wrapper">
+        <div id="tier-t2-results" class="info-item">
+          <%= number_with_precision(10, precision: 6, delimiter: '.', separator: ',') %>
+        </div>
+        <div class="info-item-secondary">
+          <span><%= number_with_precision(11, precision: 6, delimiter: '.', separator: ',') %> ADA</span><br>
+          <span><%= number_with_precision((11 * 11).floor(2), precision: 2, delimiter: '.', separator: ',') %> USD</span>
+        </div>
+      </div>
+    </div>
+    <div class="graph-wrapper box">
+      <div class="graph-title">
+        Total "Crowdsale" LADA sold
+      </div>
+      <div class="info-item-wrapper">
+        <div id="tier-cs-results" class="info-item">
+          <%= number_with_precision(12, precision: 6, delimiter: '.', separator: ',') %>
+        </div>
+        <div class="info-item-secondary">
+          <span><%= number_with_precision(13, precision: 6, delimiter: '.', separator: ',') %> ADA</span><br>
+          <span><%= number_with_precision((13 * 13).floor(2), precision: 2, delimiter: '.', separator: ',') %> USD</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

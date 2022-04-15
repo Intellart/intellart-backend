@@ -1,0 +1,112 @@
+<div class="dashboard-menu">
+  <div class="top-menu">
+    <div class="logo">
+      <a href="#">
+
+      </a>
+    </div>
+  </div>
+
+  <div class="side-menu">
+    <% if current_admin.super? %>
+      <%= link_to(dashboard_admins_path) do %>
+        <div class="wrapper">
+          <div class="icon-wrapper">
+            <i class="fa fa-line-chart"></i>
+          </div>
+          Dashboard
+        </div>
+      <% end %>
+    <% end %>
+    <% if current_admin.super? %>
+      <%= link_to(users_path) do %>
+        <div class="wrapper">
+          <div class="icon-wrapper">
+            <i class="fa fa-users"></i>
+          </div>
+          Users
+        </div>
+      <% end %>
+
+      <div class="dropdown-toggle">
+        <div class="wrapper">
+          <div class="icon-wrapper">
+            <i class="fa fa-credit-card"></i>
+          </div>
+          Transactions
+          <div class="icon-wrapper-right">
+            <i class="fa fa-chevron-down"></i>
+          </div>
+        </div>
+
+        <div class="dropdown-menu">
+          PS1 transactions
+          PS2 transactions
+          CS transactions
+        </div>
+      </div>
+    <% end %>
+
+    <%= link_to(destroy_admin_session_path, method: :delete) do %>
+      <i class="fa fa-sign-out"></i> Logout
+    <% end %>
+  </div>
+</div>
+
+<div class="dashboard-mobile-menu admin-mobile-menu">
+  <div class="top-menu">
+    <div class="logo">
+      <a href="#">
+      </a>
+    </div>
+    <div class="top-nav-items">
+      <div class="menu toggle">
+        <i class="fa fa-bars" id="mobile-icon"></i>
+      </div>
+    </div>
+  </div>
+  <div class="sub-menu">
+    <div class="top-links">
+      <% if current_admin.super? %>
+        <%= link_to(dashboard_admins_path) do %>
+          <div class="wrapper">
+            <div class="icon-wrapper">
+              <i class="fa fa-line-chart"></i>
+            </div>
+            Dashboard
+          </div>
+        <% end %>
+      <% end %>
+      <% if current_admin.super? %>
+        <%= link_to(users_path) do %>
+          <i class="fa fa-users"></i>
+          Users
+        <% end %>
+
+        <div class="dropdown-toggle">
+          <div class="wrapper">
+            <div class="icon-wrapper">
+              <i class="fa fa-credit-card"></i>
+            </div>
+            Transactions
+            <div class="icon-wrapper-right">
+              <i class="fa fa-chevron-down"></i>
+            </div>
+          </div>
+
+          <div class="dropdown-menu">
+            PS1 transactions
+            PS2 transactions
+            CS transactions
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+    <div class="bottom-links">
+      <%= link_to(destroy_admin_session_path, method: :delete) do %>
+        <i class="fa fa-sign-out"></i> Logout
+      <% end %>
+    </div>
+  </div>
+</div>

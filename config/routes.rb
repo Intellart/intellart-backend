@@ -1,4 +1,24 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  root to: "home#index"
+  devise_for :admins, controllers: {
+    sessions: 'admins/sessions'
+  }, skip: [:registrations]
+
+  resources :admins, only: [] do
+    collection do
+      get :dashboard
+    end
+  end
+
+  root to: 'home#index'
+
+  devise_for :users, controllers: {
+    registrations: 'users/registrations',
+    confirmations: 'users/confirmations'
+  }
+
+  resources :users do
+    collection do
+      get :index
+    end
+  end
 end

@@ -1,0 +1,23 @@
+<div class="">
+  <h1 class="text-center"><%= @user.first_name + ' ' + @user.last_name %>'s details</h1>
+  <br>
+
+  <p><strong>First name: </strong><%= @user.first_name %></p>
+  <p><strong>Last name: </strong><%= @user.last_name %></p>
+  <p><strong>Email: </strong><%= @user.email %></p>
+  <p><strong>ORCID iD: </strong><%= @user.orcid_id %></p>
+  <p><strong>Joined: </strong><%= time_ago_in_words @user.created_at %> ago</p>
+  <p><strong>Updated profile: </strong><%= time_ago_in_words @user.updated_at %> ago</p>
+  <br>
+
+  <% if logged_in? %>
+      <% if current_user == @user %>
+          <%= link_to "Edit", edit_user_registration_path(@user.id), method: :edit, class: "btn btn-outline-info btn-sm" %>
+          <%= link_to "Destroy this user", @user, class: "btn btn-outline-danger btn-sm", method: :delete %>
+      <% end %>
+  <% end %>
+  <%= link_to "Back to users listing", users_path, class: "btn btn-outline-warning btn-sm" %>
+  <br>
+
+  <%= link_to "Home page", root_path, class: "btn btn-outline-primary btn-sm" %>
+</div>

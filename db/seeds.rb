@@ -5,3 +5,31 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+user1 = User.create!(email: 'test1@thespian.hr', first_name: 'Leon', last_name: 'Kvež', password: 'test1234', orcid_id: '0000-0001-6672-3293')
+user2 = User.create!(email: 'test2@thespian.hr', first_name: 'Dario', last_name: 'Đumlijan', password: 'test1234')
+
+wallet1 = Wallet.create!(user_id: 1)
+
+addr1 = CardanoAddress.create!(address: '1testBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', dirty: false, wallet_id: 1)
+
+tag1 = Tag.create!(tag: 'test-tag')
+tag2 = Tag.create!(tag: 'test-tag-2')
+
+col1 = NftCollection.create!(collection_name: 'test-collection')
+
+cat1 = Category.create!(category_name: 'test-category')
+
+# field1 = FieldOfStudy.create(field_name: 'Physics')
+# field2 = FieldOfStudy.create(field_name: 'Chemistry')
+
+trans1 = Transaction.create(timestamp: '2022-15-04 12:00:00',
+                            buyer_address: 'addr1q8usdmn7lz7tgvn6xd99jc4ysrgyj83t4hvmvket4w28v8ml072qh4vkn5euu9s8h0g70stvwfh0cshtxf7502hta72qu3vxru',
+                            seller_address: 'addr1vyasfpcn39d6l3rrn8hpuumcdypuj8dkkudur4ethc44ueqrjd9y8', price: 76.0,
+                            onchain_transaction_id: 'c2882f40e4512572bb8594e467d84fccceb0cff17e62f0d8bcb807f79a7c97a0')
+
+nft1 = Nft.create(tradeable: true, price: 10.00000000, name: 'Mandala Sovereigns 4024', description: 'test-description',
+                  subject: 'test-subject', owner_id: 1, category_id: 1, collection_id: 1,
+                  asset_name: 'lion00024', policy_id: '8001dede26bb7cbbe4ee5eae6568e763422e0a3c776b3f70878b03f1',
+                  fingerprint: 'asset1hr5j2pulx3273er0dpcz9yu6xzeuypsc9nq2au',
+                  transaction_id: 1)

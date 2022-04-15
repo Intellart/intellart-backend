@@ -1,0 +1,3 @@
+class CardanoAddress < ApplicationRecord
+
+end
