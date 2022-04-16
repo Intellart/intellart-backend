@@ -11,9 +11,8 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users do
-    collection do
-      get :show
-    end
-  end
+  devise_for :users, controllers: {
+    sessions: 'users/sessions',
+    registrations: 'users/registrations'
+  }
 end

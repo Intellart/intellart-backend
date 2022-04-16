@@ -6,8 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-user1 = User.create!(email: 'test1@thespian.hr', first_name: 'Leon', last_name: 'Kvež', password: 'test1234', orcid_id: '0000-0001-6672-3293')
-user2 = User.create!(email: 'test2@thespian.hr', first_name: 'Dario', last_name: 'Đumlijan', password: 'test1234')
+user1 = User.create!(email: 'test@test.com', first_name: 'First name', last_name: 'Last name', password: '123456', orcid_id: '0000-0000-0000-0001')
 
 wallet1 = Wallet.create!(user_id: 1)
 
