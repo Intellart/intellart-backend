@@ -25,7 +25,9 @@ class ApplicationController < ActionController::Base
 
   # API AUTHORIZATION
   def is_valid?
-    API_KEY == request.headers["Authorization"].sub("Bearer ", "")
+    if !request.headers["Authorization"] || (request.headers["Authorization"] && API_KEY != request.headers["Authorization"].sub("Bearer ", ""))
+      render :json => { errors: ["Access denied due to missing/invalid subscription key. Make sure to include the correct subscription key when making requests to an API."] }, status: :unauthorized
+    end
   end
 
   def authorize?

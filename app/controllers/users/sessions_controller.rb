@@ -5,9 +5,9 @@ class Users::SessionsController < Devise::SessionsController
   def create
     @user = User.find_by_email(user_params[:email])
     if @user && @user.valid_password?(user_params[:password])
-      render json: { status: 200, data: @user }
+      render json: @user, status: :ok
     else
-      render json: { status: 500, errors: ['User not found'] }
+      render json: { errors: ['User not found'] }, status: :not_found
     end
   end
 

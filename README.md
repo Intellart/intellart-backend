@@ -1,24 +1,76 @@
-# README
+# Veritheum API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Getting Started
 
-Things you may want to cover:
+Follow these instructions to install GIT, RVM, Ruby and Rails:
+https://gorails.com/setup/osx/11-big-sur
 
-* Ruby version
+The ruby and rails version is written in the Gemfile.
 
-* System dependencies
+### Additional dependencies
 
-* Configuration
+#### PostgreSQL
 
-* Database creation
+Install postgres.app:
+https://postgresapp.com
 
-* Database initialization
+#### NVM & Node.js
 
-* How to run the test suite
+First install NVM:
+https://github.com/creationix/nvm
 
-* Services (job queues, cache servers, search engines, etc.)
+Then install the correct version of node.js. The version is found in the package.json-file in the root directory.
 
-* Deployment instructions
+#### Yarn
 
-* ...
+Install Yarn package manager:
+https://yarnpkg.com/lang/en/docs/install/
+
+### Install all ruby gems and node modules
+
+Install all ruby gems by running:
+
+    bundle install
+
+Install mailcatcher gem by running:
+
+    gem install mailcatcher
+
+Install all node module by running:
+
+    yarn install
+
+### Prepare environment variables
+
+Add `.env` file to root directory. Inside add the required variables to run the app localy (all secrets are distributed within the development team & the repo owner):
+```
+API_KEY="<secret>"
+FRONTEND_DEVELOPMENT_PORT="3001"
+```
+
+### Prepare application credentials
+
+Run
+
+    EDITOR="mate --wait" bin/rails credentials:edit
+
+Replace the default master key with the one used to encrypt the credentials initially -
+the key is distributed by the development team.
+
+### Prepare the database
+
+Run
+
+    rails db:create
+    rails db:migrate
+    rails db:seed
+
+### Running the application
+
+Start rails application:
+
+    rails s
+
+Start mailcatcher:
+
+    mailcatcher
