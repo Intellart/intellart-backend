@@ -14,7 +14,7 @@ class CreateNfts < ActiveRecord::Migration[6.1]
       t.references :owner, foreign_key: { to_table: :users }
       t.references :category, foreign_key: true
       t.references :nft_collection, foreign_key: true
-      t.references :transaction, foreign_key: true
+      t.references :onchain_transaction, foreign_key: true
       t.references :cardano_address, foreign_key: true
 
       t.timestamps
