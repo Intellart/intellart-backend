@@ -25,7 +25,7 @@ class AddDeviseToUsers < ActiveRecord::Migration[6.1]
       t.text :social_links
       t.text :profile_img
       t.string :orcid_id
-      t.references :field_of_study, foreign_key: { to_table: :fields_of_studies }
+      t.references :study_field, foreign_key: { to_table: :study_fields }
 
       t.timestamps
     end

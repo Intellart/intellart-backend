@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :verify_authenticity_token
-  before_action :is_valid?
+  before_action :authenticate_api_user!
 
   def show
     @user = User.find_by_email(user_params)

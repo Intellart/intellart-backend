@@ -1,48 +1,44 @@
 class ApplicationController < ActionController::Base
+  include ActionController::HttpAuthentication::Token
   require 'dotenv/load'
-  # before_action :authenticate_user!
-  # before_action :configure_permitted_parameters, if: :devise_controller?
-  # helper_method :logged_in?, :is_valid?, :authorize!
-  API_KEY = ENV.fetch('API_KEY')
+  before_action :authenticate_api_user!
+  skip_before_action :verify_authenticity_token
+  respond_to :json
 
-  def authenticate_super_admin!
-    authenticate_admin!
-    return true if current_admin.super?
+  # def authenticate_super_admin!
+  #   authenticate_admin!
+  #   return true if current_admin.super?
 
-    flash[:alert] = 'You are not authorized to access this part of the admin dashboard.'
-    redirect_to root_path
-  end
+  #   flash[:alert] = 'You are not authorized to access this part of the admin dashboard.'
+  #   redirect_to root_path
+  # end
 
   private
 
-  def after_sign_in_path_for(resource)
-    if resource.instance_of? Admin
-      root_path
-    else
-      root_path
-    end
+  def refresh_jwt
+    new_token = AuthTokenService.generate_jwt(@current_user.id)
+    response.set_header('_jwt', new_token)
   end
 
-  # API AUTHORIZATION
-  def is_valid?
-    if !request.headers["Authorization"] || (request.headers["Authorization"] && API_KEY != request.headers["Authorization"].sub("Bearer ", ""))
-      render :json => { errors: ["Access denied due to missing/invalid subscription key. Make sure to include the correct subscription key when making requests to an API."] }, status: :unauthorized
-    end
+  def authenticate_api_user!
+    token, = token_and_options(request)
+    head :unauthorized unless jwt_valid?(token) && !jwt_expired?(token)
   end
 
-  def authorize?
-    request.headers['Authorization'] = "Bearer #{API_KEY}"
+  def jwt_valid?(token)
+    jwt_payload = AuthTokenService.decode_jwt(token)
+    user_id = jwt_payload[0]['user_id']
+    @current_user = User.find(user_id)
+  rescue ActiveRecord::RecordNotFound => e
+    render json: { errors: e.message }, status: :unauthorized
+  rescue JWT::DecodeError => e
+    render json: { errors: e.message }, status: :unauthorized
   end
 
-  # HELPERS
-  def logged_in?
-    # make it into a boolean
-    !!current_user
-  end
-
-  protected
-
-  def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :orcid_id])
+  def jwt_expired?(token)
+    is_expired = JwtDenylist.find_by(jti: token)
+    !!is_expired
+  rescue ActiveRecord::RecordNotFound
+    false
   end
 end
