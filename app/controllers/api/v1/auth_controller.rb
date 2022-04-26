@@ -4,23 +4,23 @@ class Api::V1::AuthController < ApplicationController
   # POST /api/auth/session
   def create_session
     @user = User.find_by_email(user_session_params[:email])
-    if @user&.valid_password?(user_session_params[:password])
+    if @user.nil?
+      render_json_error :not_found, :user_not_found
+    elsif @user&.valid_password?(user_session_params[:password])
       jwt = AuthTokenService.generate_jwt(@user.id)
       render json: { user: @user, _jwt: jwt }, status: :ok
     else
-      render json: { errors: ['User not found'] }, status: :not_found
+      render json: { errors: ['Invalid password.'] }, status: :unprocessable_entity
     end
   end
 
   # POST /api/auth/user
   def create_user
     @user = User.new(user_create_params)
-    if @user.save
-      jwt = AuthTokenService.generate_jwt(@user.id)
-      render json: { user: @user, _jwt: jwt }, status: :ok
-    else
-      render json: @user.errors, status: 500
-    end
+    render_json_validation_error(@user) and return unless @user.save
+
+    jwt = AuthTokenService.generate_jwt(@user.id)
+    render json: { user: @user, _jwt: jwt }, status: :ok
   end
 
   # DELETE /api/auth/session

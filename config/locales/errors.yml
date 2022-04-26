@@ -1,0 +1,29 @@
+en:
+  error_messages:
+    # NFTs
+    nft_not_found:
+      code: 2001
+      title: "NFT not found."
+      detail: "This NFT does not exist or has been removed from the database."
+
+    nft_not_destroyed:
+      code: 2002
+      title: "NFT not destroyed."
+      detail: "This NFT was not removed from the database."
+
+    nft_not_unique:
+      code: 2003
+      title: "NFT fingerprint not unique."
+      detail: "NFT with this fingerprint already exists in the database."
+
+
+    # Users
+    user_not_found:
+      code: 3001
+      title: "User not found."
+      detail: "This user does not exist or has been removed from the database."
+
+    user_not_destroyed:
+      code: 3002
+      title: "User not destroyed."
+      detail: "This user was not removed from the database."

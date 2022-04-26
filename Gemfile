@@ -31,6 +31,7 @@ gem 'jwt'
 
 gem 'rack-cors'
 gem 'dotenv'
+gem "active_model_serializers", require: true
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.4', require: false

@@ -1,45 +1,51 @@
 class Api::V1::NftsController < ApplicationController
-  before_action :authenticate_api_user!
-  before_action :set_nft, only: [:show, :destroy]
+  before_action :set_nft, only: [:show, :update, :destroy]
   after_action :refresh_jwt
+
+  rescue_from ActiveRecord::RecordNotFound do
+    render_json_error :not_found, :nft_not_found
+  end
+  rescue_from ActiveRecord::RecordNotDestroyed do
+    render_json_error :not_destroyed, :nft_not_destroyed
+  end
+
+  rescue_from ActiveRecord::RecordNotUnique do
+    render_json_error :conflict, :nft_not_unique
+  end
 
   # GET api/nfts/
   def index
     @nfts = Nft.all
-    render json: { data: @nfts }
+    render json: { data: @nfts }, status: :ok
     # render json: NftsRepresenter.new(@nfts).as_json
   end
 
   # GET api/nfts/:id
   def show
-    if @nft
-      render json: { data: @nft }, status: :ok
-    else
-      render json: { error: 'Nft does not exist.' }, status: 404
-    end
+    render json: { data: @nft }, status: :ok
   end
 
   # POST api/nfts/
   def create
     @nft = Nft.new(nft_params)
-    @nft.save
-    render json: { data: @nft }, status: :ok
-  rescue => e
-    render json: { errors: e.to_json }, status: :unprocessable_entity
+    render_json_validation_error(@nft) and return unless @nft.save
+
+    render json: { data: @nft }, status: :created
+  end
+
+  def update
+
   end
 
   # DELETE api/nfts/:id
   def destroy
-    @nft.destroy!
-    head :no_content
+    head :no_content if @nft.destroy
   end
 
   private
 
   def set_nft
     @nft = Nft.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    nil
   end
 
   def nft_params
