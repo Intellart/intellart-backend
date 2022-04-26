@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   current_api_routes = lambda do
     resources :nfts
+    resources :users, only: [:show, :update, :destroy]
   end
 
   namespace :api, defaults: { format: :json } do

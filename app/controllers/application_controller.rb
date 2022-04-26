@@ -1,9 +1,10 @@
 class ApplicationController < ActionController::Base
   include ActionController::HttpAuthentication::Token
   require 'dotenv/load'
+
+  respond_to :json
   before_action :authenticate_api_user!
   skip_before_action :verify_authenticity_token
-  respond_to :json
 
   # def authenticate_super_admin!
   #   authenticate_admin!
@@ -15,6 +16,7 @@ class ApplicationController < ActionController::Base
 
   private
 
+  # AUTH
   def refresh_jwt
     new_token = AuthTokenService.generate_jwt(@current_user.id)
     response.set_header('_jwt', new_token)
@@ -40,5 +42,28 @@ class ApplicationController < ActionController::Base
     !!is_expired
   rescue ActiveRecord::RecordNotFound
     false
+  end
+
+  # ERROR HANDLING
+  def render_json_error(status, error_code, extra = {})
+    status = Rack::Utils::SYMBOL_TO_STATUS_CODE[status] if status.is_a? Symbol
+
+    error = {
+      title: t("error_messages.#{error_code}.title"),
+      status: status,
+      code: t("error_messages.#{error_code}.code")
+    }.merge(extra)
+
+    detail = t("error_messages.#{error_code}.detail", default: '')
+    error[:detail] = detail unless detail.empty?
+
+    render json: { errors: [error] }, status: status
+  end
+
+  def render_json_validation_error(resource)
+    render json: resource,
+           status: :bad_request,
+           adapter: :json_api,
+           serializer: ActiveModel::Serializer::ErrorSerializer
   end
 end
