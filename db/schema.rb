@@ -43,6 +43,12 @@ ActiveRecord::Schema.define(version: 2022_04_28_133443) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "fields_of_studies", force: :cascade do |t|
+    t.string "field_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "jwt_denylist", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "exp", null: false
@@ -99,7 +105,7 @@ ActiveRecord::Schema.define(version: 2022_04_28_133443) do
     t.bigint "owner_id"
     t.bigint "category_id"
     t.bigint "nft_collection_id"
-    t.bigint "onchain_transaction_id"
+    t.bigint "transaction_id"
     t.bigint "cardano_address_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -107,18 +113,8 @@ ActiveRecord::Schema.define(version: 2022_04_28_133443) do
     t.index ["category_id"], name: "index_nfts_on_category_id"
     t.index ["fingerprint"], name: "index_nfts_on_fingerprint", unique: true
     t.index ["nft_collection_id"], name: "index_nfts_on_nft_collection_id"
-    t.index ["onchain_transaction_id"], name: "index_nfts_on_onchain_transaction_id"
     t.index ["owner_id"], name: "index_nfts_on_owner_id"
-  end
-
-  create_table "onchain_transactions", force: :cascade do |t|
-    t.datetime "timestamp"
-    t.string "seller_address"
-    t.string "buyer_address"
-    t.decimal "price"
-    t.text "transaction_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.index ["transaction_id"], name: "index_nfts_on_transaction_id"
   end
 
   create_table "ratings", force: :cascade do |t|
@@ -132,14 +128,18 @@ ActiveRecord::Schema.define(version: 2022_04_28_133443) do
     t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
-  create_table "study_fields", force: :cascade do |t|
-    t.string "field_name"
+  create_table "tags", force: :cascade do |t|
+    t.string "tag"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "tags", force: :cascade do |t|
-    t.string "tag"
+  create_table "transactions", force: :cascade do |t|
+    t.datetime "timestamp"
+    t.string "seller_address"
+    t.string "buyer_address"
+    t.decimal "price"
+    t.text "onchain_transaction_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -159,13 +159,13 @@ ActiveRecord::Schema.define(version: 2022_04_28_133443) do
     t.text "social_links"
     t.text "profile_img"
     t.string "orcid_id"
-    t.bigint "study_field_id"
+    t.bigint "field_of_study_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["field_of_study_id"], name: "index_users_on_field_of_study_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["study_field_id"], name: "index_users_on_study_field_id"
   end
 
   create_table "wallets", force: :cascade do |t|
@@ -185,10 +185,10 @@ ActiveRecord::Schema.define(version: 2022_04_28_133443) do
   add_foreign_key "nfts", "cardano_addresses"
   add_foreign_key "nfts", "categories"
   add_foreign_key "nfts", "nft_collections"
-  add_foreign_key "nfts", "onchain_transactions"
+  add_foreign_key "nfts", "transactions"
   add_foreign_key "nfts", "users", column: "owner_id"
   add_foreign_key "ratings", "users"
   add_foreign_key "ratings", "users", column: "rated_user_id"
-  add_foreign_key "users", "study_fields"
+  add_foreign_key "users", "fields_of_studies", column: "field_of_study_id"
   add_foreign_key "wallets", "users"
 end

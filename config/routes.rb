@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   # resources :admins, only: [] do
   #   collection do
   #     get :dashboard
@@ -25,6 +24,9 @@ Rails.application.routes.draw do
       post '/auth/user', to: 'auth#create_user'
       put '/auth/user/password_update', to: 'passwords#update'
       post '/auth/session', to: 'auth#create_session'
+      post '/auth/orcid', to: 'auth#auth_orcid'
+      post '/auth/user/orcid', to: 'auth#create_user_orcid'
+      post '/auth/session/orcid', to: 'auth#create_session_orcid'
       delete '/auth/session', to: 'auth#destroy_session'
 
       # TODO: write this method
