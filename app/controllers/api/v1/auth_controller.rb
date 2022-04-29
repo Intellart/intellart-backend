@@ -1,12 +1,10 @@
 class Api::V1::AuthController < ApplicationController
   skip_before_action :authenticate_api_user!, only: [:create_session, :create_user, :create_session_orcid, :create_user_orcid, :auth_orcid]
   after_action :make_header_jwt, only: [:create_session, :create_session_orcid]
-  
+
   rescue_from ActiveRecord::RecordNotFound do
     render_json_error :not_found, :user_not_found
   end
-
-  rescue_from JWT::VerificationError, JWT::DecodeError, with: unauthorized!
 
   ORCID_CLIENT_ID = ENV.fetch('ORCID_CLIENT_ID')
   ORCID_SECRET = ENV.fetch('ORCID_SECRET')
@@ -41,8 +39,8 @@ class Api::V1::AuthController < ApplicationController
   def create_session_orcid
     @user = User.find_by_orcid_id(user_orcid_params[:orcid])
     render_json_error :not_found, :user_not_found and return unless @user
-    
-    jwt = AuthTokenService.generate_jwt(@user.id)
+
+    @jwt = AuthTokenService.generate_jwt(@user.id)
     render json: @user, status: :ok
   rescue ActiveRecord::RecordNotFound
     render json: { errors: ['Invalid ORCID Id.'] }, status: :unprocessable_entity
@@ -60,21 +58,23 @@ class Api::V1::AuthController < ApplicationController
   def create_user_orcid
     response = OrcidApi.get(
       "/#{user_orcid_params[:orcid]}/record",
-      headers: { 
+      headers: {
         "Authorization": "Bearer #{user_orcid_params[:access_token]}",
         "Content-Type": 'application/orcid+json'
       }
     ).parsed_response
 
-    render json: { user: JSON.parse(response) }, status: :ok and return unless response&.['error']
-    
-    render json: { errors: [response['error_description']] }, status: :bad_request if response
+    return unless response
+
+    render json: { user: JSON.parse(response) }, status: :ok and return unless response['error']
+
+    render json: { errors: [response['error_description']] }, status: :bad_request
   end
 
   # POST /api/auth/orcid
   def auth_orcid
     response = OrcidOAuthApi.post(
-      '/oauth/token', 
+      '/oauth/token',
       body: {
         client_id: ORCID_CLIENT_ID,
         client_secret: ORCID_SECRET,
@@ -84,9 +84,11 @@ class Api::V1::AuthController < ApplicationController
       }
     ).parsed_response
 
-    render json: { orcid: response }, status: :ok and return if response['orcid'] and !response['error']
-    
-    render json: { errors: [response['error_description']] }, status: :bad_request if response
+    return unless response
+
+    render json: { orcid: response }, status: :ok and return if response['orcid'] && !response['error']
+
+    render json: { errors: [response['error_description']] }, status: :bad_request
   end
 
   # DELETE /api/auth/session
@@ -102,7 +104,9 @@ class Api::V1::AuthController < ApplicationController
     jwt_payload = AuthTokenService.decode_jwt(token)
     user_id = jwt_payload[0]['user_id']
     user = User.find(user_id)
-    unauthorized! and return unless user == @current_user && !jwt_expired?(token)
+    head :unauthorized and return unless user == @current_user && !jwt_expired?(token)
+  rescue JWT::VerificationError, JWT::DecodeError
+    head :unauthorized and return
 
     head :ok
   end
