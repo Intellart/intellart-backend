@@ -5,6 +5,7 @@ class Api::V1::NftsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound do
     render_json_error :not_found, :nft_not_found
   end
+
   rescue_from ActiveRecord::RecordNotDestroyed do
     render_json_error :not_destroyed, :nft_not_destroyed
   end
@@ -16,13 +17,12 @@ class Api::V1::NftsController < ApplicationController
   # GET api/nfts/
   def index
     @nfts = Nft.all
-    render json: { data: @nfts }, status: :ok
-    # render json: NftsRepresenter.new(@nfts).as_json
+    render json: @nfts, status: :ok
   end
 
   # GET api/nfts/:id
   def show
-    render json: { data: @nft }, status: :ok
+    render json: @nft, status: :ok
   end
 
   # POST api/nfts/
@@ -30,12 +30,10 @@ class Api::V1::NftsController < ApplicationController
     @nft = Nft.new(nft_params)
     render_json_validation_error(@nft) and return unless @nft.save
 
-    render json: { data: @nft }, status: :created
+    render json: @nft, status: :created
   end
 
-  def update
-
-  end
+  def update; end
 
   # DELETE api/nfts/:id
   def destroy

@@ -1,5 +1,12 @@
 class Api::V1::AuthController < ApplicationController
   skip_before_action :authenticate_api_user!, only: [:create_session, :create_user, :create_session_orcid, :create_user_orcid, :auth_orcid]
+  after_action :make_header_jwt, only: [:create_session, :create_session_orcid]
+  
+  rescue_from ActiveRecord::RecordNotFound do
+    render_json_error :not_found, :user_not_found
+  end
+
+  rescue_from JWT::VerificationError, JWT::DecodeError, with: unauthorized!
 
   ORCID_CLIENT_ID = ENV.fetch('ORCID_CLIENT_ID')
   ORCID_SECRET = ENV.fetch('ORCID_SECRET')
@@ -20,11 +27,11 @@ class Api::V1::AuthController < ApplicationController
   # POST /api/auth/session
   def create_session
     @user = User.find_by_email(user_session_params[:email])
-    if @user.nil?
-      render_json_error :not_found, :user_not_found
-    elsif @user&.valid_password?(user_session_params[:password])
-      jwt = AuthTokenService.generate_jwt(@user.id)
-      render json: { user: @user, _jwt: jwt }, status: :ok
+    render_json_error :not_found, :user_not_found and return unless @user
+
+    if @user&.valid_password?(user_session_params[:password])
+      @jwt = AuthTokenService.generate_jwt(@user.id)
+      render json: @user, status: :ok
     else
       render json: { errors: ['Invalid password.'] }, status: :unprocessable_entity
     end
@@ -33,14 +40,12 @@ class Api::V1::AuthController < ApplicationController
   # POST /api/auth/session/orcid
   def create_session_orcid
     @user = User.find_by_orcid_id(user_orcid_params[:orcid])
-    if @user.nil?
-      render_json_error :not_found, :user_not_found
-    elsif @user
-      jwt = AuthTokenService.generate_jwt(@user.id)
-      render json: { user: @user, _jwt: jwt }, status: :ok
-    else
-      render json: { errors: ['Invalid ORCID Id.'] }, status: :unprocessable_entity
-    end
+    render_json_error :not_found, :user_not_found and return unless @user
+    
+    jwt = AuthTokenService.generate_jwt(@user.id)
+    render json: @user, status: :ok
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: ['Invalid ORCID Id.'] }, status: :unprocessable_entity
   end
 
   # POST /api/auth/user
@@ -48,41 +53,40 @@ class Api::V1::AuthController < ApplicationController
     @user = User.new(user_create_params)
     render_json_validation_error(@user) and return unless @user.save
 
-    jwt = AuthTokenService.generate_jwt(@user.id)
-    render json: { user: @user, _jwt: jwt }, status: :ok
+    render json: @user, status: :ok
   end
 
   # POST /api/auth/user/orcid
   def create_user_orcid
-    response = OrcidApi.get("/#{user_orcid_params[:orcid]}/record", headers: {
-                              "Authorization": "Bearer #{user_orcid_params[:access_token]}",
-                              "Content-Type": 'application/orcid+json'
-                            }).parsed_response
+    response = OrcidApi.get(
+      "/#{user_orcid_params[:orcid]}/record",
+      headers: { 
+        "Authorization": "Bearer #{user_orcid_params[:access_token]}",
+        "Content-Type": 'application/orcid+json'
+      }
+    ).parsed_response
 
-    if !response.nil? && response['error']
-      render json: { errors: [response['error_description']] }, status: :bad_request
-    elsif !response.nil? && !response['error']
-      render json: { user: JSON.parse(response) }, status: :ok
-    end
+    render json: { user: JSON.parse(response) }, status: :ok and return unless response&.['error']
+    
+    render json: { errors: [response['error_description']] }, status: :bad_request if response
   end
 
   # POST /api/auth/orcid
   def auth_orcid
-    response = OrcidOAuthApi.post('/oauth/token', {
-                                    body: {
-                                      client_id: ORCID_CLIENT_ID,
-                                      client_secret: ORCID_SECRET,
-                                      grant_type: 'authorization_code',
-                                      redirect_uri: auth_orcid_params[:redirect_uri],
-                                      code: auth_orcid_params[:code]
-                                    }
-                                  }).parsed_response
+    response = OrcidOAuthApi.post(
+      '/oauth/token', 
+      body: {
+        client_id: ORCID_CLIENT_ID,
+        client_secret: ORCID_SECRET,
+        grant_type: 'authorization_code',
+        redirect_uri: auth_orcid_params[:redirect_uri],
+        code: auth_orcid_params[:code]
+      }
+    ).parsed_response
 
-    if !response.nil? && response['error']
-      render json: { errors: [response['error_description']] }, status: :bad_request
-    elsif !response.nil? && response['orcid']
-      render json: { orcid: response }, status: :ok
-    end
+    render json: { orcid: response }, status: :ok and return if response['orcid'] and !response['error']
+    
+    render json: { errors: [response['error_description']] }, status: :bad_request if response
   end
 
   # DELETE /api/auth/session
@@ -90,6 +94,17 @@ class Api::V1::AuthController < ApplicationController
     token, = token_and_options(request)
     AuthTokenService.save_expired_token(token)
     head :no_content, status: :ok
+  end
+
+  # POST /api/auth/validate_jwt
+  def validate_jwt
+    token = params[:jwt]
+    jwt_payload = AuthTokenService.decode_jwt(token)
+    user_id = jwt_payload[0]['user_id']
+    user = User.find(user_id)
+    unauthorized! and return unless user == @current_user && !jwt_expired?(token)
+
+    head :ok
   end
 
   private

@@ -27,3 +27,9 @@ en:
       code: 3002
       title: "User not destroyed."
       detail: "This user was not removed from the database."
+
+    # Study fields
+    study_field_not_found:
+      code: 4001
+      title: "Study fields not found."
+      detail: "There are no records in the database table."
