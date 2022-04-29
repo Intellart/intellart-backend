@@ -28,6 +28,7 @@ gem 'jbuilder', '~> 2.7'
 
 gem 'devise'
 gem 'jwt'
+gem 'httparty'
 
 gem 'rack-cors'
 gem 'dotenv'

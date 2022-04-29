@@ -45,7 +45,10 @@ Install all node module by running:
 Add `.env` file to root directory. Inside add the required variables to run the app localy (all secrets are distributed within the development team & the repo owner):
 ```
 API_KEY="<secret>"
-FRONTEND_DEVELOPMENT_PORT="3001"
+ALGORITHM_TYPE="<secret>"
+ORCID_CLIENT_ID="<secret>"
+ORCID_SECRET="<secret>"
+FRONTEND_BASE_URL="http://localhost:3001"
 ```
 
 ### Prepare application credentials
