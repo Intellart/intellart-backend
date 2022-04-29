@@ -12,14 +12,14 @@ class Api::V1::UsersController < ApplicationController
 
   # GET /api/v1/users/:id
   def show
-    render json: { data: @user }, status: :ok
+    render json: @user, status: :ok
   end
 
   # PUT/PATCH /api/v1/users/:id
   def update
     render_json_validation_error(@user) and return unless @user.update(user_update_params)
 
-    render json: { data: @user }, status: :ok
+    render json: @user, status: :ok
   end
 
   # DELETE /api/v1/users/:id
@@ -30,7 +30,7 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def require_same_user
-    head :unauthorized unless @current_user == @user
+    unauthorized! unless @current_user == @user
   end
 
   def set_user
@@ -38,6 +38,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def user_update_params
-    params.require(:user).permit(:first_name, :last_name, :orcid_id, :study_field_id)
+    params.require(:user).permit(:first_name, :last_name, :orcid_id, :study_field_id, :profile_img, :social_links)
   end
 end

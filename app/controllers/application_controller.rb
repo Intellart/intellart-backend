@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_api_user!
   skip_before_action :verify_authenticity_token
 
+  helper_method :render_json_error, :render_json_validation_error, :unauthorized!
+
   # def authenticate_super_admin!
   #   authenticate_admin!
   #   return true if current_admin.super?
@@ -17,6 +19,10 @@ class ApplicationController < ActionController::Base
   private
 
   # AUTH
+  def make_header_jwt
+    response.set_header('_jwt', @jwt)
+  end
+
   def refresh_jwt
     new_token = AuthTokenService.generate_jwt(@current_user.id)
     response.set_header('_jwt', new_token)
@@ -24,7 +30,7 @@ class ApplicationController < ActionController::Base
 
   def authenticate_api_user!
     token, = token_and_options(request)
-    head :unauthorized unless jwt_valid?(token) && !jwt_expired?(token)
+    unauthorized! unless jwt_valid?(token) && !jwt_expired?(token)
   end
 
   def jwt_valid?(token)
@@ -32,9 +38,11 @@ class ApplicationController < ActionController::Base
     user_id = jwt_payload[0]['user_id']
     @current_user = User.find(user_id)
   rescue ActiveRecord::RecordNotFound => e
-    render json: { errors: e.message }, status: :unauthorized
+    render_unathorized_error(e)
   rescue JWT::DecodeError => e
-    render json: { errors: e.message }, status: :unauthorized
+    render_unathorized_error(e)
+  rescue JWT::VerificationError => e
+    render_unathorized_error(e)
   end
 
   def jwt_expired?(token)
@@ -61,9 +69,14 @@ class ApplicationController < ActionController::Base
   end
 
   def render_json_validation_error(resource)
-    render json: resource,
-           status: :bad_request,
-           adapter: :json_api,
-           serializer: ActiveModel::Serializer::ErrorSerializer
+    render json: { errors: resource.errors.full_messages }, status: :bad_request
+  end
+
+  def render_unathorized_error(error)
+    render json: { errors: [error.message] }, status: :unauthorized
+  end
+
+  def unauthorized!
+    head :unauthorized
   end
 end

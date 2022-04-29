@@ -6,7 +6,5 @@ class CreateNftLikes < ActiveRecord::Migration[6.1]
 
       t.timestamps
     end
-
-    add_foreign_key :nft_likes, :nfts, column: :fingerprint, primary_key: :fingerprint
   end
 end

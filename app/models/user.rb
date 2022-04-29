@@ -9,7 +9,13 @@ class User < ApplicationRecord
 
   validates :first_name, :last_name, presence: true
 
-  def full_name
-    "#{first_name} #{last_name}"
+  def active_model_serializer
+    UserSerializer
+  end
+
+  def reset_password!(password)
+    self.reset_password_token = nil
+    self.password = password
+    save!
   end
 end

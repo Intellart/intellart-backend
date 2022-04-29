@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_23_204033) do
+ActiveRecord::Schema.define(version: 2022_04_28_133443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(version: 2022_04_23_204033) do
     t.string "fingerprint"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "fingerprint"], name: "index_nft_endorsers_on_user_id_and_fingerprint", unique: true
     t.index ["user_id"], name: "index_nft_endorsers_on_user_id"
   end
 
@@ -70,14 +71,18 @@ ActiveRecord::Schema.define(version: 2022_04_23_204033) do
     t.string "fingerprint"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id", "fingerprint"], name: "index_nft_likes_on_user_id_and_fingerprint", unique: true
     t.index ["user_id"], name: "index_nft_likes_on_user_id"
   end
 
   create_table "nft_tags", force: :cascade do |t|
     t.bigint "user_id", null: false
+    t.bigint "tag_id", null: false
     t.string "fingerprint"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_id", "fingerprint"], name: "index_nft_tags_on_tag_id_and_fingerprint", unique: true
+    t.index ["tag_id"], name: "index_nft_tags_on_tag_id"
     t.index ["user_id"], name: "index_nft_tags_on_user_id"
   end
 
@@ -123,6 +128,7 @@ ActiveRecord::Schema.define(version: 2022_04_23_204033) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["rated_user_id"], name: "index_ratings_on_rated_user_id"
+    t.index ["user_id", "rated_user_id"], name: "index_ratings_on_user_id_and_rated_user_id", unique: true
     t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
@@ -172,11 +178,9 @@ ActiveRecord::Schema.define(version: 2022_04_23_204033) do
   end
 
   add_foreign_key "cardano_addresses", "wallets"
-  add_foreign_key "nft_endorsers", "nfts", column: "fingerprint", primary_key: "fingerprint"
   add_foreign_key "nft_endorsers", "users"
-  add_foreign_key "nft_likes", "nfts", column: "fingerprint", primary_key: "fingerprint"
   add_foreign_key "nft_likes", "users"
-  add_foreign_key "nft_tags", "nfts", column: "fingerprint", primary_key: "fingerprint"
+  add_foreign_key "nft_tags", "tags"
   add_foreign_key "nft_tags", "users"
   add_foreign_key "nfts", "cardano_addresses"
   add_foreign_key "nfts", "categories"
