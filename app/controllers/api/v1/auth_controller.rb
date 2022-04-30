@@ -66,7 +66,7 @@ class Api::V1::AuthController < ApplicationController
 
     return unless response
 
-    render json: { user: JSON.parse(response) }, status: :ok and return unless response['error']
+    render json: JSON.parse(response), status: :ok and return unless response['error']
 
     render json: { errors: [response['error_description']] }, status: :bad_request
   end
