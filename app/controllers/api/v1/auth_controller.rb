@@ -8,19 +8,6 @@ class Api::V1::AuthController < ApplicationController
 
   ORCID_CLIENT_ID = ENV.fetch('ORCID_CLIENT_ID')
   ORCID_SECRET = ENV.fetch('ORCID_SECRET')
-  ORCID_API_ENDPOINT = Rails.env.development? ? 'sandbox.' : ''
-
-  # ORCID OAuth API client config
-  class OrcidOAuthApi
-    include HTTParty
-    base_uri "https://#{ORCID_API_ENDPOINT}orcid.org"
-  end
-
-  # ORCID API client config
-  class OrcidApi
-    include HTTParty
-    base_uri "https://pub.#{ORCID_API_ENDPOINT}orcid.org/v3.0"
-  end
 
   # POST /api/auth/session
   def create_session
