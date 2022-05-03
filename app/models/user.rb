@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :cardano_addresses, through: :wallets
 
   validates :first_name, :last_name, presence: true
+  validates :orcid_id, uniqueness: true
 
   def active_model_serializer
     UserSerializer

@@ -33,3 +33,15 @@ en:
       code: 4001
       title: "Study fields not found."
       detail: "There are no records in the database table."
+
+    # Categories
+    category_not_found:
+      code: 5001
+      title: "Categories not found."
+      detail: "There are no records in the database table."
+
+    # NFT collections
+    nft_collection_not_found:
+      code: 6001
+      title: "NFT collections not found."
+      detail: "There are no records in the database table."

@@ -15,7 +15,10 @@ Rails.application.routes.draw do
   current_api_routes = lambda do
     resources :nfts
     resources :users, only: [:show, :update, :destroy]
+    get '/categories', to: 'categories#index'
     get '/study_fields', to: 'study_fields#index'
+    get '/nft_collections', to: 'nft_collections#index'
+    get '/generate_nft', to: 'python#generate_nft'
   end
 
   namespace :api, defaults: { format: :json } do
@@ -28,8 +31,6 @@ Rails.application.routes.draw do
       post '/auth/user/orcid', to: 'auth#create_user_orcid'
       post '/auth/session/orcid', to: 'auth#create_session_orcid'
       delete '/auth/session', to: 'auth#destroy_session'
-
-      # TODO: write this method
       post '/auth/validate_jwt', to: 'auth#validate_jwt'
     end
   end

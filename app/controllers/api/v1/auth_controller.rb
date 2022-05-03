@@ -8,19 +8,6 @@ class Api::V1::AuthController < ApplicationController
 
   ORCID_CLIENT_ID = ENV.fetch('ORCID_CLIENT_ID')
   ORCID_SECRET = ENV.fetch('ORCID_SECRET')
-  ORCID_API_ENDPOINT = Rails.env.development? ? 'sandbox.' : ''
-
-  # ORCID OAuth API client config
-  class OrcidOAuthApi
-    include HTTParty
-    base_uri "https://#{ORCID_API_ENDPOINT}orcid.org"
-  end
-
-  # ORCID API client config
-  class OrcidApi
-    include HTTParty
-    base_uri "https://pub.#{ORCID_API_ENDPOINT}orcid.org/v3.0"
-  end
 
   # POST /api/auth/session
   def create_session
@@ -56,7 +43,7 @@ class Api::V1::AuthController < ApplicationController
 
   # POST /api/auth/user/orcid
   def create_user_orcid
-    response = OrcidApi.get(
+    response = OrcidService::OrcidApi.get(
       "/#{user_orcid_params[:orcid]}/record",
       headers: {
         "Authorization": "Bearer #{user_orcid_params[:access_token]}",
@@ -73,7 +60,7 @@ class Api::V1::AuthController < ApplicationController
 
   # POST /api/auth/orcid
   def auth_orcid
-    response = OrcidOAuthApi.post(
+    response = OrcidService::OrcidOAuthApi.post(
       '/oauth/token',
       body: {
         client_id: ORCID_CLIENT_ID,
