@@ -43,7 +43,7 @@ class Api::V1::AuthController < ApplicationController
 
   # POST /api/auth/user/orcid
   def create_user_orcid
-    response = OrcidApi.get(
+    response = OrcidService::OrcidApi.get(
       "/#{user_orcid_params[:orcid]}/record",
       headers: {
         "Authorization": "Bearer #{user_orcid_params[:access_token]}",
@@ -60,7 +60,7 @@ class Api::V1::AuthController < ApplicationController
 
   # POST /api/auth/orcid
   def auth_orcid
-    response = OrcidOAuthApi.post(
+    response = OrcidService::OrcidOAuthApi.post(
       '/oauth/token',
       body: {
         client_id: ORCID_CLIENT_ID,
