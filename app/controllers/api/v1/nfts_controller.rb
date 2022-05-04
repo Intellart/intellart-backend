@@ -1,6 +1,6 @@
 class Api::V1::NftsController < ApplicationController
   before_action :set_nft, only: [:show, :update, :destroy]
-  after_action :refresh_jwt
+  after_action :refresh_jwt, only: [:create, :update, :destroy]
 
   rescue_from ActiveRecord::RecordNotFound do
     render_json_error :not_found, :nft_not_found
