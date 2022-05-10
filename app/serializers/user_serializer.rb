@@ -1,5 +1,7 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :email, :first_name, :last_name, :full_name, :orcid_id, :study_field, :profile_img, :social_links
+  attributes :id, :email, :first_name, :last_name, :full_name, :orcid_id, :study_field,
+             :profile_img, :social_links, :created_at, :updated_at
+
 
   has_many :wallets
   # has_many :cardano_addresses, through: :wallets
