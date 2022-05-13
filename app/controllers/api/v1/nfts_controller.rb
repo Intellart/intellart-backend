@@ -17,7 +17,22 @@ class Api::V1::NftsController < ApplicationController
 
   # GET api/nfts/
   def index
-    @nfts = Nft.all
+    @nfts = []
+
+    if request.query_parameters.any?
+      if params[:match_any]
+        nfts = nil
+        request.query_parameters.except(:match_any).each do |scope, value|
+          nfts = Nft.where("#{scope}=#{value}") if nfts.nil?
+          nfts = nfts.or(Nft.where("#{scope}": value)) if nfts.present?
+        end
+        @nfts = nfts
+      else
+        @nfts = Nft.where(request.query_parameters)
+      end
+    else
+      @nfts = Nft.all
+    end
     render json: @nfts, status: :ok
   end
 
@@ -48,6 +63,13 @@ class Api::V1::NftsController < ApplicationController
   end
 
   def nft_params
+    params.require(:nft).permit(
+      :fingerprint, :tradeable, :price, :name, :description, :subject, :owner_id, :nft_collection_id, :category_id,
+      :asset_name, :policy_id, :onchain_transaction_id
+    )
+  end
+
+  def nft_update_params
     params.require(:nft).permit(
       :fingerprint, :tradeable, :price, :name, :description, :subject, :owner_id, :nft_collection_id, :category_id,
       :asset_name, :policy_id, :onchain_transaction_id
