@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   current_api_routes = lambda do
     resources :nfts
+    resources :nft_likes, only: [:index, :create, :destroy]
     resources :users, only: [:show, :update, :destroy]
     get '/categories', to: 'categories#index'
     get '/study_fields', to: 'study_fields#index'
