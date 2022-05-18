@@ -22,6 +22,9 @@ Rails.application.routes.draw do
     get '/study_fields', to: 'study_fields#index'
     get '/nft_collections', to: 'nft_collections#index'
     get '/generate_nft', to: 'python#generate_nft'
+    get '/sd_search/scopus', to: 'science_direct#search_scopus'
+    get '/sd_search/scopus/author', to: 'science_direct#search_scopus_author'
+    get '/sd_search/scopus/affiliation', to: 'science_direct#search_scopus_affiliation'
   end
 
   namespace :api, defaults: { format: :json } do

@@ -38,6 +38,13 @@ class Api::V1::AuthController < ApplicationController
     @user = User.new(user_create_params)
     render_json_validation_error(@user) and return unless @user.save
 
+    wallet = Wallet.new(user_id: @user.id)
+    @user.wallets << wallet if wallet.save
+
+    # dummy address
+    cardano_address = CardanoAddress.new(address: SecureRandom.uuid, wallet_id: wallet.id, dirty: false)
+    cardano_address.save
+
     render json: @user, status: :ok
   end
 
