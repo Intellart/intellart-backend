@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_22_182237) do
+ActiveRecord::Schema.define(version: 2022_05_27_093552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,10 +46,12 @@ ActiveRecord::Schema.define(version: 2022_05_22_182237) do
   create_table "exchange_rates", force: :cascade do |t|
     t.bigint "unix_time"
     t.string "coin_id"
-    t.string "currency"
-    t.float "value"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.float "usd"
+    t.float "cad"
+    t.float "eur"
+    t.float "gbp"
   end
 
   create_table "jwt_denylist", force: :cascade do |t|
