@@ -8,8 +8,22 @@ class Nft < ApplicationRecord
   validates :fingerprint, presence: true, uniqueness: true
   validates :policy_id, :asset_name, presence: true
 
+  after_create :new_nft_broadcast
+
   def active_model_serializer
     NftSerializer
+  end
+
+  private
+
+  def new_nft_broadcast
+    ActionCable.server.broadcast(
+      "general_channel",
+      {
+        type: 'nft',
+        data: self
+      }
+    )
   end
 
   # def to_json(*)

@@ -44,11 +44,15 @@ Install all node module by running:
 
 Add `.env` file to root directory. Inside add the required variables to run the app localy (all secrets are distributed within the development team & the repo owner):
 ```
-API_KEY="<secret>"
 ALGORITHM_TYPE="<secret>"
+API_KEY="<secret>"
+FRONTEND_BASE_URL="http://localhost:3001"
+FRONTEND_WS_URL="ws://localhost:3001"
 ORCID_CLIENT_ID="<secret>"
 ORCID_SECRET="<secret>"
-FRONTEND_BASE_URL="http://localhost:3001"
+REDIS_DB="<secret>"
+REDIS_PORT="<secret>"
+REDIS_URL="redis://localhost"
 ```
 
 ### Prepare application credentials
@@ -77,3 +81,19 @@ Start rails application:
 Start mailcatcher:
 
     mailcatcher
+
+Run sidekiq workers:
+
+    rails c
+    GetCurrentExchangeRatesJob.perform_now
+
+Run with full action cable functionality in development (by default it will not broadcast models & jobs):
+- In `cable.yml` make the following change
+
+      development:
+        adapter: redis
+        url: <%= ENV.fetch('REDIS_URL', 'redis://localhost') %>:<%= ENV.fetch('REDIS_PORT', 6379) %>/<%= ENV.fetch('REDIS_DB', 0) %>
+
+- In new terminal run
+
+      redis-server

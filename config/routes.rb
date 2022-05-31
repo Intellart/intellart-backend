@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :nfts
     resources :nft_likes, only: [:index, :create, :destroy]
     resources :users, only: [:show, :update, :destroy]
+    get '/exchange_rates', to: 'exchange_rates#latest'
     get '/categories', to: 'categories#index'
     get '/study_fields', to: 'study_fields#index'
     get '/nft_collections', to: 'nft_collections#index'

@@ -45,3 +45,9 @@ en:
       code: 6001
       title: "NFT collections not found."
       detail: "There are no records in the database table."
+
+    # Exchange rates
+    exchange_rate_not_found:
+      code: 7001
+      title: "Exchange rate not found."
+      detail: "There are no records in the database table."
