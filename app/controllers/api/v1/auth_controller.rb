@@ -1,6 +1,6 @@
 class Api::V1::AuthController < ApplicationController
-  skip_before_action :authenticate_api_user!, only: [:create_session, :create_user, :create_session_orcid, :create_user_orcid, :auth_orcid]
-  after_action :make_header_jwt, only: [:create_session, :create_session_orcid]
+  skip_before_action :authenticate_api_user!, only: [:create_session, :create_user, :create_orcid_session, :create_user_orcid, :auth_orcid]
+  after_action :make_header_jwt, only: [:create_session, :create_orcid_session]
 
   rescue_from ActiveRecord::RecordNotFound do
     render_json_error :not_found, :user_not_found
@@ -23,7 +23,7 @@ class Api::V1::AuthController < ApplicationController
   end
 
   # POST /api/auth/session/orcid
-  def create_session_orcid
+  def create_orcid_session
     @user = User.find_by_orcid_id(user_orcid_params[:orcid])
     render_json_error :not_found, :user_not_found and return unless @user
 
@@ -49,7 +49,7 @@ class Api::V1::AuthController < ApplicationController
   end
 
   # POST /api/auth/user/orcid
-  def create_user_orcid
+  def create_orcid_user
     response = OrcidService::OrcidApi.get(
       "/#{user_orcid_params[:orcid]}/record",
       headers: {
@@ -89,7 +89,7 @@ class Api::V1::AuthController < ApplicationController
   def destroy_session
     token, = token_and_options(request)
     AuthTokenService.save_expired_token(token)
-    head :no_content, status: :ok
+    head :no_content
   end
 
   # POST /api/auth/validate_jwt

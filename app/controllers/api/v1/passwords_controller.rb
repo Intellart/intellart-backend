@@ -8,7 +8,7 @@ class Api::V1::PasswordsController < ApplicationController
   end
 
   def update
-    if @user.reset_password!(params[:password])
+    if @user.reset_password!(update_password_params[:password])
       render json: { message: 'Password sucessfully changed.' }, status: :ok
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
@@ -25,7 +25,6 @@ class Api::V1::PasswordsController < ApplicationController
   end
 
   def update_password_params
-    puts params
     params.require(:password).permit(:password)
   end
 

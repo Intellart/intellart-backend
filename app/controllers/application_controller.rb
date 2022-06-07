@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
     render json: { errors: resource.errors.full_messages }, status: :bad_request
   end
 
-  def render_unathorized_error(error='Unauthorized.')
+  def render_unathorized_error(error = 'Unauthorized.')
     render json: { errors: [error.message] }, status: :unauthorized
   end
 

@@ -29,20 +29,18 @@ class Api::V1::NftLikesController < ApplicationController
   # POST api/nft_likes/
   def create
     @like = NftLike.new(like_create_params)
-    render_json_validation_error(@like) and return unless 
-    @like.save
-    @nft = Nft.find(@like[:fingerprint])
+    render_json_validation_error(@like) and return unless @like.save
 
+    @nft = Nft.find(@like[:fingerprint])
     render json: @nft, status: :ok
   end
 
   # POST api/nft_likes/:id
   def destroy
-    if @like.destroy
-      @nft = Nft.find(@like[:fingerprint])
+    return unless @like.destroy
 
-      render json: @nft, status: :ok
-    end
+    @nft = Nft.find(@like[:fingerprint])
+    render json: @nft, status: :ok
   end
 
   private

@@ -1,5 +1,6 @@
 class Api::V1::NftsController < ApplicationController
   before_action :set_nft, only: [:show, :update, :destroy]
+  before_action :require_owner, only: [:update, :destroy]
   after_action :refresh_jwt, only: [:create, :update, :destroy]
   skip_before_action :authenticate_api_user!, only: [:index]
 
@@ -58,6 +59,11 @@ class Api::V1::NftsController < ApplicationController
 
   private
 
+  # only owner can modify/delete nft
+  def require_owner
+    head :unauthorized unless @nft.owner_id == @current_user.id
+  end
+
   def set_nft
     @nft = Nft.find(params[:id])
   end
@@ -65,14 +71,12 @@ class Api::V1::NftsController < ApplicationController
   def nft_params
     params.require(:nft).permit(
       :fingerprint, :tradeable, :price, :name, :description, :subject, :owner_id, :nft_collection_id, :category_id,
-      :asset_name, :policy_id, :onchain_transaction_id, :cardano_address_id,
+      :asset_name, :policy_id, :onchain_transaction_id, :cardano_address_id
     )
   end
 
+  # Onchain Cardano address cannot be changed, so we remove it
   def nft_update_params
-    params.require(:nft).permit(
-      :fingerprint, :tradeable, :price, :name, :description, :subject, :owner_id, :nft_collection_id, :category_id,
-      :asset_name, :policy_id, :onchain_transaction_id
-    )
+    params[:nft].delete(:cardano_address_id)
   end
 end

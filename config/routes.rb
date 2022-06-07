@@ -35,8 +35,8 @@ Rails.application.routes.draw do
       put '/auth/user/password_update', to: 'passwords#update'
       post '/auth/session', to: 'auth#create_session'
       post '/auth/orcid', to: 'auth#auth_orcid'
-      post '/auth/user/orcid', to: 'auth#create_user_orcid'
-      post '/auth/session/orcid', to: 'auth#create_session_orcid'
+      post '/auth/orcid/user', to: 'auth#create_orcid_user'
+      post '/auth/orcid/session', to: 'auth#create_orcid_session'
       delete '/auth/session', to: 'auth#destroy_session'
       post '/auth/validate_jwt', to: 'auth#validate_jwt'
     end

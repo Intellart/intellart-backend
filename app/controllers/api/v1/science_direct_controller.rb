@@ -2,7 +2,8 @@ class Api::V1::ScienceDirectController < ApplicationController
   require 'dotenv/load'
   require 'elsevier_api'
   require 'uri'
-  after_action :refresh_jwt
+  #after_action :refresh_jwt
+  skip_before_action :authenticate_api_user!
 
   API_KEY = ENV.fetch('SCIENCE_DIRECT_API_KEY')
   @conn = ElsevierApi::Connection.new(API_KEY)
