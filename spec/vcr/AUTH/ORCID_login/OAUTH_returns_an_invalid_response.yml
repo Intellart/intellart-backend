@@ -1,0 +1,52 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://orcid.org/oauth/token
+    body:
+      encoding: UTF-8
+      string: client_id=APP-X7HXKA3BRNVNC4LP&client_secret=c7335782-da19-4ad2-aab1-abd088a4199c&grant_type=authorization_code&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fsign_in&code=
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Date:
+      - Tue, 24 May 2022 13:03:05 GMT
+      Content-Type:
+      - application/json;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 71063ab7cab6788e-VIE
+      Cache-Control:
+      - no-store
+      Set-Cookie:
+      - X-Mapping-fjhppofk=145A3CB8E13B0D631CA2687B2737F2BA; path=/
+      Vary:
+      - accept-encoding
+      Www-Authenticate:
+      - 'Bearer realm="orcid", error="invalid_client", error_description="Client not
+        found: APP-X7HXKA3BRNVNC4LP"'
+      Cf-Cache-Status:
+      - DYNAMIC
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Pragma:
+      - no-cache
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: '{"error":"invalid_client","error_description":"Client not found: APP-X7HXKA3BRNVNC4LP"}'
+  recorded_at: Tue, 24 May 2022 13:03:05 GMT
+recorded_with: VCR 6.1.0

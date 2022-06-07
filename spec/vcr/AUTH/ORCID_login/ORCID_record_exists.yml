@@ -1,0 +1,78 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://pub.orcid.org/v3.0/0000-0001-9349-4019/record
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer bf2729b2-dc4b-496c-be3b-6b2a07019cd6
+      Content-Type:
+      - application/orcid+json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: Ok
+    headers:
+      Date:
+      - Tue, 24 May 2022 14:00:08 GMT
+      Content-Type:
+      - application/orcid+json;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 71068e4aecc638b2-VIE
+      Access-Control-Allow-Origin:
+      - "*"
+      Cache-Control:
+      - no-store
+      Set-Cookie:
+      - X-Mapping-fjhppofk=8104E9347DADE295E77282E84B2DD5CD; path=/
+      Www-Authenticate:
+      - 'Bearer realm="ORCID T1 API", error="invalid_token", error_description="Invalid
+        access token: bf2729b2-dc4b-496c-be3b-6b2a07019cd6"'
+      Cf-Cache-Status:
+      - DYNAMIC
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Pragma:
+      - no-cache
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+      X-Xss-Protection:
+      - 1; mode=block
+      Vary:
+      - Accept-Encoding
+      Server:
+      - cloudflare
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "id":22,
+          "email":"thespian-agency@thespian.hr",
+          "first_name":"Thespian",
+          "last_name":"Agency",
+          "full_name":"Thespian Agency",
+          "orcid_id":"0000-0001-9349-4019",
+          "study_field":"",
+          "profile_img":null,
+          "social_links":null,
+          "created_at":"2022-05-24T12:44:20.523Z",
+          "updated_at":"2022-05-24T12:44:20.523Z",
+          "wallets":[]
+        }
+  recorded_at: Tue, 24 May 2022 14:00:08 GMT
+recorded_with: VCR 6.1.0

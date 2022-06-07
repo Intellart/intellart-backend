@@ -1,0 +1,72 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.coingecko.com/api/v3/simple/price?ids=cardano&include_24hr_change=false&include_24hr_vol=false&include_last_updated_at=true&include_market_cap=false&vs_currencies=usd,cad,eur,gbp
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 06 Jun 2022 13:22:31 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 717175139a7c78af-VIE
+      Access-Control-Allow-Origin:
+      - "*"
+      Cache-Control:
+      - public, max-age=300
+      Etag:
+      - W/"511096a34b3ed486d1f97d96fecf8a8c"
+      Expires:
+      - Mon, 06 Jun 2022 13:27:31 GMT
+      Set-Cookie:
+      - datadome=HG5-RyvQKjU-h5XkWmJzrElN0WeGrHa.Kv4mxsyUZxYqYt4CS2hIushh~li~LR8wTywr~gjGhDyB5ymAH5dKwHGsM_Jr3BY4nu-XnvglqIfqMKCOPYIkG~oMLy6ei5J;
+        Max-Age=31536000; Domain=.coingecko.com; Path=/; Secure; SameSite=Lax
+      Vary:
+      - Accept-Encoding, Origin
+      Cf-Cache-Status:
+      - EXPIRED
+      Accept-Ch:
+      - Sec-CH-UA,Sec-CH-UA-Mobile,Sec-CH-UA-Platform,Sec-CH-UA-Arch,Sec-CH-UA-Full-Version-List,Sec-CH-UA-Model,Sec-CH-Device-Memory
+      Access-Control-Allow-Headers:
+      - Origin, X-Requested-With, Content-Type, Accept, Authorization
+      Access-Control-Allow-Methods:
+      - POST, PUT, DELETE, GET, OPTIONS
+      Access-Control-Expose-Headers:
+      - link, per-page, total
+      Access-Control-Request-Method:
+      - "*"
+      Alternate-Protocol:
+      - 443:npn-spdy/2
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      X-Datadome:
+      - protected
+      X-Request-Id:
+      - fe63d63c-fe5f-491d-9bf2-58e7a560dd2d
+      X-Runtime:
+      - '0.020524'
+      Server:
+      - cloudflare
+    body:
+      encoding: ASCII-8BIT
+      string: '{"cardano":{"usd":0.622509,"cad":0.780794,"eur":0.58081,"gbp":0.49593,"last_updated_at":1654521654}}'
+  recorded_at: Mon, 06 Jun 2022 13:22:31 GMT
+recorded_with: VCR 6.1.0

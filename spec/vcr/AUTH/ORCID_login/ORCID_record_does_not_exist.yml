@@ -1,0 +1,67 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://pub.orcid.org/v3.0/9999-0001-9349-4019/record
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer bf2729b2-dc4b-496c-be3b-6b2a07019cd6
+      Content-Type:
+      - application/orcid+json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Tue, 24 May 2022 14:13:51 GMT
+      Content-Type:
+      - application/orcid+json;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 7106a25b890477f7-VIE
+      Access-Control-Allow-Origin:
+      - "*"
+      Cache-Control:
+      - no-store
+      Set-Cookie:
+      - X-Mapping-fjhppofk=EF4B50528D6B3E454639F398223D1D1E; path=/
+      Www-Authenticate:
+      - ''
+      Cf-Cache-Status:
+      - DYNAMIC
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Pragma:
+      - no-cache
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+      X-Xss-Protection:
+      - 1; mode=block
+      Vary:
+      - Accept-Encoding
+      Server:
+      - cloudflare
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "error" : "record_does_not_exist",
+          "error_description" : "Record does not exist."
+        }
+  recorded_at: Tue, 24 May 2022 14:13:51 GMT
+recorded_with: VCR 6.1.0

@@ -1,0 +1,68 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://pub.orcid.org/v3.0/0000-0001-9349-4019/record
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Authorization:
+      - Bearer zzzzzz
+      Content-Type:
+      - application/orcid+json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 400
+      message: Bad request
+    headers:
+      Date:
+      - Tue, 24 May 2022 14:13:49 GMT
+      Content-Type:
+      - application/orcid+json;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Cf-Ray:
+      - 7106a2568d520f8e-VIE
+      Access-Control-Allow-Origin:
+      - "*"
+      Cache-Control:
+      - no-store
+      Set-Cookie:
+      - X-Mapping-fjhppofk=EF4B50528D6B3E454639F398223D1D1E; path=/
+      Www-Authenticate:
+      - 'Bearer realm="ORCID T1 API", error="invalid_token", error_description="Invalid
+        access token: zzzzzz"'
+      Cf-Cache-Status:
+      - DYNAMIC
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Pragma:
+      - no-cache
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+      X-Xss-Protection:
+      - 1; mode=block
+      Vary:
+      - Accept-Encoding
+      Server:
+      - cloudflare
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "error" : "invalid_token",
+          "error_description" : "Invalid access token: zzzzzz"
+        }
+  recorded_at: Tue, 24 May 2022 14:13:49 GMT
+recorded_with: VCR 6.1.0
