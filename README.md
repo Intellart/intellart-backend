@@ -68,9 +68,7 @@ the key is distributed by the development team.
 
 Run
 
-    rails db:create
-    rails db:migrate
-    rails db:seed
+    rails db:setup
 
 ### Running the application
 
@@ -82,7 +80,7 @@ Start mailcatcher:
 
     mailcatcher
 
-Run sidekiq workers:
+Run sidekiq workers (*For now this is only a one time action, the ExchangeRates table should have at least one entry*):
 
     rails c
     GetCurrentExchangeRatesJob.perform_now
@@ -97,3 +95,7 @@ Run with full action cable functionality in development (by default it will not 
 - In new terminal run
 
       redis-server
+
+Run RSpec tests:
+
+    rspec
