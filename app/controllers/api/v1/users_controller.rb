@@ -1,7 +1,8 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_user
   before_action :require_same_user, only: [:update, :destroy]
-  after_action :refresh_jwt
+  after_action :refresh_jwt, except: [:show]
+  skip_before_action :authenticate_api_user!, only: [:show]
 
   rescue_from ActiveRecord::RecordNotFound do
     render_json_error :not_found, :user_not_found
