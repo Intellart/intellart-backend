@@ -1,7 +1,7 @@
 class Nft < ApplicationRecord
-  has_many :tags, class_name: 'NftTag', foreign_key: :fingerprint
-  has_many :likes, class_name: 'NftLike', foreign_key: :fingerprint
-  has_many :endorsers, class_name: 'NftEndorser', foreign_key: :fingerprint
+  has_many :tags, class_name: 'NftTag', foreign_key: :fingerprint, dependent: :destroy
+  has_many :likes, class_name: 'NftLike', foreign_key: :fingerprint, dependent: :destroy
+  has_many :endorsers, class_name: 'NftEndorser', foreign_key: :fingerprint, dependent: :destroy
   belongs_to :user, foreign_key: 'owner_id'
   belongs_to :onchain_transaction
 

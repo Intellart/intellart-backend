@@ -33,15 +33,9 @@ gem 'httparty'
 gem 'http', '5.0.4'
 gem 'rack-cors'
 gem 'dotenv'
-gem 'active_model_serializers', require: true
 gem 'elsevier_api'
 gem 'sidekiq', '6.2.2'
 gem 'sidekiq-scheduler', '3.1.0'
-gem 'dotenv'
-gem 'elsevier_api'
-gem 'httparty'
-gem 'jwt'
-gem 'rack-cors'
 gem 'webmock'
 
 # Reduces boot times through caching; required in config/boot.rb
@@ -73,6 +67,8 @@ group :test do
   gem 'selenium-webdriver', '>= 4.0.0.rc1'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
+  # Test coverage
+  gem 'simplecov', require: false
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

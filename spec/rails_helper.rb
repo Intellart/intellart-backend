@@ -1,3 +1,5 @@
+require 'simplecov'
+SimpleCov.start
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
@@ -63,10 +65,12 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  # Include more types not included by default
   # Some tests fail because of Devise::MissingWarden
   config.include Devise::Test::ControllerHelpers, type: :controller
 
   config.define_derived_metadata(:file_path => Regexp.new('/spec/services/')) do |metadata|
     metadata[:type] = :service
   end
+
 end

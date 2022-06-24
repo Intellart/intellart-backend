@@ -1,6 +1,6 @@
 class Wallet < ApplicationRecord
   belongs_to :user
-  has_many :cardano_addresses
+  has_many :cardano_addresses, dependent: :destroy
 
   def active_model_serializer
     WalletSerializer
