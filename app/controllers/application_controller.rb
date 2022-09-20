@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_api_user!
   skip_before_action :verify_authenticity_token
 
-  helper_method :render_json_error, :render_json_validation_error, :unauthorized!
+  helper_method :render_json_error, :render_json_validation_error, :unauthorized!, :make_confirmation_url
 
   private
 
@@ -82,5 +82,9 @@ class ApplicationController < ActionController::Base
 
   def unauthorized!
     head :unauthorized
+  end
+
+  def make_confirmation_url(token)
+    "http://localhost:3000/users/confirmation?confirmation_token=#{token}"
   end
 end
