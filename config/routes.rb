@@ -7,7 +7,9 @@ Rails.application.routes.draw do
 
   # TODO: devise must have current_user for email confirmation link
   devise_for :users, controllers: {
-    confirmations: 'api/v1/confirmations'
+    confirmations: 'api/v1/confirmations',
+    sessions: 'users/sessions',
+    registrations: 'users/registrations'
   }
 
   current_api_routes = lambda do
@@ -25,8 +27,8 @@ Rails.application.routes.draw do
     get '/sd_search/scopus', to: 'science_direct#search_scopus'
     get '/sd_search/scopus/author', to: 'science_direct#search_scopus_author'
     get '/sd_search/scopus/affiliation', to: 'science_direct#search_scopus_affiliation'
-    post '/created_nfts', to: 'created_nfts#approve'
-    delete '/created_nfts', to: 'created_nfts#decline'
+    post 'created_nfts', to: 'created_nfts#approve'
+    delete 'created_nfts', to: 'created_nfts#decline'
   end
 
   namespace :api, defaults: { format: :json } do

@@ -4,8 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable, :confirmable
 
-  # wallets not necessary
-  # has_many :wallets, dependent: :destroy
+  has_many :wallets, dependent: :destroy
   has_many :cardano_addresses, through: :wallets
 
   validates :first_name, :last_name, presence: true
