@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_27_093552) do
+ActiveRecord::Schema.define(version: 2022_09_19_114226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,30 @@ ActiveRecord::Schema.define(version: 2022_05_27_093552) do
     t.string "category_name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "created_nfts", primary_key: "fingerprint", id: :string, force: :cascade do |t|
+    t.boolean "tradeable"
+    t.string "name"
+    t.decimal "price"
+    t.boolean "verified"
+    t.text "description"
+    t.string "url"
+    t.string "subject"
+    t.string "asset_name"
+    t.string "policy_id"
+    t.string "status"
+    t.bigint "owner_id"
+    t.bigint "cardano_address_id"
+    t.bigint "category_id"
+    t.bigint "nft_collection_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cardano_address_id"], name: "index_created_nfts_on_cardano_address_id"
+    t.index ["category_id"], name: "index_created_nfts_on_category_id"
+    t.index ["fingerprint"], name: "index_created_nfts_on_fingerprint", unique: true
+    t.index ["nft_collection_id"], name: "index_created_nfts_on_nft_collection_id"
+    t.index ["owner_id"], name: "index_created_nfts_on_owner_id"
   end
 
   create_table "exchange_rates", force: :cascade do |t|
@@ -187,6 +211,10 @@ ActiveRecord::Schema.define(version: 2022_05_27_093552) do
   end
 
   add_foreign_key "cardano_addresses", "wallets"
+  add_foreign_key "created_nfts", "cardano_addresses"
+  add_foreign_key "created_nfts", "categories"
+  add_foreign_key "created_nfts", "nft_collections"
+  add_foreign_key "created_nfts", "users", column: "owner_id"
   add_foreign_key "nft_endorsers", "users"
   add_foreign_key "nft_likes", "users"
   add_foreign_key "nft_tags", "tags"

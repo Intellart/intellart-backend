@@ -51,3 +51,14 @@ en:
       code: 7001
       title: "Exchange rate not found."
       detail: "There are no records in the database table."
+
+    # Admins
+    admin_not_found:
+      code: 9001
+      title: "Admin not found."
+      detail: "This admin user does not exist or has been removed from the database."
+
+    admin_not_destroyed:
+      code: 9002
+      title: "Admin not destroyed."
+      detail: "This admin user was not removed from the database."

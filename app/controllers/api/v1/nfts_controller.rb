@@ -71,7 +71,7 @@ class Api::V1::NftsController < ApplicationController
   def nft_params
     params.require(:nft).permit(
       :fingerprint, :tradeable, :price, :name, :description, :subject, :owner_id, :nft_collection_id, :category_id,
-      :asset_name, :policy_id, :onchain_transaction_id, :cardano_address_id
+      :asset_name, :policy_id, :onchain_transaction_id, :cardano_address_id, :url
     )
   end
 
