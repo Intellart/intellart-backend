@@ -1,10 +1,4 @@
 Rails.application.routes.draw do
-  # resources :admins, only: [] do
-  #   collection do
-  #     get :dashboard
-  #   end
-  # end
-
   # TODO: devise must have current_user for email confirmation link
   devise_for :users, controllers: {
     confirmations: 'api/v1/confirmations',
@@ -19,6 +13,7 @@ Rails.application.routes.draw do
     resources :nft_likes, only: [:index, :create, :destroy]
     resources :users, only: [:show, :index, :update, :destroy]
     resources :created_nfts, only: [:index]
+    resources :sell_nfts, only: [:index]
     get '/exchange_rates', to: 'exchange_rates#latest'
     get '/categories', to: 'categories#index'
     get '/study_fields', to: 'study_fields#index'
@@ -29,6 +24,8 @@ Rails.application.routes.draw do
     get '/sd_search/scopus/affiliation', to: 'science_direct#search_scopus_affiliation'
     post 'created_nfts', to: 'created_nfts#approve'
     delete 'created_nfts', to: 'created_nfts#decline'
+    post 'sell_nfts', to: 'sell_nfts#approve'
+    delete 'sell_nfts', to: 'sell_nfts#decline'
   end
 
   namespace :api, defaults: { format: :json } do
