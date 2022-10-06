@@ -39,3 +39,5 @@ yarn-debug.log*
 
 # Ignore redis dump file
 dump.rdb
+# Ignore application configuration
+/config/application.yml

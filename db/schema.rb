@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_19_114226) do
+ActiveRecord::Schema.define(version: 2022_10_06_073430) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,6 +167,30 @@ ActiveRecord::Schema.define(version: 2022_09_19_114226) do
     t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
+  create_table "sell_nfts", primary_key: "fingerprint", id: :string, force: :cascade do |t|
+    t.boolean "tradeable"
+    t.string "name"
+    t.decimal "price"
+    t.boolean "verified"
+    t.text "description"
+    t.string "url"
+    t.string "subject"
+    t.string "asset_name"
+    t.string "policy_id"
+    t.string "status"
+    t.bigint "owner_id"
+    t.bigint "cardano_address_id"
+    t.bigint "category_id"
+    t.bigint "nft_collection_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cardano_address_id"], name: "index_sell_nfts_on_cardano_address_id"
+    t.index ["category_id"], name: "index_sell_nfts_on_category_id"
+    t.index ["fingerprint"], name: "index_sell_nfts_on_fingerprint", unique: true
+    t.index ["nft_collection_id"], name: "index_sell_nfts_on_nft_collection_id"
+    t.index ["owner_id"], name: "index_sell_nfts_on_owner_id"
+  end
+
   create_table "study_fields", force: :cascade do |t|
     t.string "field_name"
     t.datetime "created_at", precision: 6, null: false
@@ -226,6 +250,10 @@ ActiveRecord::Schema.define(version: 2022_09_19_114226) do
   add_foreign_key "nfts", "users", column: "owner_id"
   add_foreign_key "ratings", "users"
   add_foreign_key "ratings", "users", column: "rated_user_id"
+  add_foreign_key "sell_nfts", "cardano_addresses"
+  add_foreign_key "sell_nfts", "categories"
+  add_foreign_key "sell_nfts", "nft_collections"
+  add_foreign_key "sell_nfts", "users", column: "owner_id"
   add_foreign_key "users", "study_fields"
   add_foreign_key "wallets", "users"
 end

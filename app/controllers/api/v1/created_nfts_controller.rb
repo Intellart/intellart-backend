@@ -21,6 +21,7 @@ class Api::V1::CreatedNftsController < ApplicationController
 
   # POST api/created_nfts/:id
   def approve
+    # mint(@nft) then save to the db
     @nft = Nft.new(
       fingerprint: @created_nft.id,
       tradeable: @created_nft.tradeable,
@@ -35,9 +36,9 @@ class Api::V1::CreatedNftsController < ApplicationController
       category_id: @created_nft.category_id,
       asset_name: @created_nft.asset_name,
       policy_id: @created_nft.policy_id,
+      # TODO: change this to real transaction id once the minting is complete
       onchain_transaction_id: 1
     )
-    # mint(@nft)
     render_json_validation_error(@nft) unless @nft.save
 
     @created_nft.status = 'approved'
@@ -52,7 +53,7 @@ class Api::V1::CreatedNftsController < ApplicationController
     @created_nft.status = 'declined'
     return unless @created_nft.save
 
-    render json: "{Nft successfully declined.}", status: :ok
+    render json: 'Nft minting successfully declined.', status: :ok
   end
 
   private
