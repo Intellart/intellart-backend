@@ -96,8 +96,13 @@ class Api::V1::AuthController < ApplicationController
   def validate_jwt
     token = params[:jwt]
     jwt_payload = AuthTokenService.decode_jwt(token)
-    user_id = jwt_payload[0]['user_id']
-    user = User.find(user_id)
+    if jwt_payload[0]['admin_id']
+      user_id = jwt_payload[0]['admin_id']
+      user = Admin.find(user_id)
+    else
+      user_id = jwt_payload[0]['user_id']
+      user = User.find(user_id)
+    end
     head :unauthorized and return unless user == @current_user && !jwt_expired?(token)
   rescue JWT::VerificationError, JWT::DecodeError
     head :unauthorized and return
