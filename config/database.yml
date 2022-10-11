@@ -84,3 +84,9 @@ production:
   database: veritheum_production
   username: veritheum
   password: <%= ENV['VERITHEUM_DATABASE_PASSWORD'] %>
+
+staging:
+  <<: *default
+  database: veritheum_staging
+  username: deploy
+  password: <%= ENV['VERITHEUM_DATABASE_PASSWORD'] %>

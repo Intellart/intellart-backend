@@ -3,6 +3,21 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.0.2'
 
+gem 'capistrano',         require: false
+gem 'capistrano3-puma',   require: false
+gem 'capistrano-bundler', require: false
+gem 'capistrano-db-tasks', require: false
+gem 'capistrano-figaro-yml'
+gem 'capistrano-passenger'
+gem 'capistrano-rails', require: false
+gem 'capistrano-rails-collection'
+gem 'capistrano-rbenv', require: false
+gem 'capistrano-rbenv-install', require: false
+
+gem 'bcrypt_pbkdf', '>= 1.0'
+gem 'ed25519', '>= 1.2'
+
+gem 'figaro'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.5'
 # Use postgresql as the database for Active Record

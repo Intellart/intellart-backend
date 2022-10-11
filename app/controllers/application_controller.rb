@@ -8,14 +8,6 @@ class ApplicationController < ActionController::Base
 
   helper_method :render_json_error, :render_json_validation_error, :unauthorized!
 
-  # def authenticate_super_admin!
-  #   authenticate_admin!
-  #   return true if current_admin.super?
-
-  #   flash[:alert] = 'You are not authorized to access this part of the admin dashboard.'
-  #   redirect_to root_path
-  # end
-
   private
 
   # AUTH
@@ -33,10 +25,22 @@ class ApplicationController < ActionController::Base
     unauthorized! unless jwt_valid?(token) && !jwt_expired?(token)
   end
 
+  def authenticate_api_admin!
+    authenticate_api_user!
+    unauthorized! unless @current_user.super?
+  rescue NoMethodError => e
+    unauthorized!
+  end
+
   def jwt_valid?(token)
     jwt_payload = AuthTokenService.decode_jwt(token)
-    user_id = jwt_payload[0]['user_id']
-    @current_user = User.find(user_id)
+    if jwt_payload[0]['admin_id']
+      user_id = jwt_payload[0]['admin_id']
+      @current_user = Admin.find(user_id)
+    else
+      user_id = jwt_payload[0]['user_id']
+      @current_user = User.find(user_id)
+    end
   rescue ActiveRecord::RecordNotFound => e
     render_unathorized_error(e)
   rescue JWT::DecodeError => e

@@ -1,10 +1,4 @@
 Rails.application.routes.draw do
-  # resources :admins, only: [] do
-  #   collection do
-  #     get :dashboard
-  #   end
-  # end
-
   # TODO: devise must have current_user for email confirmation link
   devise_for :users, controllers: {
     confirmations: 'api/v1/confirmations',
@@ -17,7 +11,9 @@ Rails.application.routes.draw do
 
     resources :nfts
     resources :nft_likes, only: [:index, :create, :destroy]
-    resources :users, only: [:show, :update, :destroy]
+    resources :users, only: [:show, :index, :update, :destroy]
+    resources :created_nfts, only: [:index]
+    resources :sell_nfts, only: [:index]
     get '/exchange_rates', to: 'exchange_rates#latest'
     get '/categories', to: 'categories#index'
     get '/study_fields', to: 'study_fields#index'
@@ -26,6 +22,10 @@ Rails.application.routes.draw do
     get '/sd_search/scopus', to: 'science_direct#search_scopus'
     get '/sd_search/scopus/author', to: 'science_direct#search_scopus_author'
     get '/sd_search/scopus/affiliation', to: 'science_direct#search_scopus_affiliation'
+    post 'created_nfts', to: 'created_nfts#approve'
+    delete 'created_nfts', to: 'created_nfts#decline'
+    post 'sell_nfts', to: 'sell_nfts#approve'
+    delete 'sell_nfts', to: 'sell_nfts#decline'
   end
 
   namespace :api, defaults: { format: :json } do
@@ -39,6 +39,8 @@ Rails.application.routes.draw do
       post '/auth/orcid/session', to: 'auth#create_orcid_session'
       delete '/auth/session', to: 'auth#destroy_session'
       post '/auth/validate_jwt', to: 'auth#validate_jwt'
+      post '/admin/session', to: 'admin#create_session'
+      delete '/admin/session', to: 'admin#destroy_session'
     end
   end
 end

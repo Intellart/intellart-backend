@@ -1,8 +1,9 @@
 class Api::V1::UsersController < ApplicationController
-  before_action :set_user
+  before_action :set_user, except: [:index]
   before_action :require_same_user, only: [:update, :destroy]
-  after_action :refresh_jwt, except: [:show]
-  skip_before_action :authenticate_api_user!, only: [:show]
+  before_action :authenticate_api_admin!, only: [:index]
+  after_action :refresh_jwt, except: [:show, :index]
+  skip_before_action :authenticate_api_user!, only: [:show, :index]
 
   rescue_from ActiveRecord::RecordNotFound do
     render_json_error :not_found, :user_not_found
@@ -14,6 +15,12 @@ class Api::V1::UsersController < ApplicationController
   # GET /api/v1/users/:id
   def show
     render json: @user, status: :ok
+  end
+
+  # GET /api/v1/users
+  def index
+    users = User.all
+    render json: users, status: :ok
   end
 
   # PUT/PATCH /api/v1/users/:id
