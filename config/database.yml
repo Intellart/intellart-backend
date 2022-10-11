@@ -90,5 +90,3 @@ staging:
   database: veritheum_staging
   username: deploy
   password: <%= ENV['VERITHEUM_DATABASE_PASSWORD'] %>
-  host: <%= ENV['VERITHEUM_STAGING_DB_HOST'] %>
-  port: <%= ENV['VERITHEUM_STAGING_DB_PORT'] %>
