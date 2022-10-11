@@ -14,6 +14,9 @@ gem 'capistrano-rails-collection'
 gem 'capistrano-rbenv', require: false
 gem 'capistrano-rbenv-install', require: false
 
+gem 'bcrypt_pbkdf', '>= 1.0'
+gem 'ed25519', '>= 1.2'
+
 gem 'figaro'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.5'

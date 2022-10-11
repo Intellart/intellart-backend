@@ -63,10 +63,10 @@
 set :stage, :staging
 set :branch, :lk_admin_login
 set :rails_env, 'staging'
-server '161.97.171.245:42022', user: 'deploy', roles: %w{web app db}
+server '161.97.171.245:42022', user: 'deploy', roles: %w[web app db]
 set ssh_options: {
     user: "deploy", # overrides user setting above
-    keys: %w(/home/deploy/.ssh/id_rsa),
+    keys: %w[/home/deploy/.ssh/id_rsa /home/deploy/.ssh/leon_key /home/deploy/.ssh/dominik_key /home/deploy/.ssh/filip_key],
     forward_agent: false,
-    auth_methods: %w(publickey password)
+    auth_methods: %w[publickey password]
   }
