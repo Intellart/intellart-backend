@@ -39,13 +39,17 @@ class Api::V1::CreatedNftsController < ApplicationController
       # TODO: change this to real transaction id once the minting is complete
       onchain_transaction_id: 1
     )
-    render_json_validation_error(@nft) unless @nft.save
 
-    @created_nft.status = 'approved'
-
-    render_json_validation_error(@created_nft) unless @created_nft.save
-
-    render json: @created_nft, status: :created
+    if @nft.save
+      @created_nft.status = 'approved'
+      if @created_nft.save
+        render json: @created_nft, status: :created
+      else
+        render_json_validation_error(@created_nft)
+      end
+    else
+      render_json_validation_error(@nft)
+    end
   end
 
   # DELETE api/created_nfts/:id

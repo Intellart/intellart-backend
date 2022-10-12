@@ -1,5 +1,5 @@
 class Api::V1::AuthController < ApplicationController
-  skip_before_action :authenticate_api_user!, only: [:create_session, :create_user, :create_orcid_session, :create_user_orcid, :auth_orcid]
+  skip_before_action :authenticate_api_user!, only: [:create_session, :create_user, :create_orcid_session, :create_orcid_user, :auth_orcid]
   after_action :make_header_jwt, only: [:create_session, :create_orcid_session]
 
   rescue_from ActiveRecord::RecordNotFound do
@@ -22,7 +22,7 @@ class Api::V1::AuthController < ApplicationController
     end
   end
 
-  # POST /api/auth/session/orcid
+  # POST /api/auth/orcid/session
   def create_orcid_session
     @user = User.find_by_orcid_id(user_orcid_params[:orcid])
     render_json_error :not_found, :user_not_found and return unless @user
@@ -48,7 +48,7 @@ class Api::V1::AuthController < ApplicationController
     render json: @user, status: :ok
   end
 
-  # POST /api/auth/user/orcid
+  # POST /api/auth/orcid/user
   def create_orcid_user
     response = OrcidService::OrcidApi.get(
       "/#{user_orcid_params[:orcid]}/record",
