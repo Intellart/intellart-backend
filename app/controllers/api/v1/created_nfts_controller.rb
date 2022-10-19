@@ -1,5 +1,5 @@
 class Api::V1::CreatedNftsController < ApplicationController
-  before_action :set_nft, only: [:approve, :decline]
+  before_action :set_nft, only: [:show, :approve, :decline, :destroy]
   #before_action :require_owner, only: [:update, :destroy]
   #skip_before_action :authenticate_api_user!, only: [:index]
   before_action :authenticate_api_admin!
@@ -12,6 +12,22 @@ class Api::V1::CreatedNftsController < ApplicationController
     render_json_error :not_destroyed, :nft_not_destroyed
   end
 
+  # GET api/created_nfts/:id
+  def show
+    render json: @created_nft, status: :ok
+  end
+
+  # POST api/created_nfts/:id
+  def new
+    nft = CreatedNft.new(nft_params)
+
+    if nft.save
+      render json: nft, status: :created
+    else
+      render_json_validation_error(nft)
+    end
+  end
+
   # GET api/created_nfts/
   def index
     @created_nfts = CreatedNft.where(status: 'waiting')
@@ -19,7 +35,12 @@ class Api::V1::CreatedNftsController < ApplicationController
     render json: @created_nfts, status: :ok
   end
 
-  # POST api/created_nfts/:id
+  # DELETE api/created_nfts/:id
+  def destroy
+    head :no_content if @created_nft.destroy
+  end
+
+  # POST api/created_nfts/approve/:id
   def approve
     # mint(@nft) then save to the db
     @nft = Nft.new(
@@ -52,7 +73,7 @@ class Api::V1::CreatedNftsController < ApplicationController
     end
   end
 
-  # DELETE api/created_nfts/:id
+  # DELETE api/created_nfts/decline/:id
   def decline
     @created_nft.status = 'declined'
     return unless @created_nft.save

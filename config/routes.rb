@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     resources :nfts
     resources :nft_likes, only: [:index, :create, :destroy]
     resources :users, only: [:show, :index, :update, :destroy]
-    resources :created_nfts, only: [:index]
+    resources :created_nfts, only: [:show, :index]
     resources :sell_nfts, only: [:index]
     get '/exchange_rates', to: 'exchange_rates#latest'
     get '/categories', to: 'categories#index'
@@ -22,10 +22,12 @@ Rails.application.routes.draw do
     get '/sd_search/scopus', to: 'science_direct#search_scopus'
     get '/sd_search/scopus/author', to: 'science_direct#search_scopus_author'
     get '/sd_search/scopus/affiliation', to: 'science_direct#search_scopus_affiliation'
-    post 'created_nfts', to: 'created_nfts#approve'
-    delete 'created_nfts', to: 'created_nfts#decline'
-    post 'sell_nfts', to: 'sell_nfts#approve'
-    delete 'sell_nfts', to: 'sell_nfts#decline'
+    post 'created_nfts', to: 'created_nfts#new'
+    delete 'created_nfts', to: 'created_nfts#destroy'
+    post 'created_nfts/approve', to: 'created_nfts#approve'
+    delete 'created_nfts/decline', to: 'created_nfts#decline'
+    post 'sell_nfts/approve', to: 'sell_nfts#approve'
+    delete 'sell_nfts/decline', to: 'sell_nfts#decline'
   end
 
   namespace :api, defaults: { format: :json } do
