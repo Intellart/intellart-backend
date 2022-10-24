@@ -11,6 +11,7 @@ gem 'capistrano-figaro-yml'
 gem 'capistrano-passenger'
 gem 'capistrano-rails', require: false
 gem 'capistrano-rails-collection'
+gem 'capistrano-rails-console', require: false
 gem 'capistrano-rbenv', require: false
 gem 'capistrano-rbenv-install', require: false
 

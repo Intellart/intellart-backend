@@ -8,6 +8,7 @@ require 'capistrano/rails/migrations'
 require 'capistrano/passenger'
 require 'capistrano/rails/collection'
 require 'capistrano/figaro_yml'
+require 'capistrano/rails/console'
 set :rbenv_type, :user
 set :rbenv_ruby, '3.0.2'
 install_plugin Capistrano::Puma
