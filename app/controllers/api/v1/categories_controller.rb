@@ -6,9 +6,7 @@ class Api::V1::CategoriesController < ApplicationController
   end
 
   def index
-    test_array = []
     categories = Category.all
-    test_array << categories << 'testestestest'
-    render json: test_array, status: :ok
+    render json: categories, status: :ok
   end
 end
