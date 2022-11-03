@@ -28,7 +28,6 @@ class Api::V1::CreatedNftsController < ApplicationController
       price: @created_nft.price,
       name: @created_nft.name,
       description: @created_nft.description,
-      subject: @created_nft.subject,
       url: @created_nft.url,
       owner_id: @created_nft.owner_id,
       cardano_address_id: @created_nft.cardano_address_id,
@@ -71,7 +70,7 @@ class Api::V1::CreatedNftsController < ApplicationController
 
   def nft_params
     params.permit(
-      :fingerprint, :tradeable, :price, :name, :description, :subject, :owner_id, :nft_collection_id, :category_id,
+      :fingerprint, :tradeable, :price, :name, :description, :owner_id, :nft_collection_id, :category_id,
       :asset_name, :policy_id, :status, :url, :cardano_address_id
     )
   end

@@ -38,11 +38,8 @@ class Api::V1::AuthController < ApplicationController
     @user = User.new(user_create_params)
     render_json_validation_error(@user) and return unless @user.save
 
-    wallet = Wallet.new(user_id: @user.id)
-    @user.wallets << wallet if wallet.save
-
     # dummy address
-    cardano_address = CardanoAddress.new(address: SecureRandom.uuid, wallet_id: wallet.id, dirty: false)
+    cardano_address = CardanoAddress.new(address: SecureRandom.uuid, dirty: false)
     cardano_address.save
 
     render json: @user, status: :ok
@@ -96,18 +93,20 @@ class Api::V1::AuthController < ApplicationController
   def validate_jwt
     token = params[:jwt]
     jwt_payload = AuthTokenService.decode_jwt(token)
+    is_admin = false
     if jwt_payload[0]['admin_id']
       user_id = jwt_payload[0]['admin_id']
       user = Admin.find(user_id)
+      is_admin = true
     else
       user_id = jwt_payload[0]['user_id']
       user = User.find(user_id)
     end
     head :unauthorized and return unless user == @current_user && !jwt_expired?(token)
+
+    render json: { user: is_admin ? AdminSerializer.new(user) : UserSerializer.new(user), is_admin: is_admin }, status: :ok
   rescue JWT::VerificationError, JWT::DecodeError
     head :unauthorized and return
-
-    head :ok
   end
 
   private

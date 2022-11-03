@@ -1,8 +1,8 @@
 class Api::V1::NftsController < ApplicationController
-  before_action :set_nft, only: [:show, :update, :destroy]
+  before_action :set_nft, except: [:index, :create, :nfts_sell_requests]
   before_action :require_owner, only: [:update, :destroy]
   after_action :refresh_jwt, only: [:create, :update, :destroy]
-  skip_before_action :authenticate_api_user!, only: [:index]
+  skip_before_action :authenticate_api_user!, only: [:index, :accept_minting, :sell_request, :accept_sell, :nfts_sell_requests, :reject_sell]
 
   rescue_from ActiveRecord::RecordNotFound do
     render_json_error :not_found, :nft_not_found
@@ -42,6 +42,11 @@ class Api::V1::NftsController < ApplicationController
     render json: @nft, status: :ok
   end
 
+  def nfts_sell_requests
+    @nfts = Nft.where(state: 'request_for_sell')
+    render json: @nfts, status: :ok
+  end
+
   # POST api/nfts/
   def create
     @nft = Nft.new(nft_params)
@@ -55,6 +60,31 @@ class Api::V1::NftsController < ApplicationController
   # DELETE api/nfts/:id
   def destroy
     head :no_content if @nft.destroy
+  end
+
+  def accept_minting
+    @nft.accept_minting!
+    head :ok if @nft.minting_accepted?
+  end
+
+  def reject_minting
+    @nft.reject_minting!
+    head :ok if @nft.minting_rejected?
+  end
+
+  def sell_request
+    @nft.sell_request!
+    head :ok if @nft.request_for_sell?
+  end
+
+  def accept_sell
+    @nft.accept_sell!
+    head :ok if @nft.on_sale?
+  end
+
+  def reject_sell
+    @nft.reject_sell!
+    head :ok if @nft.selling_rejected?
   end
 
   private

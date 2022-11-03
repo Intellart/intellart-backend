@@ -1,8 +1,9 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.0.2'
+ruby '3.0.0'
 
+gem 'aasm', '~> 5.4'
 gem 'capistrano',         require: false
 gem 'capistrano3-puma',   require: false
 gem 'capistrano-bundler', require: false
@@ -17,7 +18,6 @@ gem 'capistrano-rbenv-install', require: false
 
 gem 'bcrypt_pbkdf', '>= 1.0'
 gem 'ed25519', '>= 1.2'
-
 gem 'figaro'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.5'
@@ -35,12 +35,12 @@ gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.7'
 # Use Redis adapter to run Action Cable in production
-gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
+gem 'redis', '< 4.6'
 
 gem 'active_model_serializers', require: true
 gem 'devise'
@@ -67,6 +67,7 @@ group :development, :test do
 end
 
 group :development do
+
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 4.1.0'
   # Display performance information such as SQL time and flame graphs for each request in your browser.

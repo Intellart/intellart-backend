@@ -6,10 +6,23 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+  devise_for :admins, defaults: { format: :json }
+
   current_api_routes = lambda do
     mount ActionCable.server => '/cable'
 
-    resources :nfts
+    resources :nfts do
+      member do
+        put :accept_minting
+        put :reject_minting
+        put :sell_request
+        put :accept_sell
+        put :reject_sell
+      end
+      collection do
+        get :nfts_sell_requests
+      end
+    end
     resources :nft_likes, only: [:index, :create, :destroy]
     resources :users, only: [:show, :index, :update, :destroy]
     resources :created_nfts, only: [:index]

@@ -26,64 +26,59 @@ user2 = User.create!(
   study_field_id: 2
 )
 
-wallet1 = Wallet.create!(user_id: 1)
-wallet2 = Wallet.create!(user_id: 2)
-
-addr1 = CardanoAddress.create!(address: '1testBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', dirty: false, wallet_id: 1)
-addr2 = CardanoAddress.create!(address: '1testAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', dirty: false, wallet_id: 2)
+admin = Admin.create!(
+  email: 'a@a.com',
+  password: '123456'
+)
+addr1 = CardanoAddress.create!(address: '1testBBBBf12wc13r313fBt3fBBB', dirty: false)
+addr2 = CardanoAddress.create!(address: '1tesAf12rf1AAAA', dirty: false)
+addr3 = CardanoAddress.create!(address: '1testAAdawdawAAAAAwdj5zhvcxq5AAqawd126AA', dirty: false)
 
 tag1 = Tag.create!(tag: 'test-tag')
 tag2 = Tag.create!(tag: 'test-tag-2')
 
-col1 = NftCollection.create!(collection_name: 'test-collection')
 
 cat1 = Category.create!(category_name: 'test-category')
 
-trans1 = OnchainTransaction.create!(
-  timestamp: '2022-15-04 12:00:00',
-  buyer_address: 'addr1q8usdmn7lz7tgvn6xd99jc4ysrgyj83t4hvmvket4w28v8ml072qh4vkn5euu9s8h0g70stvwfh0cshtxf7502hta72qu3vxru',
-  seller_address: 'addr1vyasfpcn39d6l3rrn8hpuumcdypuj8dkkudur4ethc44ueqrjd9y8',
-  price: 76.0,
-  transaction_id: 'c2882f40e4512572bb8594e467d84fccceb0cff17e62f0d8bcb807f79a7c97a0'
-)
-trans2 = OnchainTransaction.create!(
-  timestamp: '2022-25-04 12:00:00',
-  buyer_address: '1testAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-  seller_address: 'addr1vyasfpcn39d6l3rrn8hpuumcdypuj8dkkudur4ethc44ueqrjd9y8',
-  price: 76.0,
-  transaction_id: 'ceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee9a7c97a0'
-)
 
 nft1 = Nft.create!(
   tradeable: true,
   price: 10.00000000,
   name: 'Mandala Sovereigns 4024',
   description: 'test-description',
-  subject: 'test-subject',
   owner_id: 1,
-  category_id: 1,
-  nft_collection_id: 1,
   asset_name: 'lion00024',
-  policy_id: '8001dede26bb7cbbe4ee5eae6568e763422e0a3c776b3f70878b03f1',
+  policy_id: '8001dede26bb7cbbdwwde4ee5eae6568e763422e0a3c776b3f70878b03f1',
   fingerprint: 'asset1hr5j2pulx3273er0dpcz9yu6xzeuypsc9nq2au',
-  onchain_transaction_id: 1,
   cardano_address_id: 1
 )
 nft2 = Nft.create!(
   tradeable: false,
   price: 1000.00000000,
-  name: 'Test',
-  description: 'test-description',
-  subject: 'test-subject',
+  name: 'request_for_minting title',
+  description: 'request_for_minting description',
   owner_id: 2,
-  category_id: 1,
-  nft_collection_id: 1,
+  state: 'request_for_minting',
   asset_name: 'lion00024',
-  policy_id: '8001dede26bb7cbbe4ee5eae6568e763422e0a3c776b3f70878b03f1',
-  fingerprint: 'a1',
-  onchain_transaction_id: 2,
+  policy_id: '8001dede26bbdwad7cbbe4ee5eae6568e763422e0a3c776b3f70878b03f1',
+  fingerprint: 'asset1hr5j2dwadwaz9yu6xzeuypsc9nq2au',
   cardano_address_id: 2
 )
+
+nft3 = Nft.create!(
+  tradeable: false,
+  price: 1000.00000000,
+  name: 'request_for_sell title',
+  description: 'request_for_sell description',
+  owner_id: 2,
+  asset_name: 'lion00024',
+  state: 'request_for_sell',
+  policy_id: '8001dede26bb7awdcbbe4ee5eae6568e763422e0a3c776b3f70878b03f1',
+  fingerprint: 'asset1hr5jdwadwau6xzeuypsc9nq2au',
+  cardano_address_id: 3
+)
+
+
 
 nft_tag1 = NftTag.create!(user_id: 1, tag_id: 1, fingerprint: 'asset1hr5j2pulx3273er0dpcz9yu6xzeuypsc9nq2au')
 nft_tag2 = NftTag.create!(user_id: 2, tag_id: 2, fingerprint: 'asset1hr5j2pulx3273er0dpcz9yu6xzeuypsc9nq2au')

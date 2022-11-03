@@ -9,9 +9,6 @@ class SellNftSerializer < ActiveModel::Serializer
     object.category_id ? Category.find(object.category_id).category_name : ''
   end
 
-  def nft_collection
-    object.nft_collection_id ? NftCollection.find(object.nft_collection_id).collection_name : ''
-  end
 
   def cardano_address
     object.cardano_address_id ? CardanoAddress.find(object.cardano_address_id).address : ''
