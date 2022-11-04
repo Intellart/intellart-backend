@@ -18,22 +18,7 @@ class Api::V1::NftsController < ApplicationController
 
   # GET api/nfts/
   def index
-    @nfts = []
-
-    if request.query_parameters.any?
-      if params[:match_any]
-        nfts = nil
-        request.query_parameters.except(:match_any).each do |scope, value|
-          nfts = Nft.where("#{scope}=#{value}") if nfts.nil?
-          nfts = nfts.or(Nft.where("#{scope}": value)) if nfts.present?
-        end
-        @nfts = nfts
-      else
-        @nfts = Nft.where(request.query_parameters)
-      end
-    else
-      @nfts = Nft.all
-    end
+    @nfts = Nft.where(state: 'request_for_minting')
     render json: @nfts, status: :ok
   end
 
@@ -64,27 +49,27 @@ class Api::V1::NftsController < ApplicationController
 
   def accept_minting
     @nft.accept_minting!
-    head :ok if @nft.minting_accepted?
+    render json: @nft, status: :ok if @nft.minting_accepted?
   end
 
   def reject_minting
     @nft.reject_minting!
-    head :ok if @nft.minting_rejected?
+    render json: @nft, status: :ok if @nft.minting_rejected?
   end
 
   def sell_request
     @nft.sell_request!
-    head :ok if @nft.request_for_sell?
+    render json: @nft, status: :ok if @nft.request_for_sell?
   end
 
   def accept_sell
     @nft.accept_sell!
-    head :ok if @nft.on_sale?
+    render json: @nft, status: :ok if @nft.on_sale?
   end
 
   def reject_sell
     @nft.reject_sell!
-    head :ok if @nft.selling_rejected?
+    render json: @nft, status: :ok if @nft.selling_rejected?
   end
 
   private
