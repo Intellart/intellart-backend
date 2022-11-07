@@ -37,8 +37,11 @@ module Api
       # POST api/nfts/
       def create
         @nft = Nft.new(nft_params)
-        render_json_validation_error(@nft) and return unless @nft.save
-
+        if @nft.save
+          @nft.url = ActiveStorage::Blob.where(filename: params[:nft][:file].original_filename).last.url if @nft.save
+        else
+          render_json_validation_error(@nft) and return unless @nft.save
+        end
         render json: @nft, status: :created
       end
 
@@ -88,7 +91,7 @@ module Api
       def nft_params
         params.require(:nft).permit(
           :fingerprint, :tradeable, :price, :name, :description, :subject, :owner_id, :nft_collection_id, :category_id,
-          :asset_name, :policy_id, :onchain_transaction_id, :cardano_address_id, :url
+          :asset_name, :policy_id, :onchain_transaction_id, :cardano_address_id, :url, :file
         )
       end
 

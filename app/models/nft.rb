@@ -5,11 +5,14 @@ class Nft < ApplicationRecord
   has_many :likes, class_name: 'NftLike', foreign_key: :fingerprint, dependent: :destroy
   has_many :endorsers, class_name: 'NftEndorser', foreign_key: :fingerprint, dependent: :destroy
   belongs_to :user, foreign_key: 'owner_id'
+  belongs_to :cardano_address, optional: true
 
   validates :fingerprint, presence: true, uniqueness: true
   validates :policy_id, :asset_name, presence: true
 
   after_create :new_nft_broadcast
+
+  has_one_attached :file
 
   include AASM
   aasm column: :state do

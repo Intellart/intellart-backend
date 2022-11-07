@@ -15,6 +15,8 @@ gem 'capistrano-rails-collection'
 gem 'capistrano-rails-console', require: false
 gem 'capistrano-rbenv', require: false
 gem 'capistrano-rbenv-install', require: false
+gem 'cloudinary', '~> 1.2', '>= 1.2.2'
+
 
 gem 'bcrypt_pbkdf', '>= 1.0'
 gem 'ed25519', '>= 1.2'
