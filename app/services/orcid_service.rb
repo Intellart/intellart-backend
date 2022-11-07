@@ -1,5 +1,5 @@
 class OrcidService
-  ORCID_API_ENDPOINT = (Rails.env.development? || Rails.env.test?) ? 'sandbox.' : ''
+  ORCID_API_ENDPOINT = Rails.env.development? || Rails.env.test? ? 'sandbox.' : ''
 
   # ORCID OAuth API client config
   class OrcidOAuthApi

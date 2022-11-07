@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
   def authenticate_api_admin!
     authenticate_api_user!
     unauthorized! unless @current_user.super?
-  rescue NoMethodError => e
+  rescue NoMethodError
     unauthorized!
   end
 

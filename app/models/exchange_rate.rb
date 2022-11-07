@@ -8,8 +8,8 @@ class ExchangeRate < ApplicationRecord
 
   def exchange_rate_broadcast
     ActionCable.server.broadcast('general_channel', {
-      type: 'exchange_rates',
-      data: self
-    })
+                                   type: 'exchange_rates',
+                                   data: self
+                                 })
   end
 end

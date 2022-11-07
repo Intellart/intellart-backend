@@ -1,5 +1,5 @@
 class NftSerializer < ActiveModel::Serializer
-  #embed :ids, :include => true
+  # embed :ids, :include => true
   attributes :fingerprint, :tradeable, :price, :name, :description, :url,
              :asset_name, :policy_id, :cardano_address, :created_at, :updated_at
 
@@ -12,7 +12,6 @@ class NftSerializer < ActiveModel::Serializer
   def category
     object.category_id ? Category.find(object.category_id).category_name : ''
   end
-
 
   def cardano_address
     object.cardano_address_id ? CardanoAddress.find(object.cardano_address_id).address : ''

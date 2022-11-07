@@ -71,7 +71,6 @@ class Nft < ApplicationRecord
     )
   end
 
-
   def request_for_minting_notification
     NotificationMailer.with(nft: self).request_for_minting.deliver_now!
   end

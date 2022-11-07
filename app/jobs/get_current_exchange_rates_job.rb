@@ -2,7 +2,7 @@ class GetCurrentExchangeRatesJob < ApplicationJob
   queue_as :default
   sidekiq_options retry: false
 
-  def perform(*args)
+  def perform(*_args)
     # get latest/current ADA->USD exchange rate, but include the timestamp of last rate
     # update as well
     data = CoingeckoService.get(

@@ -1,9 +1,13 @@
-class Api::V1::ConfirmationsController < Devise::ConfirmationsController
-  skip_before_action :authenticate_api_user!
+module Api
+  module V1
+    class ConfirmationsController < Devise::ConfirmationsController
+      skip_before_action :authenticate_api_user!
 
-  protected
+      protected
 
-  def after_confirmation_path_for(resource_name, resource)
-    ENV.fetch('FRONTEND_BASE_URL')
+      def after_confirmation_path_for(_resource_name, _resource)
+        ENV.fetch('FRONTEND_BASE_URL')
+      end
+    end
   end
 end
