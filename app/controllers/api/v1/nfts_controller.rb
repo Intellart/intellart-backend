@@ -1,8 +1,8 @@
 class Api::V1::NftsController < ApplicationController
-  before_action :set_nft, except: [:index, :create, :nfts_sell_requests]
+  before_action :set_nft, except: [:index, :create, :nfts_sell_requests, :blockfrost_get_asset]
   before_action :require_owner, only: [:update, :destroy]
   after_action :refresh_jwt, only: [:create, :update, :destroy]
-  skip_before_action :authenticate_api_user!, only: [:index, :accept_minting, :sell_request, :accept_sell, :nfts_sell_requests, :reject_sell]
+  skip_before_action :authenticate_api_user!, only: [:index, :accept_minting, :sell_request, :accept_sell, :nfts_sell_requests, :reject_sell, :blockfrost_get_asset]
 
   rescue_from ActiveRecord::RecordNotFound do
     render_json_error :not_found, :nft_not_found
@@ -85,6 +85,21 @@ class Api::V1::NftsController < ApplicationController
   def reject_sell
     @nft.reject_sell!
     head :ok if @nft.selling_rejected?
+  end
+
+  def mint_success
+    @nft.mint_success!
+    head :ok if @nft.minted?
+  end
+
+  def mint_failed
+    @nft.mint_failed!
+    head :ok if @nft.mint_failed?
+  end
+
+  def sell_success
+    @nft.sell_success!
+    head :ok if @nft.minted?
   end
 
   private

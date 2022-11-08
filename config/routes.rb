@@ -39,6 +39,9 @@ Rails.application.routes.draw do
     delete 'created_nfts', to: 'created_nfts#decline'
     post 'sell_nfts', to: 'sell_nfts#approve'
     delete 'sell_nfts', to: 'sell_nfts#decline'
+
+    get '/blockfrost/query_asset', to: 'blockfrost#query_asset'
+    get '/blockfrost/query_address', to: 'blockfrost#query_address_for_asset'
   end
 
   namespace :api, defaults: { format: :json } do
