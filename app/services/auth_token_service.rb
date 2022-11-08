@@ -4,12 +4,12 @@ class AuthTokenService
   API_KEY = ENV.fetch('API_KEY')
   ALGORITHM_TYPE = ENV.fetch('ALGORITHM_TYPE')
 
-  def self.generate_jwt(user_id, expiration = 30.minutes.from_now.to_i, admin: false)
-    if admin
-      payload = { admin_id: user_id, exp: expiration }
-    else
-      payload = { user_id: user_id, exp: expiration }
-    end
+  def self.generate_jwt(user_id, expiration = 3.days.from_now.to_i, admin: false)
+    payload = if admin
+                { admin_id: user_id, exp: expiration }
+              else
+                { user_id: user_id, exp: expiration }
+              end
     JWT.encode payload, API_KEY, ALGORITHM_TYPE
   end
 

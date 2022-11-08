@@ -25,8 +25,6 @@ Rails.application.routes.draw do
     end
     resources :nft_likes, only: [:index, :create, :destroy]
     resources :users, only: [:show, :index, :update, :destroy]
-    resources :created_nfts, only: [:index]
-    resources :sell_nfts, only: [:index]
     get '/exchange_rates', to: 'exchange_rates#latest'
     get '/categories', to: 'categories#index'
     get '/study_fields', to: 'study_fields#index'
@@ -35,11 +33,6 @@ Rails.application.routes.draw do
     get '/sd_search/scopus', to: 'science_direct#search_scopus'
     get '/sd_search/scopus/author', to: 'science_direct#search_scopus_author'
     get '/sd_search/scopus/affiliation', to: 'science_direct#search_scopus_affiliation'
-    post 'created_nfts', to: 'created_nfts#approve'
-    delete 'created_nfts', to: 'created_nfts#decline'
-    post 'sell_nfts', to: 'sell_nfts#approve'
-    delete 'sell_nfts', to: 'sell_nfts#decline'
-
     get '/blockfrost/query_asset', to: 'blockfrost#query_asset'
     get '/blockfrost/query_address', to: 'blockfrost#query_address_for_asset'
   end
