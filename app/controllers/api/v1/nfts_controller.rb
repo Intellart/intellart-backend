@@ -38,7 +38,8 @@ module Api
       def create
         @nft = Nft.new(nft_params)
         if @nft.save
-          @nft.url = ActiveStorage::Blob.where(filename: params[:nft][:file].original_filename).last.url if @nft.save
+          @nft.url = ActiveStorage::Blob.where(filename: params[:nft][:file].original_filename).last.url
+          @nft.save
         else
           render_json_validation_error(@nft) and return unless @nft.save
         end
