@@ -64,21 +64,6 @@ module Api
         render json: @nft, status: :ok if @nft.on_sale?
       end
 
-      def mint_success
-        @nft.mint_success!
-        head :ok if @nft.minted?
-      end
-
-      def mint_failed
-        @nft.mint_failed!
-        head :ok if @nft.mint_failed?
-      end
-
-      def sell_success
-        @nft.sell_success!
-        head :ok if @nft.minted?
-      end
-
       private
 
       # only owner can modify/delete nft

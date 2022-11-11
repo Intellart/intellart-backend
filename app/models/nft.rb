@@ -32,7 +32,7 @@ class Nft < ApplicationRecord
     end
 
     event :mint_success, after: :mint_success_notification do
-      transitions from: [:minting_accepted, :mint_failed], to: :minted
+      transitions from: :minting_accepted, to: :minted
     end
 
     event :mint_failed, after: :mint_failed_notification do
