@@ -52,7 +52,27 @@ class Nft < ApplicationRecord
     NftSerializer
   end
 
+  def send_to_minting
+    url = 'http://127.0.0.1:5000/api/v1/nfts'
+    json = create_json_for_request
+    puts json
+    headers = { 'Content-Type' => 'application/json' }
+    HTTParty.post(url, body: json, headers: headers)
+  end
+
   private
+
+  def create_json_for_request
+    JSON.generate(
+      {
+        nft_id: self.nft_id,
+        nft_name: self.name,
+        nft_long_name: self.asset_name,
+        nft_description: self.description,
+        nft_image_ipfs: self.url
+      }
+    )
+  end
 
   def new_nft_broadcast
     ActionCable.server.broadcast(

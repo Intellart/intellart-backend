@@ -49,8 +49,16 @@ module Api
         head :no_content if @nft.destroy
       end
 
+      # TODO: CheckMintSuccessJob needs to run every 5 minutes for nfts that still have the status minting_in_progress
+      # TODO: Add new state on nfts table status column, minting_in_progress
       def accept_minting
         @nft.accept_minting!
+        response = @nft.send_to_minting
+        # if response.code == 200
+        #   @nft.minting_in_progress!
+        # end
+        puts response
+        # CheckMintSuccessJob.perform_now!(@nft)
         render json: @nft, status: :ok if @nft.minting_accepted?
       end
 

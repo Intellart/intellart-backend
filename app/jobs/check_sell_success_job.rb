@@ -4,8 +4,8 @@ class CheckSellSuccessJob < ApplicationJob
   queue_as :default
   sidekiq_options retry: true
 
-  BLOCKFROST_PREPROD_API_KEY = ENV.fetch('BLOCKFROST_PREPROD_API_KEY')
-  BLOCKFROST_API_PREPROD = ENV.fetch('BLOCKFROST_API_PREPROD')
+  BLOCKFROST_PREVIEW_API_KEY = ENV.fetch('BLOCKFROST_PREVIEW_API_KEY')
+  BLOCKFROST_API_PREVIEW = ENV.fetch('BLOCKFROST_API_PREVIEW')
 
   def query_address_for_asset(address, asset)
     response = HTTParty.get(address_url(address), headers: make_headers)
@@ -39,10 +39,10 @@ class CheckSellSuccessJob < ApplicationJob
   end
 
   def address_url(address)
-    "#{BLOCKFROST_API_PREPROD}/addresses/#{address}"
+    "#{BLOCKFROST_API_PREVIEW}/addresses/#{address}"
   end
 
   def make_headers
-    { project_id: BLOCKFROST_PREPROD_API_KEY }
+    { project_id: BLOCKFROST_PREVIEW_API_KEY }
   end
 end
