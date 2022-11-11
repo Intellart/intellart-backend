@@ -1,10 +1,11 @@
 module Api
   module V1
     class NftsController < ApplicationController
-      before_action :set_nft, except: [:index, :create, :nfts_sell_requests]
+      before_action :set_nft, except: [:index, :create]
       before_action :require_owner, only: [:update, :destroy]
       after_action :refresh_jwt, only: [:create, :update, :destroy]
-      skip_before_action :authenticate_api_user!, only: [:index, :accept_minting, :sell_request, :accept_sell, :nfts_sell_requests, :reject_sell]
+      skip_before_action :authenticate_api_user!, only: [:index]
+      before_action :authenticate_api_admin!, only: [:accept_minting, :reject_minting, :sell_init]
 
       rescue_from ActiveRecord::RecordNotFound do
         render_json_error :not_found, :nft_not_found
@@ -27,11 +28,6 @@ module Api
       # GET api/nfts/:id
       def show
         render json: @nft, status: :ok
-      end
-
-      def nfts_sell_requests
-        @nfts = Nft.where(state: 'request_for_sell')
-        render json: @nfts, status: :ok
       end
 
       # POST api/nfts/
@@ -63,19 +59,9 @@ module Api
         render json: @nft, status: :ok if @nft.minting_rejected?
       end
 
-      def sell_request
-        @nft.sell_request!
-        render json: @nft, status: :ok if @nft.request_for_sell?
-      end
-
-      def accept_sell
-        @nft.accept_sell!
+      def sell_init
+        @nft.sell_init!
         render json: @nft, status: :ok if @nft.on_sale?
-      end
-
-      def reject_sell
-        @nft.reject_sell!
-        render json: @nft, status: :ok if @nft.selling_rejected?
       end
 
       def mint_success

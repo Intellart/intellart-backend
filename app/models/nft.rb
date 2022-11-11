@@ -21,9 +21,7 @@ class Nft < ApplicationRecord
     state :minted
     state :mint_failed
     state :minting_rejected
-    state :request_for_sell
     state :on_sale
-    state :selling_rejected
 
     event :accept_minting, after: :minting_accepted_notification do
       transitions from: :request_for_minting, to: :minting_accepted
@@ -34,23 +32,15 @@ class Nft < ApplicationRecord
     end
 
     event :mint_success, after: :mint_success_notification do
-      transitions from: :minting_accepted, to: :minted
+      transitions from: [:minting_accepted, :mint_failed], to: :minted
     end
 
     event :mint_failed, after: :mint_failed_notification do
       transitions from: :minting_accepted, to: :mint_failed
     end
 
-    event :sell_request, after: :new_sell_request_notification do
-      transitions from: :minted, to: :request_for_sell
-    end
-
-    event :accept_sell, after: :selling_accepted_notification do
-      transitions from: :request_for_sell, to: :on_sale
-    end
-
-    event :reject_sell, after: :selling_rejected_notification do
-      transitions from: :request_for_sell, to: :selling_rejected
+    event :sell_init, after: :sell_init_notification do
+      transitions from: :minted, to: :on_sale
     end
 
     event :sell_success, after: :sell_success_notification do
@@ -94,16 +84,8 @@ class Nft < ApplicationRecord
     NotificationMailer.with(nft: self).mint_failed.deliver_later
   end
 
-  def new_sell_request_notification
-    NotificationMailer.with(nft: self).new_sell_request.deliver_later
-  end
-
-  def selling_accepted_notification
-    NotificationMailer.with(nft: self).selling_accepted.deliver_later
-  end
-
-  def selling_rejected_notification
-    NotificationMailer.with(nft: self).selling_rejected.deliver_later
+  def sell_init_notification
+    NotificationMailer.with(nft: self).new_sell_init.deliver_later
   end
 
   def sell_success_notification

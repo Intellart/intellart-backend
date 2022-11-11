@@ -47,6 +47,7 @@ nft1 = Nft.create!(
   name: 'Mandala Sovereigns 4024',
   description: 'test-description',
   owner_id: 1,
+  state: 'minted',
   asset_name: 'lion00024',
   policy_id: '8001dede26bb7cbbdwwde4ee5eae6568e763422e0a3c776b3f70878b03f1',
   fingerprint: 'asset1hr5j2pulx3273er0dpcz9yu6xzeuypsc9nq2au',

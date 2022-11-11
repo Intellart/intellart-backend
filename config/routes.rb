@@ -15,12 +15,7 @@ Rails.application.routes.draw do
       member do
         put :accept_minting
         put :reject_minting
-        put :sell_request
-        put :accept_sell
-        put :reject_sell
-      end
-      collection do
-        get :nfts_sell_requests
+        put :sell_init
       end
     end
     resources :nft_likes, only: [:index, :create, :destroy]
