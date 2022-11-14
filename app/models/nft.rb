@@ -55,8 +55,7 @@ class Nft < ApplicationRecord
   def send_to_minting
     url = 'http://127.0.0.1:5000/api/v1/nfts/submit_tx'
     # TODO: this needs to contain tx in the payload
-    json = create_json_for_request
-    puts json
+    json = { tx: self.tx_id, witness: self.witness }
     headers = { 'Content-Type' => 'application/json' }
     HTTParty.post(url, body: json, headers: headers)
   end

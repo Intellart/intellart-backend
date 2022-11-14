@@ -66,21 +66,6 @@ nft2 = Nft.create!(
   cardano_address_id: 2
 )
 
-nft3 = Nft.create!(
-  tradeable: false,
-  price: 1000.00000000,
-  name: 'request_for_sell title',
-  description: 'request_for_sell description',
-  owner_id: 2,
-  asset_name: 'lion00024',
-  state: 'request_for_sell',
-  policy_id: '8001dede26bb7awdcbbe4ee5eae6568e763422e0a3c776b3f70878b03f1',
-  fingerprint: 'asset1hr5jdwadwau6xzeuypsc9nq2au',
-  cardano_address_id: 3
-)
-
-
-
 nft_tag1 = NftTag.create!(user_id: 1, tag_id: 1, fingerprint: 'asset1hr5j2pulx3273er0dpcz9yu6xzeuypsc9nq2au')
 nft_tag2 = NftTag.create!(user_id: 2, tag_id: 2, fingerprint: 'asset1hr5j2pulx3273er0dpcz9yu6xzeuypsc9nq2au')
 
