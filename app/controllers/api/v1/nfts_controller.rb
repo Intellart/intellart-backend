@@ -53,6 +53,7 @@ module Api
       # TODO: Add new state on nfts table status column, minting_in_progress
       def accept_minting
         @nft.accept_minting!
+        # TODO: handle submitTx part here
         response = @nft.send_to_minting
         # if response.code == 200
         #   @nft.minting_in_progress!

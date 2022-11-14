@@ -17,7 +17,7 @@ class CheckMintSuccessJob < ApplicationJob
 
   def perform(nft)
     # query blockfrost for an asset
-    asset = make_asset(nft)
+    asset = make_hex_asset(nft.asset_name)
     mint_result = query_asset(asset)
 
     nft.mint_success! and return if mint_result
@@ -26,10 +26,6 @@ class CheckMintSuccessJob < ApplicationJob
   end
 
   private
-
-  def make_asset(nft)
-    nft.policy_id + nft.asset_name
-  end
 
   def asset_url(asset)
     "#{BLOCKFROST_API_PREVIEW}/assets/#{asset}"

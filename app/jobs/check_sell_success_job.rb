@@ -31,13 +31,6 @@ class CheckSellSuccessJob < ApplicationJob
 
   private
 
-  def find_nft(asset)
-    # TODO: construct fingerprint from asset
-    fingerprint = nil
-
-    @nft = Nft.find(fingerprint)
-  end
-
   def address_url(address)
     "#{BLOCKFROST_API_PREVIEW}/addresses/#{address}"
   end

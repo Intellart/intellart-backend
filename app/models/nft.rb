@@ -53,7 +53,8 @@ class Nft < ApplicationRecord
   end
 
   def send_to_minting
-    url = 'http://127.0.0.1:5000/api/v1/nfts'
+    url = 'http://127.0.0.1:5000/api/v1/nfts/submit_tx'
+    # TODO: this needs to contain tx in the payload
     json = create_json_for_request
     puts json
     headers = { 'Content-Type' => 'application/json' }
@@ -69,7 +70,7 @@ class Nft < ApplicationRecord
         nft_name: self.name,
         nft_long_name: self.asset_name,
         nft_description: self.description,
-        nft_image_ipfs: self.url
+        nft_image_ipfs: "ipfs://QmRhTTbUrPYEw3mJGGhQqQST9k86v1DPBiTTWJGKDJsVFw" # self.url
       }
     )
   end
