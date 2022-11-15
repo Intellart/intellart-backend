@@ -1,7 +1,7 @@
 module Api
   module V1
     class NftsController < ApplicationController
-      before_action :set_nft, except: [:index, :create]
+      before_action :set_nft, except: [:index, :create, :update]
       before_action :require_owner, only: [:update, :destroy]
       after_action :refresh_jwt, only: [:create, :update, :destroy]
       skip_before_action :authenticate_api_user!, only: [:index]
@@ -43,6 +43,14 @@ module Api
       end
 
       def update; end
+
+      def update_tx_and_witness
+        if @nft.update(nft_params)
+          render json: { message: 'Successfuly submited request for minting' }, status: :ok
+        else
+          render json: { errors: @nft.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
 
       # DELETE api/nfts/:id
       def destroy
@@ -87,7 +95,7 @@ module Api
       def nft_params
         params.require(:nft).permit(
           :fingerprint, :tradeable, :price, :name, :description, :subject, :owner_id, :nft_collection_id, :category_id,
-          :asset_name, :policy_id, :onchain_transaction_id, :cardano_address_id, :url, :file
+          :asset_name, :policy_id, :onchain_transaction_id, :cardano_address_id, :url, :file, :witness, :tx_id
         )
       end
 

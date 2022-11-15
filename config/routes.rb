@@ -16,6 +16,7 @@ Rails.application.routes.draw do
         put :accept_minting
         put :reject_minting
         put :sell_init
+        put :update_tx_and_witness
       end
     end
     resources :nft_likes, only: [:index, :create, :destroy]

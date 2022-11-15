@@ -57,7 +57,7 @@ class Nft < ApplicationRecord
     # TODO: this needs to contain tx in the payload
     json = { tx: self.tx_id, witness: self.witness }
     headers = { 'Content-Type' => 'application/json' }
-    HTTParty.post(url, body: json, headers: headers)
+    HTTParty.post(url, body: json.to_json, headers: headers)
   end
 
   private
