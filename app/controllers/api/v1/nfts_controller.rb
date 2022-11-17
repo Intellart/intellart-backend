@@ -1,7 +1,7 @@
 module Api
   module V1
     class NftsController < ApplicationController
-      before_action :set_nft, except: [:index, :create, :update]
+      before_action :set_nft, except: [:index, :create, :index_mint_request, :index_minted]
       before_action :require_owner, only: [:update, :destroy]
       after_action :refresh_jwt, only: [:create, :update, :destroy]
       skip_before_action :authenticate_api_user!, only: [:index]
@@ -21,7 +21,19 @@ module Api
 
       # GET api/nfts/
       def index
+        @nfts = Nft.all
+        render json: @nfts, status: :ok
+      end
+
+      # GET api/nfts/index_mint_request
+      def index_mint_request
         @nfts = Nft.where(state: 'request_for_minting')
+        render json: @nfts, status: :ok
+      end
+
+      # GET api/nfts/index_minted
+      def index_minted
+        @nfts = Nft.where(state: 'minted')
         render json: @nfts, status: :ok
       end
 
@@ -46,7 +58,15 @@ module Api
 
       def update_tx_and_witness
         if @nft.update(nft_params)
-          render json: { message: 'Successfuly submited request for minting' }, status: :ok
+          render json: { message: 'Successfully updated tx and witness for this NFT' }, status: :ok
+        else
+          render json: { errors: @nft.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      def update_seller
+        if @nft.update(nft_params)
+          render json: { message: 'Successfully updated seller for this NFT' }, status: :ok
         else
           render json: { errors: @nft.errors.full_messages }, status: :unprocessable_entity
         end
@@ -61,7 +81,6 @@ module Api
       # TODO: Add new state on nfts table status column, minting_in_progress
       def accept_minting
         @nft.accept_minting!
-        # TODO: handle submitTx part here
         response = @nft.send_to_minting
         # if response.code == 200
         #   @nft.minting_in_progress!

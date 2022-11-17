@@ -1,6 +1,4 @@
 class Nft < ApplicationRecord
-  # TODO: add "status" field, values "minted", "sold" ?
-
   has_many :tags, class_name: 'NftTag', foreign_key: :fingerprint, dependent: :destroy
   has_many :likes, class_name: 'NftLike', foreign_key: :fingerprint, dependent: :destroy
   has_many :endorsers, class_name: 'NftEndorser', foreign_key: :fingerprint, dependent: :destroy
@@ -54,7 +52,6 @@ class Nft < ApplicationRecord
 
   def send_to_minting
     url = 'http://127.0.0.1:5000/api/v1/nfts/submit_tx'
-    # TODO: this needs to contain tx in the payload
     json = { tx: self.tx_id, witness: self.witness }
     headers = { 'Content-Type' => 'application/json' }
     HTTParty.post(url, body: json.to_json, headers: headers)
@@ -63,6 +60,7 @@ class Nft < ApplicationRecord
   private
 
   def create_json_for_request
+    # TODO: nft_image_ipfs value must be under 64 bytes -> Choose and implement URL shortener
     JSON.generate(
       {
         nft_id: self.nft_id,

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_14_101906) do
+ActiveRecord::Schema.define(version: 2022_11_17_133504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -134,6 +134,7 @@ ActiveRecord::Schema.define(version: 2022_11_14_101906) do
     t.serial "nft_id"
     t.string "tx_id"
     t.string "witness"
+    t.string "seller_address"
     t.index ["cardano_address_id"], name: "index_nfts_on_cardano_address_id"
     t.index ["fingerprint"], name: "index_nfts_on_fingerprint", unique: true
     t.index ["owner_id"], name: "index_nfts_on_owner_id"

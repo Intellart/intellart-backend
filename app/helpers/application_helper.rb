@@ -4,7 +4,6 @@ module ApplicationHelper
   end
 
   def make_hex_asset(nft)
-    # TODO: asset name needs to be in hex
     nft.policy_id + str_to_hex(nft.asset_name)
   end
 end

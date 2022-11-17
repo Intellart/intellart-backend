@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  # TODO: devise must have current_user for email confirmation link
   devise_for :users, controllers: {
     confirmations: 'api/v1/confirmations',
     sessions: 'users/sessions',
@@ -17,6 +16,11 @@ Rails.application.routes.draw do
         put :reject_minting
         put :sell_init
         put :update_tx_and_witness
+        put :update_seller
+      end
+      collection do
+        get :index_mint_request
+        get :index_minted
       end
     end
     resources :nft_likes, only: [:index, :create, :destroy]
