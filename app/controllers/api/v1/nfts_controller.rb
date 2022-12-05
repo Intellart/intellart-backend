@@ -1,7 +1,7 @@
 module Api
   module V1
     class NftsController < ApplicationController
-      before_action :set_nft, except: [:index, :create, :index_mint_request, :index_minted]
+      before_action :set_nft, except: [:index, :create, :index_mint_request, :index_minted, :index_on_sale]
       before_action :require_owner, only: [:update, :destroy]
       after_action :refresh_jwt, only: [:create, :update, :destroy]
       skip_before_action :authenticate_api_user!, only: [:index]
@@ -33,7 +33,13 @@ module Api
 
       # GET api/nfts/index_minted
       def index_minted
-        @nfts = Nft.where(state: 'minted')
+        @nfts = Nft.where(state: %w[minting_accepted minted])
+        render json: @nfts, status: :ok
+      end
+
+      # GET api/nfts/index_on_sale
+      def index_on_sale
+        @nfts = Nft.where(state: 'on_sale')
         render json: @nfts, status: :ok
       end
 
@@ -77,16 +83,13 @@ module Api
         head :no_content if @nft.destroy
       end
 
-      # TODO: CheckMintSuccessJob needs to run every 5 minutes for nfts that still have the status minting_in_progress
-      # TODO: Add new state on nfts table status column, minting_in_progress
+      # TODO: Implement CheckMintSuccessJob to run every 5 mins, 12 times in total
       def accept_minting
         @nft.accept_minting!
         response = @nft.send_to_minting
         # if response.code == 200
-        #   @nft.minting_in_progress!
+        #   CheckMintSuccessJob.perform_now!(@nft)
         # end
-        puts response
-        # CheckMintSuccessJob.perform_now!(@nft)
         render json: @nft, status: :ok if @nft.minting_accepted?
       end
 
@@ -95,7 +98,7 @@ module Api
         render json: @nft, status: :ok if @nft.minting_rejected?
       end
 
-      def sell_init
+      def initiate_sale
         @nft.sell_init!
         render json: @nft, status: :ok if @nft.on_sale?
       end
@@ -114,13 +117,8 @@ module Api
       def nft_params
         params.require(:nft).permit(
           :fingerprint, :tradeable, :price, :name, :description, :subject, :owner_id, :nft_collection_id, :category_id,
-          :asset_name, :policy_id, :onchain_transaction_id, :cardano_address_id, :url, :file, :witness, :tx_id
+          :asset_name, :policy_id, :seller_address, :url, :witness, :tx_id
         )
-      end
-
-      # Onchain Cardano address cannot be changed, so we remove it
-      def nft_update_params
-        params[:nft].delete(:cardano_address_id)
       end
     end
   end

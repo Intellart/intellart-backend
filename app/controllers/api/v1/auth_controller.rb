@@ -13,7 +13,7 @@ module Api
 
       # POST /api/auth/session
       def create_session
-        @user = User.find_by_email(user_session_params[:email])
+        @user = User.find_by(email: user_session_params[:email], domain: user_session_params[:domain])
         render_json_error :not_found, :user_not_found and return unless @user
 
         if @user&.valid_password?(user_session_params[:password])
@@ -26,7 +26,7 @@ module Api
 
       # POST /api/auth/session/orcid
       def create_orcid_session
-        @user = User.find_by_orcid_id(user_orcid_params[:orcid])
+        @user = User.find_by(orcid_id: user_orcid_params[:orcid], domain: user_orcid_params[:domain])
         render_json_error :not_found, :user_not_found and return unless @user
 
         @jwt = AuthTokenService.generate_jwt(@user.id)
@@ -39,10 +39,6 @@ module Api
       def create_user
         @user = User.new(user_create_params)
         render_json_validation_error(@user) and return unless @user.save
-
-        # dummy address
-        cardano_address = CardanoAddress.new(address: SecureRandom.uuid, dirty: false)
-        cardano_address.save
 
         render json: @user, status: :ok
       end
@@ -114,11 +110,11 @@ module Api
       private
 
       def user_session_params
-        params.require(:user).permit(:email, :password)
+        params.require(:user).permit(:email, :password, :domain)
       end
 
       def user_create_params
-        params.require(:user).permit(:first_name, :last_name, :email, :password, :study_field_id, :orcid_id)
+        params.require(:user).permit(:first_name, :last_name, :email, :password, :study_field_id, :orcid_id, :domain)
       end
 
       def auth_orcid_params
@@ -126,7 +122,7 @@ module Api
       end
 
       def user_orcid_params
-        params.require(:orcid).permit(:access_token, :token_type, :refresh_token, :expires_in, :scope, :name, :orcid)
+        params.require(:orcid).permit(:access_token, :token_type, :refresh_token, :expires_in, :scope, :name, :orcid, :domain)
       end
     end
   end

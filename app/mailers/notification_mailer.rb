@@ -40,7 +40,7 @@ class NotificationMailer < ApplicationMailer
     @nft = params[:nft]
     @user = User.find_by_id(@nft.owner_id)
     @email = @user.email
-    mail(to: @email, subject: 'New request for sell!')
+    mail(to: @email, subject: 'NFT sale has started!')
   end
 
   def sell_success

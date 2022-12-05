@@ -16,12 +16,11 @@ RSpec.describe WalletSerializer do
     end
 
     context 'attributtes' do
-      it 'should have id, user, total, used, cardano_addresses' do
+      it 'should have id, user, total, used' do
         expect(subject).to have_key('id')
         expect(subject).to have_key('user')
         expect(subject).to have_key('total')
         expect(subject).to have_key('used')
-        expect(subject).to have_key('cardano_addresses')
       end
     end
   end

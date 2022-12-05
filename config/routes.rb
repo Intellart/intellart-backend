@@ -14,13 +14,14 @@ Rails.application.routes.draw do
       member do
         put :accept_minting
         put :reject_minting
-        put :sell_init
+        put :initiate_sale
         put :update_tx_and_witness
         put :update_seller
       end
       collection do
         get :index_mint_request
         get :index_minted
+        get :index_on_sale
       end
     end
     resources :nft_likes, only: [:index, :create, :destroy]
@@ -35,6 +36,11 @@ Rails.application.routes.draw do
     get '/sd_search/scopus/affiliation', to: 'science_direct#search_scopus_affiliation'
     get '/blockfrost/query_asset', to: 'blockfrost#query_asset'
     get '/blockfrost/query_address', to: 'blockfrost#query_address_for_asset'
+
+    # # PUBWEAVE
+    # resources :blogs
+    # resources :blog_articles
+    # resources :blog_article_comments
   end
 
   namespace :api, defaults: { format: :json } do
