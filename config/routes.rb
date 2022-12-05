@@ -37,10 +37,10 @@ Rails.application.routes.draw do
     get '/blockfrost/query_asset', to: 'blockfrost#query_asset'
     get '/blockfrost/query_address', to: 'blockfrost#query_address_for_asset'
 
-    # # PUBWEAVE
-    # resources :blogs
-    # resources :blog_articles
-    # resources :blog_article_comments
+    # PUBWEAVE
+    resources :blogs
+    resources :blog_articles
+    resources :blog_article_comments
   end
 
   namespace :api, defaults: { format: :json } do

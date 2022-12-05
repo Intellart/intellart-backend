@@ -56,32 +56,32 @@ ActiveRecord::Schema.define(version: 2022_12_04_203739) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
-  # create_table "blog_article_comments", force: :cascade do |t|
-  #   t.bigint "blog_article_id", null: false
-  #   t.bigint "commenter_id"
-  #   t.text "comment"
-  #   t.datetime "created_at", precision: 6, null: false
-  #   t.datetime "updated_at", precision: 6, null: false
-  #   t.index ["blog_article_id"], name: "index_blog_article_comments_on_blog_article_id"
-  #   t.index ["commenter_id"], name: "index_blog_article_comments_on_commenter_id"
-  # end
+  create_table "blog_article_comments", force: :cascade do |t|
+    t.bigint "blog_article_id", null: false
+    t.bigint "commenter_id"
+    t.text "comment"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["blog_article_id"], name: "index_blog_article_comments_on_blog_article_id"
+    t.index ["commenter_id"], name: "index_blog_article_comments_on_commenter_id"
+  end
 
-  # create_table "blog_articles", force: :cascade do |t|
-  #   t.bigint "blog_id", null: false
-  #   t.text "title"
-  #   t.text "subtitle"
-  #   t.text "content"
-  #   t.datetime "created_at", precision: 6, null: false
-  #   t.datetime "updated_at", precision: 6, null: false
-  #   t.index ["blog_id"], name: "index_blog_articles_on_blog_id"
-  # end
+  create_table "blog_articles", force: :cascade do |t|
+    t.bigint "blog_id", null: false
+    t.text "title"
+    t.text "subtitle"
+    t.text "content"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["blog_id"], name: "index_blog_articles_on_blog_id"
+  end
 
-  # create_table "blogs", force: :cascade do |t|
-  #   t.bigint "user_id", null: false
-  #   t.datetime "created_at", precision: 6, null: false
-  #   t.datetime "updated_at", precision: 6, null: false
-  #   t.index ["user_id"], name: "index_blogs_on_user_id"
-  # end
+  create_table "blogs", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_blogs_on_user_id"
+  end
 
   create_table "categories", force: :cascade do |t|
     t.string "category_name"
@@ -208,10 +208,10 @@ ActiveRecord::Schema.define(version: 2022_12_04_203739) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  # add_foreign_key "blog_article_comments", "blog_articles"
-  # add_foreign_key "blog_article_comments", "users", column: "commenter_id"
-  # add_foreign_key "blog_articles", "blogs"
-  # add_foreign_key "blogs", "users"
+  add_foreign_key "blog_article_comments", "blog_articles"
+  add_foreign_key "blog_article_comments", "users", column: "commenter_id"
+  add_foreign_key "blog_articles", "blogs"
+  add_foreign_key "blogs", "users"
   add_foreign_key "nft_endorsers", "users"
   add_foreign_key "nft_likes", "users"
   add_foreign_key "nft_tags", "tags"
