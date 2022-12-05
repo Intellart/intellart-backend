@@ -17,23 +17,15 @@ gem 'capistrano-rbenv', require: false
 gem 'capistrano-rbenv-install', require: false
 gem 'cloudinary', '~> 1.2', '>= 1.2.2'
 
-
 gem 'bcrypt_pbkdf', '>= 1.0'
 gem 'ed25519', '>= 1.2'
 gem 'figaro'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 6.1.5'
+gem 'rails', '~> 7.0.0'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.1'
 # Use Puma as the app server
 gem 'puma', '~> 5.0'
-# Use SCSS for stylesheets
-gem 'sass-rails', '>= 6'
-# Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'react-rails'
-gem 'webpacker', '~> 5.0'
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.7'
 # Use Redis adapter to run Action Cable in production
@@ -61,7 +53,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 group :development, :test do
   gem 'factory_bot_rails'
-  gem 'pry'
+  gem 'pry-rails'
   gem 'rspec-rails'
   gem 'vcr'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
