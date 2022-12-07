@@ -13,11 +13,12 @@ module Api
 
       # POST /api/auth/session
       def create_session
-        @user = User.find_by(email: user_session_params[:email], domain: user_session_params[:domain])
+        @user = User.find_by_email(user_session_params[:email])
         render_json_error :not_found, :user_not_found and return unless @user
 
         if @user&.valid_password?(user_session_params[:password])
-          @jwt = AuthTokenService.generate_jwt(@user.id)
+          @domain = user_session_params[:domain]
+          @jwt = AuthTokenService.generate_jwt(@user.id, @domain)
           render json: @user, status: :ok
         else
           render json: { errors: ['Invalid password.'] }, status: :unprocessable_entity
@@ -26,10 +27,11 @@ module Api
 
       # POST /api/auth/session/orcid
       def create_orcid_session
-        @user = User.find_by(orcid_id: user_orcid_params[:orcid], domain: user_orcid_params[:domain])
+        @user = User.find_by(orcid_id: user_orcid_params[:orcid])
         render_json_error :not_found, :user_not_found and return unless @user
 
-        @jwt = AuthTokenService.generate_jwt(@user.id)
+        @domain = user_orcid_params[:domain]
+        @jwt = AuthTokenService.generate_jwt(@user.id, @domain)
         render json: @user, status: :ok
       rescue ActiveRecord::RecordNotFound
         render json: { errors: ['Invalid ORCID Id.'] }, status: :unprocessable_entity
@@ -122,7 +124,7 @@ module Api
       end
 
       def user_orcid_params
-        params.require(:orcid).permit(:access_token, :token_type, :refresh_token, :expires_in, :scope, :name, :orcid, :domain)
+        params.require(:orcid).permit(:access_token, :token_type, :refresh_token, :expires_in, :scope, :name, :orcid)
       end
     end
   end

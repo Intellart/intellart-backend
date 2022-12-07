@@ -10,7 +10,8 @@ module Api
         render_json_error :not_found, :admin_not_found and return unless @admin
 
         if @admin&.valid_password?(admin_session_params[:password])
-          @jwt = AuthTokenService.generate_jwt(@admin.id, admin: true)
+          @domain = admin_session_params[:domain]
+          @jwt = AuthTokenService.generate_jwt(@admin.id, @domain, admin: true)
           @current_user = @admin
           render json: @admin, status: :ok
         else
@@ -29,7 +30,7 @@ module Api
       private
 
       def admin_session_params
-        params.require(:admin).permit(:email, :password)
+        params.require(:admin).permit(:email, :password, :domain)
       end
     end
   end

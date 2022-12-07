@@ -15,8 +15,7 @@ user1 = User.create!(
   last_name: 'Last name',
   password: '123456',
   orcid_id: '0000-0000-0000-0001',
-  study_field_id: 1,
-  domain: 'Intellart'
+  study_field_id: 1
 )
 user2 = User.create!(
   email: 'test2@test.com',
@@ -24,15 +23,13 @@ user2 = User.create!(
   last_name: 'Lastname',
   password: '123456',
   orcid_id: '0000-0000-0000-0002',
-  study_field_id: 2,
-  domain: 'Intellart'
+  study_field_id: 2
 )
 user3 = User.create!(
-  email: 'test2@test.com',
+  email: 'test3@test.com',
   first_name: 'Name',
   last_name: 'Lastname',
   password: '123456',
-  domain: 'Pubweave'
 )
 
 admin = Admin.create!(
@@ -50,3 +47,13 @@ cat1 = Category.create!(category_name: 'test-category')
 
 rating1 = Rating.create!(user_id: 1, rated_user_id: 2, rating: 5)
 rating2 = Rating.create!(user_id: 2, rated_user_id: 1, rating: 1)
+
+blog1 = Blog.create!(user_id: user3.id, name: "First blog")
+blog2 = Blog.create!(user_id: user3.id, name: "Second blog")
+
+article1 = BlogArticle.create!(blog_id: blog1.id, title: "Title", subtitle: "Subtitle", content: "Content")
+article2 = BlogArticle.create!(blog_id: blog1.id, title: "Title 2", subtitle: "Subtitle 2", content: "Content")
+
+comment1 = BlogArticleComment.create!(blog_article_id: article1.id, commenter_id: user3.id, comment: "Comment")
+comment2 = BlogArticleComment.create!(blog_article_id: article1.id, commenter_id: user3.id, comment: "Comment 2")
+comment3 = BlogArticleComment.create!(blog_article_id: article2.id, commenter_id: user3.id, comment: "Comment 3")

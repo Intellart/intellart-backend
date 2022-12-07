@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_api_user!
   skip_before_action :verify_authenticity_token
 
-  helper_method :render_json_error, :render_json_validation_error, :unauthorized!
+  helper_method :render_json_error, :render_json_validation_error, :unauthorized!, :authenticate_api_user!
 
   private
 
@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def refresh_jwt
-    new_token = AuthTokenService.generate_jwt(@current_user.id)
+    new_token = AuthTokenService.generate_jwt(@current_user.id, @domain)
     response.set_header('_jwt', new_token)
   end
 

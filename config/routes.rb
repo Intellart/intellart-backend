@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   devise_for :admins, defaults: { format: :json }
 
-  current_api_routes = lambda do
+  intellart_routes = lambda do
     mount ActionCable.server => '/cable'
 
     resources :nfts do
@@ -36,15 +36,16 @@ Rails.application.routes.draw do
     get '/sd_search/scopus/affiliation', to: 'science_direct#search_scopus_affiliation'
     get '/blockfrost/query_asset', to: 'blockfrost#query_asset'
     get '/blockfrost/query_address', to: 'blockfrost#query_address_for_asset'
+  end
 
-    # PUBWEAVE
+  # PUBWEAVE
+  pubweave_routes = lambda do
     resources :blogs
     resources :blog_articles
     resources :blog_article_comments
   end
 
   namespace :api, defaults: { format: :json } do
-    namespace :v1, &current_api_routes
     namespace :v1 do
       post '/auth/user', to: 'auth#create_user'
       put '/auth/user/password_update', to: 'passwords#update'
@@ -56,6 +57,9 @@ Rails.application.routes.draw do
       post '/auth/validate_jwt', to: 'auth#validate_jwt'
       post '/admin/session', to: 'admin#create_session'
       delete '/admin/session', to: 'admin#destroy_session'
+
+      namespace :intellart, &intellart_routes
+      namespace :pubweave, &pubweave_routes
     end
   end
 end
