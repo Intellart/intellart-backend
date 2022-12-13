@@ -22,6 +22,7 @@ Rails.application.routes.draw do
         get :index_mint_request
         get :index_minted
         get :index_on_sale
+        get :index_user_nfts
       end
     end
     resources :nft_likes, only: [:index, :create, :destroy]

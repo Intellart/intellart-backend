@@ -2,7 +2,7 @@ class NftSerializer < ActiveModel::Serializer
   # embed :ids, :include => true
   attributes :fingerprint, :tradeable, :price, :name, :description, :url,
              :asset_name, :policy_id, :created_at, :updated_at,
-             :nft_id, :state, :seller_address
+             :nft_id, :state, :seller_address, :category
 
   has_many :tags
   has_many :likes

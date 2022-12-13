@@ -4,7 +4,7 @@ class Nft < ApplicationRecord
   has_many :endorsers, class_name: 'NftEndorser', foreign_key: :fingerprint, dependent: :destroy
   belongs_to :user, foreign_key: 'owner_id'
 
-  validates :fingerprint, :asset_name, presence: true, uniqueness: true
+  validates :fingerprint, presence: true, uniqueness: true
   validates :policy_id, presence: true
 
   after_create :new_nft_broadcast
@@ -29,7 +29,7 @@ class Nft < ApplicationRecord
     end
 
     event :mint_success, after: :mint_success_notification do
-      transitions from: :minting_accepted, to: :minted
+      transitions from: [:minting_accepted, :mint_failed], to: :minted
     end
 
     event :mint_failed, after: :mint_failed_notification do
@@ -57,19 +57,6 @@ class Nft < ApplicationRecord
   end
 
   private
-
-  def create_json_for_request
-    # TODO: nft_image_ipfs value must be under 64 bytes -> Choose and implement URL shortener
-    JSON.generate(
-      {
-        nft_id: self.nft_id,
-        nft_name: self.name,
-        nft_long_name: self.asset_name,
-        nft_description: self.description,
-        nft_image_ipfs: "ipfs://QmRhTTbUrPYEw3mJGGhQqQST9k86v1DPBiTTWJGKDJsVFw" # self.url
-      }
-    )
-  end
 
   def new_nft_broadcast
     ActionCable.server.broadcast(

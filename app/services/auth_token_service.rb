@@ -4,7 +4,7 @@ class AuthTokenService
   API_KEY = ENV.fetch('API_KEY')
   ALGORITHM_TYPE = ENV.fetch('ALGORITHM_TYPE')
 
-  def self.generate_jwt(user_id, domain, expiration = 5.minutes.from_now.to_i, admin: false)
+  def self.generate_jwt(user_id, domain, expiration = 5.days.from_now.to_i, admin: false)
     payload = if admin
                 { admin_id: user_id, exp: expiration, domain: domain }
               else

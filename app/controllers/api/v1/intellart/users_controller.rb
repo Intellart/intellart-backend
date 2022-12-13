@@ -3,7 +3,7 @@ module Api
     module Intellart
       class UsersController < ApplicationController
         before_action :set_user, except: [:index]
-        before_action :require_same_user, only: [:update, :destroy, :show]
+        before_action :require_same_user, only: [:update, :destroy]
         before_action :authenticate_api_admin!, only: [:index]
         after_action :refresh_jwt, except: [:show, :index]
         skip_before_action :authenticate_api_user!, only: [:index]

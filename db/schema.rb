@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_06_111823) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_09_113430) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -154,6 +154,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_06_111823) do
     t.string "tx_id"
     t.string "witness"
     t.string "seller_address"
+    t.bigint "category_id", null: false
+    t.index ["category_id"], name: "index_nfts_on_category_id"
     t.index ["fingerprint"], name: "index_nfts_on_fingerprint", unique: true
     t.index ["owner_id"], name: "index_nfts_on_owner_id"
   end
@@ -215,6 +217,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_06_111823) do
   add_foreign_key "nft_likes", "users"
   add_foreign_key "nft_tags", "tags"
   add_foreign_key "nft_tags", "users"
+  add_foreign_key "nfts", "categories"
   add_foreign_key "nfts", "users", column: "owner_id"
   add_foreign_key "ratings", "users"
   add_foreign_key "ratings", "users", column: "rated_user_id"
