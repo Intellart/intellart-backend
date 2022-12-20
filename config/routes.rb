@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+
   devise_for :admins, defaults: { format: :json }
 
   intellart_routes = lambda do
