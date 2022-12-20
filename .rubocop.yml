@@ -1,0 +1,45 @@
+AllCops:
+  Exclude:
+    - 'db/schema.rb'
+    - 'db/seeds.rb'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - 'bin/**/*'
+    - 'db/migrate/*'
+    - 'config/**/*'
+    - 'spec/**/*'
+
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Max: 20
+
+Metrics/CyclomaticComplexity:
+  Max: 20
+
+
+# Configuration parameters: CountComments, CountAsOne, ExcludedMethods, IgnoredMethods.
+Metrics/MethodLength:
+  Max: 30
+
+Metrics/BlockLength:
+  Max: 35
+
+Metrics/ClassLength:
+  Max: 500
+
+# Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, AllowedPatterns, IgnoredPatterns.
+# URISchemes: http, https
+Layout/LineLength:
+  Max: 200
+
+Metrics/AbcSize:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false

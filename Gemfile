@@ -3,6 +3,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.0.2'
 
+gem 'aasm', '~> 5.4'
 gem 'capistrano',         require: false
 gem 'capistrano3-puma',   require: false
 gem 'capistrano-bundler', require: false
@@ -11,44 +12,40 @@ gem 'capistrano-figaro-yml'
 gem 'capistrano-passenger'
 gem 'capistrano-rails', require: false
 gem 'capistrano-rails-collection'
+gem 'capistrano-rails-console', require: false
 gem 'capistrano-rbenv', require: false
 gem 'capistrano-rbenv-install', require: false
+gem 'cloudinary', '~> 1.2', '>= 1.2.2'
 
 gem 'bcrypt_pbkdf', '>= 1.0'
 gem 'ed25519', '>= 1.2'
-
 gem 'figaro'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
-gem 'rails', '~> 6.1.5'
+gem 'rails', '~> 7.0.0'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.1'
 # Use Puma as the app server
 gem 'puma', '~> 5.0'
-# Use SCSS for stylesheets
-gem 'sass-rails', '>= 6'
-# Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'react-rails'
-gem 'webpacker', '~> 5.0'
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.7'
 # Use Redis adapter to run Action Cable in production
-gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
+gem 'redis', '< 4.6'
 
 gem 'active_model_serializers', require: true
 gem 'devise'
-gem 'jwt'
-gem 'httparty'
-gem 'http', '5.0.4'
-gem 'rack-cors'
 gem 'dotenv'
 gem 'elsevier_api'
+gem 'http', '5.0.4'
+gem 'httparty'
+gem 'jwt'
+gem 'rack-cors'
+gem 'shorturl'
+gem 'good_job'
 gem 'sidekiq', '6.2.2'
 gem 'sidekiq-scheduler', '3.1.0'
 gem 'webmock'
@@ -58,7 +55,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 group :development, :test do
   gem 'factory_bot_rails'
-  gem 'pry'
+  gem 'pry-rails'
   gem 'rspec-rails'
   gem 'vcr'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -87,4 +84,4 @@ group :test do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

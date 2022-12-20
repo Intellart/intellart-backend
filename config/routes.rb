@@ -1,19 +1,34 @@
 Rails.application.routes.draw do
-  # TODO: devise must have current_user for email confirmation link
   devise_for :users, controllers: {
     confirmations: 'api/v1/confirmations',
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
 
-  current_api_routes = lambda do
+
+  devise_for :admins, defaults: { format: :json }
+
+  intellart_routes = lambda do
     mount ActionCable.server => '/cable'
 
-    resources :nfts
+    resources :nfts do
+      member do
+        put :accept_minting
+        put :reject_minting
+        put :update_tx_and_witness
+        put :update_seller
+        put :check_sale_status
+        put :check_buy_status
+      end
+      collection do
+        get :index_mint_request
+        get :index_minted
+        get :index_on_sale
+        get :index_user_nfts
+      end
+    end
     resources :nft_likes, only: [:index, :create, :destroy]
     resources :users, only: [:show, :index, :update, :destroy]
-    resources :created_nfts, only: [:show, :index]
-    resources :sell_nfts, only: [:index]
     get '/exchange_rates', to: 'exchange_rates#latest'
     get '/categories', to: 'categories#index'
     get '/study_fields', to: 'study_fields#index'
@@ -22,16 +37,18 @@ Rails.application.routes.draw do
     get '/sd_search/scopus', to: 'science_direct#search_scopus'
     get '/sd_search/scopus/author', to: 'science_direct#search_scopus_author'
     get '/sd_search/scopus/affiliation', to: 'science_direct#search_scopus_affiliation'
-    post 'created_nfts', to: 'created_nfts#new'
-    delete 'created_nfts', to: 'created_nfts#destroy'
-    post 'created_nfts/approve', to: 'created_nfts#approve'
-    delete 'created_nfts/decline', to: 'created_nfts#decline'
-    post 'sell_nfts/approve', to: 'sell_nfts#approve'
-    delete 'sell_nfts/decline', to: 'sell_nfts#decline'
+    get '/blockfrost/query_asset', to: 'blockfrost#query_asset'
+    get '/blockfrost/query_address', to: 'blockfrost#query_address_for_asset'
+  end
+
+  # PUBWEAVE
+  pubweave_routes = lambda do
+    resources :blogs
+    resources :blog_articles
+    resources :blog_article_comments
   end
 
   namespace :api, defaults: { format: :json } do
-    namespace :v1, &current_api_routes
     namespace :v1 do
       post '/auth/user', to: 'auth#create_user'
       put '/auth/user/password_update', to: 'passwords#update'
@@ -43,6 +60,9 @@ Rails.application.routes.draw do
       post '/auth/validate_jwt', to: 'auth#validate_jwt'
       post '/admin/session', to: 'admin#create_session'
       delete '/admin/session', to: 'admin#destroy_session'
+
+      namespace :intellart, &intellart_routes
+      namespace :pubweave, &pubweave_routes
     end
   end
 end

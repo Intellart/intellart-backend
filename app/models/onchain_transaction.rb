@@ -1,3 +1,0 @@
-class OnchainTransaction < ApplicationRecord
-
-end

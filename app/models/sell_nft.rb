@@ -5,7 +5,7 @@ class SellNft < ApplicationRecord
   belongs_to :user, foreign_key: 'owner_id'
 
   validates :fingerprint, presence: true, uniqueness: true
-  validates :policy_id, :asset_name, presence: true
+  validates :policy_id, presence: true
 
   def active_model_serializer
     SellNftSerializer
