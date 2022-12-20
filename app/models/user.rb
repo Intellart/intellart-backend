@@ -11,6 +11,10 @@ class User < ApplicationRecord
     UserSerializer
   end
 
+  def full_name
+    "#{self.first_name} #{self.last_name}"
+  end
+
   def reset_password!(password)
     self.reset_password_token = nil
     self.password = password

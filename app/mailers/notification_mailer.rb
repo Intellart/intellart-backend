@@ -36,17 +36,17 @@ class NotificationMailer < ApplicationMailer
     mail(to: @email, subject: 'NFT Minting failed!')
   end
 
-  def sell_init
+  def sell_success
     @nft = params[:nft]
     @user = User.find_by_id(@nft.owner_id)
     @email = @user.email
     mail(to: @email, subject: 'NFT sale has started!')
   end
 
-  def sell_success
+  def buy_success
     @nft = params[:nft]
     @user = User.find_by_id(@nft.owner_id)
     @email = @user.email
-    mail(to: @email, subject: 'Your NFT has been successfully sold!')
+    mail(to: @email, subject: 'Your NFT has been bought!')
   end
 end

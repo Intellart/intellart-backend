@@ -14,18 +14,21 @@ class CheckMintSuccessJob < ApplicationJob
     true
   end
 
-  def perform(fingerprint, retry_count = 0)
+  def perform(fingerprint, mint_retry_count)
     nft = Nft.find(fingerprint)
-    p 'Trying mint confirmation job...'
+
     # query blockfrost for an asset
     asset = make_hex_asset(nft)
     mint_result = query_asset(asset)
 
-    nft.mint_success! and return if mint_result
-
-    nft.mint_failed!
-
-    CheckMintSuccessJob.set(wait: 1.minutes).perform_later(fingerprint, retry_count + 1) if retry_count < 12
+    if mint_result
+      mint_retry_count = 0
+      nft.mint_success! and return
+    else
+      nft.mint_failed!
+      mint_retry_count = mint_retry_count + 1
+      CheckMintSuccessJob.set(wait: 1.minutes).perform_later(fingerprint, mint_retry_count) if mint_retry_count < 12 && nft.mint_failed?
+    end
   end
 
   private

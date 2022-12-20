@@ -14,9 +14,10 @@ Rails.application.routes.draw do
       member do
         put :accept_minting
         put :reject_minting
-        put :initiate_sale
         put :update_tx_and_witness
         put :update_seller
+        put :check_sale_status
+        put :check_buy_status
       end
       collection do
         get :index_mint_request

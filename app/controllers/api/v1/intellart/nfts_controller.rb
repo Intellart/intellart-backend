@@ -7,7 +7,7 @@ module Api
         after_action :refresh_jwt, only: [:create, :update, :destroy]
         after_action :run_minting_and_confirmation_job, only: [:accept_minting]
         skip_before_action :authenticate_api_user!, only: [:index, :index_minted, :index_mint_request, :index_on_sale]
-        before_action :authenticate_api_admin!, only: [:accept_minting, :reject_minting, :sell_init]
+        before_action :authenticate_api_admin!, only: [:accept_minting, :reject_minting]
 
         rescue_from ActiveRecord::RecordNotFound do
           render_json_error :not_found, :nft_not_found
@@ -35,7 +35,7 @@ module Api
 
         # GET api/nfts/index_minted
         def index_minted
-          @nfts = Nft.where(state: %w[minting_accepted minted])
+          @nfts = Nft.where(state: 'minted')
           render json: @nfts, status: :ok
         end
 
@@ -75,6 +75,11 @@ module Api
 
         def update; end
 
+        # DELETE api/nfts/:id
+        def destroy
+          head :no_content if @nft.destroy
+        end
+
         def update_tx_and_witness
           render json: { errors: @nft.errors.full_messages }, status: :unprocessable_entity unless @nft.update(nft_params)
           render json: @nft, status: :ok
@@ -85,22 +90,6 @@ module Api
           render json: @nft, status: :ok
         end
 
-        # DELETE api/nfts/:id
-        def destroy
-          head :no_content if @nft.destroy
-        end
-
-        def close_sale
-          @nft.sell_success!
-
-          render_json_validation_error(@nft) and return unless @nft.sell_success?
-
-          render_json_validation_error(@nft) and return unless @nft.update(sold_count: @nft.sold_count + 1)
-
-          render json: @nft, status: :ok
-        end
-
-        # TODO: Implement CheckMintSuccessJob to run every 5 mins, 12 times in total
         def accept_minting
           @nft.accept_minting!
           render json: @nft, status: :ok if @nft.minting_accepted?
@@ -111,9 +100,20 @@ module Api
           render json: @nft, status: :ok if @nft.minting_rejected?
         end
 
-        def initiate_sale
-          @nft.sell_init!
-          render json: @nft, status: :ok if @nft.on_sale?
+        def check_sale_status
+          fingerprint = @nft.fingerprint
+          asset_name = @nft.asset_name
+          script_address = 'addr_test1wp7gplg8rf90vu7mgmsnef5v2c7ss05aa6gfegazc9ta73c992cyw'
+
+          CheckSellSuccessJob.set(wait: 1.minutes).perform_now(script_address, asset_name, fingerprint, 0)
+        end
+
+        def check_buy_status
+          fingerprint = @nft.fingerprint
+          asset_name = @nft.asset_name
+          script_address = 'addr_test1wp7gplg8rf90vu7mgmsnef5v2c7ss05aa6gfegazc9ta73c992cyw'
+
+          CheckBuySuccessJob.set(wait: 1.minutes).perform_now(script_address, asset_name, fingerprint, 0)
         end
 
         private
@@ -123,7 +123,7 @@ module Api
           response = @nft.send_to_minting
           return unless response.code == 200
 
-          CheckMintSuccessJob.perform_now(fingerprint)
+          CheckMintSuccessJob.set(wait: 1.minutes).perform_now(fingerprint, 0)
         end
 
         def last_created_nft_id
