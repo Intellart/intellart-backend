@@ -32,12 +32,6 @@ user3 = User.create!(
   password: '123456',
 )
 
-admin = Admin.create!(
-  email: 'a@a.com',
-  password: '123456'
-)
-
-
 tag1 = Tag.create!(tag: 'test-tag')
 tag2 = Tag.create!(tag: 'test-tag-2')
 
