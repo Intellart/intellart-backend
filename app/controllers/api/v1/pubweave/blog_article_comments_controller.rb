@@ -5,6 +5,8 @@ module Api
         before_action :set_comment, only: [:show, :update, :destroy]
         before_action :authenticate_api_user!, except: [:index, :show]
         after_action :refresh_jwt, only: [:create, :update, :destroy]
+        before_action :require_owner, only: [:update, :destroy]
+        before_action :authenticate_domain, except: [:index, :show]
 
         rescue_from ActiveRecord::RecordNotFound do
           render_json_error :not_found, :blog_article_comment_not_found
@@ -41,12 +43,16 @@ module Api
 
         private
 
+        def require_owner
+          head :unauthorized unless @current_user.id == @comment.commenter_id
+        end
+
         def set_comment
           @comment = BlogArticleComment.find(params[:id])
         end
 
         def comment_params
-          params.require(:blog_article_comment).permit(:blog_article_id, :commenter_id, :comment)
+          params.require(:blog_article_comment).permit(:blog_article_id, :commenter_id, :comment, :reply_to_id)
         end
 
         def comment_update_params

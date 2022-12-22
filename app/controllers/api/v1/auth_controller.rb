@@ -17,8 +17,8 @@ module Api
         render_json_error :not_found, :user_not_found and return unless @user
 
         if @user&.valid_password?(user_session_params[:password])
-          @domain = user_session_params[:domain]
-          @jwt = AuthTokenService.generate_jwt(@user.id, @domain)
+          domain = user_session_params[:domain]
+          @jwt = AuthTokenService.generate_jwt(@user.id, domain)
           render json: @user, status: :ok
         else
           render json: { errors: ['Invalid password.'] }, status: :unprocessable_entity
@@ -30,8 +30,8 @@ module Api
         @user = User.find_by(orcid_id: user_orcid_params[:orcid])
         render_json_error :not_found, :user_not_found and return unless @user
 
-        @domain = user_orcid_params[:domain]
-        @jwt = AuthTokenService.generate_jwt(@user.id, @domain)
+        domain = user_orcid_params[:domain]
+        @jwt = AuthTokenService.generate_jwt(@user.id, domain)
         render json: @user, status: :ok
       rescue ActiveRecord::RecordNotFound
         render json: { errors: ['Invalid ORCID Id.'] }, status: :unprocessable_entity

@@ -1,6 +1,6 @@
 class BlogArticleSerializer < ActiveModel::Serializer
-  attributes :id, :title, :subtitle, :content
+  attributes :id, :title, :subtitle, :content, :user
 
-  belongs_to :blog
+  belongs_to :user
   has_many :blog_article_comments
 end

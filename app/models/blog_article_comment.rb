@@ -1,5 +1,6 @@
 class BlogArticleComment < ApplicationRecord
   belongs_to :blog_article
-  has_one :blog, through: :blog_article
-  belongs_to :user, foreign_key: :commenter_id
+  belongs_to :commenter, class_name: 'User', foreign_key: :commenter_id
+  has_many :replies, class_name: 'BlogArticleComment', foreign_key: :reply_to_id
+  belongs_to :reply_to, class_name: 'BlogArticleComment', foreign_key: :reply_to_id, optional: true
 end

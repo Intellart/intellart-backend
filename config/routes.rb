@@ -43,7 +43,6 @@ Rails.application.routes.draw do
 
   # PUBWEAVE
   pubweave_routes = lambda do
-    resources :blogs
     resources :blog_articles
     resources :blog_article_comments
   end

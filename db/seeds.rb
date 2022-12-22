@@ -31,6 +31,12 @@ user3 = User.create!(
   last_name: 'Lastname',
   password: '123456',
 )
+user4 = User.create!(
+  email: 'test4@test.com',
+  first_name: 'Fourth',
+  last_name: 'User',
+  password: '123456',
+)
 
 tag1 = Tag.create!(tag: 'test-tag')
 tag2 = Tag.create!(tag: 'test-tag-2')
@@ -42,12 +48,9 @@ cat1 = Category.create!(category_name: 'test-category')
 rating1 = Rating.create!(user_id: 1, rated_user_id: 2, rating: 5)
 rating2 = Rating.create!(user_id: 2, rated_user_id: 1, rating: 1)
 
-blog1 = Blog.create!(user_id: user3.id, name: "First blog")
-blog2 = Blog.create!(user_id: user3.id, name: "Second blog")
-
-article1 = BlogArticle.create!(blog_id: blog1.id, title: "Title", subtitle: "Subtitle", content: "Content")
-article2 = BlogArticle.create!(blog_id: blog1.id, title: "Title 2", subtitle: "Subtitle 2", content: "Content")
+article1 = BlogArticle.create!(user_id: user3.id, title: "Title", subtitle: "Subtitle", content: "Content")
+article2 = BlogArticle.create!(user_id: user4.id, title: "Title 2", subtitle: "Subtitle 2", content: "Content")
 
 comment1 = BlogArticleComment.create!(blog_article_id: article1.id, commenter_id: user3.id, comment: "Comment")
-comment2 = BlogArticleComment.create!(blog_article_id: article1.id, commenter_id: user3.id, comment: "Comment 2")
-comment3 = BlogArticleComment.create!(blog_article_id: article2.id, commenter_id: user3.id, comment: "Comment 3")
+comment2 = BlogArticleComment.create!(blog_article_id: article1.id, commenter_id: user4.id, comment: "Comment 2", reply_to_id: 1)
+comment3 = BlogArticleComment.create!(blog_article_id: article2.id, commenter_id: user3.id, comment: "Comment 3", reply_to_id: 2)
