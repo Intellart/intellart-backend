@@ -58,7 +58,7 @@ module Api
         end
 
         def article_update_params
-          params.require(:blog_article).permit(:title, :subtitle, :content)
+          params.require(:blog_article).permit(:title, :subtitle, :content, :likes)
         end
       end
     end

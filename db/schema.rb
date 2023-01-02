@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_19_093547) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_02_082650) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -63,6 +63,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_093547) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "likes"
+    t.integer "dislikes"
     t.index ["blog_article_id"], name: "index_blog_article_comments_on_blog_article_id"
     t.index ["commenter_id"], name: "index_blog_article_comments_on_commenter_id"
     t.index ["reply_to_id"], name: "index_blog_article_comments_on_reply_to_id"
@@ -75,6 +77,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_093547) do
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "likes"
     t.index ["user_id"], name: "index_blog_articles_on_user_id"
   end
 
@@ -185,7 +188,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_093547) do
     t.bigint "owner_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.serial "nft_id"
+    t.serial "nft_id", null: false
     t.string "tx_id"
     t.string "witness"
     t.string "seller_address"

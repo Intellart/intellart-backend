@@ -12,11 +12,13 @@ module Api
           render_json_error :not_found, :blog_article_comment_not_found
         end
 
+        # GET api/v1/pubweave/blog_article_comments/
         def index
           comments = BlogArticleComment.all
           render json: comments, status: :ok
         end
 
+        # GET api/v1/pubweave/blog_article_comments/:id
         def show
           render json: @comment, status: :ok
         end
@@ -56,7 +58,7 @@ module Api
         end
 
         def comment_update_params
-          params.require(:blog_article_comment).permit(:comment)
+          params.require(:blog_article_comment).permit(:comment, :likes, :dislikes)
         end
       end
     end
