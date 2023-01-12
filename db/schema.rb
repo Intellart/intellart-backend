@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_02_082650) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_12_121134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -70,14 +70,29 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_02_082650) do
     t.index ["reply_to_id"], name: "index_blog_article_comments_on_reply_to_id"
   end
 
+  create_table "blog_article_tags", force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "blog_article_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_article_id"], name: "index_blog_article_tags_on_blog_article_id"
+    t.index ["tag_id"], name: "index_blog_article_tags_on_tag_id"
+  end
+
   create_table "blog_articles", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.text "title"
     t.text "subtitle"
-    t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "likes"
+    t.string "status"
+    t.text "description"
+    t.string "image"
+    t.boolean "star"
+    t.jsonb "content"
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_blog_articles_on_category_id"
     t.index ["user_id"], name: "index_blog_articles_on_user_id"
   end
 
@@ -188,7 +203,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_02_082650) do
     t.bigint "owner_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.serial "nft_id", null: false
+    t.serial "nft_id"
     t.string "tx_id"
     t.string "witness"
     t.string "seller_address"
@@ -250,6 +265,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_02_082650) do
   add_foreign_key "blog_article_comments", "blog_article_comments", column: "reply_to_id"
   add_foreign_key "blog_article_comments", "blog_articles"
   add_foreign_key "blog_article_comments", "users", column: "commenter_id"
+  add_foreign_key "blog_article_tags", "blog_articles"
+  add_foreign_key "blog_article_tags", "tags"
+  add_foreign_key "blog_articles", "categories"
   add_foreign_key "blog_articles", "users"
   add_foreign_key "nft_endorsers", "users"
   add_foreign_key "nft_likes", "users"

@@ -48,8 +48,12 @@ cat1 = Category.create!(category_name: 'test-category')
 rating1 = Rating.create!(user_id: 1, rated_user_id: 2, rating: 5)
 rating2 = Rating.create!(user_id: 2, rated_user_id: 1, rating: 1)
 
-article1 = BlogArticle.create!(user_id: user3.id, title: "Title", subtitle: "Subtitle", content: "Content")
-article2 = BlogArticle.create!(user_id: user4.id, title: "Title 2", subtitle: "Subtitle 2", content: "Content")
+article1 = BlogArticle.create!(user_id: user3.id, title: "Title", subtitle: "Subtitle", content: {"blocks": "", "time": 0}, description: "desc", status: 'draft', star: false, category_id: 1)
+article2 = BlogArticle.create!(user_id: user4.id, title: "Title 2", subtitle: "Subtitle 2", content: {"blocks": "", "time": 1}, description: "desc", status: 'draft', star: false, category_id: 1)
+
+art_tag1 = BlogArticleTag.create!(tag_id: 1, blog_article_id: 1)
+art_tag2 = BlogArticleTag.create!(tag_id: 2, blog_article_id: 1)
+art_tag3 = BlogArticleTag.create!(tag_id: 1, blog_article_id: 2)
 
 comment1 = BlogArticleComment.create!(blog_article_id: article1.id, commenter_id: user3.id, comment: "Comment")
 comment2 = BlogArticleComment.create!(blog_article_id: article1.id, commenter_id: user4.id, comment: "Comment 2", reply_to_id: 1)
