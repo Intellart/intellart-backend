@@ -30,14 +30,14 @@ class BlogArticle < ApplicationRecord
   private
 
   def publishing_requested_notification
-    #NotificationMailer.with(nft: self).request_for_minting.deliver_now!
+    NotificationMailer.with(blog_article: self).publishing_requested.deliver_now!
   end
 
   def publishing_accepted_notification
-    #NotificationMailer.with(nft: self).minting_accepted.deliver_later
+    NotificationMailer.with(blog_article: self).publishing_accepted.deliver_later
   end
 
   def publishing_rejected_notification
-    #NotificationMailer.with(nft: self).minting_rejected.deliver_later
+    NotificationMailer.with(blog_article: self).publishing_rejected.deliver_later
   end
 end

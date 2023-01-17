@@ -43,7 +43,14 @@ Rails.application.routes.draw do
 
   # PUBWEAVE
   pubweave_routes = lambda do
-    resources :blog_articles
+    resources :blog_articles do
+      member do
+        put :request_publishing
+        put :accept_publishing
+        put :reject_publishing
+        put :like
+      end
+    end
     get '/user_blog_articles', to: 'blog_articles#index_by_user'
     get '/status_blog_articles', to: 'blog_articles#index_by_status'
     resources :blog_article_comments
