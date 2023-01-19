@@ -61,7 +61,7 @@ module Api
 
         # DELETE api/v1/pubweave/blog_articles/:id
         def destroy
-          head :no_content if @article.destroy
+          render json: @article.id, status: ok if @article.destroy
         end
 
         # PUT api/v1/pubweave/blog_articles/:id/request_publishing

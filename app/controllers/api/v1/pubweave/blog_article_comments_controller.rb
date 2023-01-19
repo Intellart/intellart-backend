@@ -2,7 +2,7 @@ module Api
   module V1
     module Pubweave
       class BlogArticleCommentsController < ApplicationController
-        before_action :set_comment, only: [:show, :update, :destroy]
+        before_action :set_comment, only: [:show, :update, :destroy, :like, :dislike]
         before_action :authenticate_api_user!, except: [:index, :show]
         after_action :refresh_jwt, only: [:create, :update, :destroy]
         before_action :require_owner, only: [:update, :destroy]
@@ -25,17 +25,33 @@ module Api
 
         # POST api/v1/pubweave/blog_article_comments/
         def create
-          @article = BlogArticleComment.new(comment_params)
+          @comment = BlogArticleComment.new(comment_params)
           render_json_validation_error(@comment) and return unless @comment.save
 
-          render json: @article, status: :created
+          render json: @comment, status: :created
         end
 
         # PUT/PATCH api/v1/pubweave/blog_article_comments/:id
         def update
           render_json_validation_error(@comment) and return unless @comment.update(comment_update_params)
 
-          render json: @article, status: :ok
+          render json: @comment, status: :ok
+        end
+
+        # PUT/PATCH api/v1/pubweave/blog_article_commentss/:id/like/
+        def like
+          @comment.likes += 1
+          render_json_validation_error(@comment) and return unless @comment.save
+
+          render json: @comment, status: :ok
+        end
+
+        # PUT/PATCH api/v1/pubweave/blog_article_commentss/:id/dislike/
+        def dislike
+          @comment.dislikes += 1
+          render_json_validation_error(@comment) and return unless @comment.save
+
+          render json: @comment, status: :ok
         end
 
         # DELETE api/v1/pubweave/blog_article_comments/:id

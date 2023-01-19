@@ -63,8 +63,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_121134) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "likes"
-    t.integer "dislikes"
+    t.integer "likes", default: 0
+    t.integer "dislikes", default: 0
     t.index ["blog_article_id"], name: "index_blog_article_comments_on_blog_article_id"
     t.index ["commenter_id"], name: "index_blog_article_comments_on_commenter_id"
     t.index ["reply_to_id"], name: "index_blog_article_comments_on_reply_to_id"
@@ -85,7 +85,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_12_121134) do
     t.text "subtitle"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "likes"
+    t.integer "likes", default: 0
     t.string "status"
     t.text "description"
     t.string "image"
