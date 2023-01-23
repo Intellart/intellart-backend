@@ -19,7 +19,7 @@ module Api
         private
 
         def article_tags_params
-          params.require(:blog_article_tag).permit(:tag_id, :blog_article_id)
+          params.require(:blog_article_tag).permit(:tag_id, :blog_article_id, :category_id)
         end
       end
     end
