@@ -59,6 +59,7 @@ Rails.application.routes.draw do
         put :dislike
       end
     end
+    resources :blog_article_tags
   end
 
   namespace :api, defaults: { format: :json } do
@@ -76,6 +77,9 @@ Rails.application.routes.draw do
 
       namespace :intellart, &intellart_routes
       namespace :pubweave, &pubweave_routes
+
+      resources :categories
+      resources :tags
     end
   end
 end

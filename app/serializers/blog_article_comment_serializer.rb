@@ -1,5 +1,5 @@
 class BlogArticleCommentSerializer < ActiveModel::Serializer
-  attributes :id, :comment, :likes, :dislikes, :created_at, :updated_at
+  attributes :id, :comment, :likes, :dislikes, :created_at, :updated_at, :commenter, :reply_to
 
   belongs_to :blog_article
   belongs_to :commenter, class_name: 'User', foreign_key: 'commenter_id'
