@@ -39,60 +39,6 @@ user4 = User.create!(
 )
 
 
-# Math tags
-tag1 = Tag.create!(tag: 'Linear Algebra')
-tag2 = Tag.create!(tag: 'Calculus')
-tag3 = Tag.create!(tag: 'Differential Equations')
-tag4 = Tag.create!(tag: 'Algebra')
-tag5 = Tag.create!(tag: 'Geometry')
-tag6 = Tag.create!(tag: 'Number Theory')
-
-# Physics tags
-tag7 = Tag.create!(tag: 'Mechanics')
-tag8 = Tag.create!(tag: 'Thermodynamics')
-tag9 = Tag.create!(tag: 'Electromagnetism')
-tag10 = Tag.create!(tag: 'Quantum Mechanics')
-tag11 = Tag.create!(tag: 'Relativity')
-tag12 = Tag.create!(tag: 'Astrophysics')
-
-# Chemistry tags
-tag13 = Tag.create!(tag: 'Organic Chemistry')
-tag14 = Tag.create!(tag: 'Inorganic Chemistry')
-tag15 = Tag.create!(tag: 'Physical Chemistry')
-tag16 = Tag.create!(tag: 'Analytical Chemistry')
-tag17 = Tag.create!(tag: 'Biochemistry')
-
-
-# Biology tags
-tag18 = Tag.create!(tag: 'Cell Biology')
-tag19 = Tag.create!(tag: 'Molecular Biology')
-tag20 = Tag.create!(tag: 'Genetics')
-tag21 = Tag.create!(tag: 'Ecology')
-tag22 = Tag.create!(tag: 'Evolution')
-tag23 = Tag.create!(tag: 'Zoology')
-
-# Computer Science tags
-tag24 = Tag.create!(tag: 'Algorithms')
-tag25 = Tag.create!(tag: 'Data Structures')
-tag26 = Tag.create!(tag: 'Programming Languages')
-tag27 = Tag.create!(tag: 'Operating Systems')
-tag28 = Tag.create!(tag: 'Computer Architecture')
-tag29 = Tag.create!(tag: 'Artificial Intelligence')
-
-# Engineering tags
-tag30 = Tag.create!(tag: 'Mechanical Engineering')
-tag31 = Tag.create!(tag: 'Electrical Engineering')
-tag32 = Tag.create!(tag: 'Civil Engineering')
-
-# Law tags
-tag33 = Tag.create!(tag: 'Criminal Law')
-tag34 = Tag.create!(tag: 'Civil Law')
-tag35 = Tag.create!(tag: 'Constitutional Law')
-tag36 = Tag.create!(tag: 'Administrative Law')
-tag37 = Tag.create!(tag: 'International Law')
-tag38 = Tag.create!(tag: 'Tax Law')
-
-
 cat1 = Category.create!(category_name: 'Mathematics')
 cat2 = Category.create!(category_name: 'Physics')
 cat3 = Category.create!(category_name: 'Chemistry')
@@ -107,6 +53,62 @@ cat11 = Category.create!(category_name: 'History')
 cat12 = Category.create!(category_name: 'Geography')
 cat13 = Category.create!(category_name: 'Law')
 cat14 = Category.create!(category_name: 'Other')
+
+# Math tags
+tag1 = Tag.create!(tag: 'Linear Algebra', category_id: cat1.id)
+tag2 = Tag.create!(tag: 'Calculus', category_id: cat1.id)
+tag3 = Tag.create!(tag: 'Differential Equations', category_id: cat1.id)
+tag4 = Tag.create!(tag: 'Algebra', category_id: cat1.id)
+tag5 = Tag.create!(tag: 'Geometry', category_id: cat1.id)
+tag6 = Tag.create!(tag: 'Number Theory', category_id: cat1.id)
+
+# Physics tags
+tag7 = Tag.create!(tag: 'Mechanics', category_id: cat2.id)
+tag8 = Tag.create!(tag: 'Thermodynamics', category_id: cat2.id)
+tag9 = Tag.create!(tag: 'Electromagnetism', category_id: cat2.id)
+tag10 = Tag.create!(tag: 'Quantum Mechanics', category_id: cat2.id)
+tag11 = Tag.create!(tag: 'Relativity', category_id: cat2.id)
+tag12 = Tag.create!(tag: 'Astrophysics', category_id: cat2.id)
+
+# Chemistry tags
+tag13 = Tag.create!(tag: 'Organic Chemistry', category_id: cat3.id)
+tag14 = Tag.create!(tag: 'Inorganic Chemistry' , category_id: cat3.id)
+tag15 = Tag.create!(tag: 'Physical Chemistry' , category_id: cat3.id)
+tag16 = Tag.create!(tag: 'Analytical Chemistry' , category_id: cat3.id)
+tag17 = Tag.create!(tag: 'Biochemistry')
+
+
+# Biology tags
+tag18 = Tag.create!(tag: 'Cell Biology' , category_id: cat4.id)
+tag19 = Tag.create!(tag: 'Molecular Biology' , category_id: cat4.id)
+tag20 = Tag.create!(tag: 'Genetics' , category_id: cat4.id)
+tag21 = Tag.create!(tag: 'Ecology' , category_id: cat4.id)
+tag22 = Tag.create!(tag: 'Evolution' , category_id: cat4.id)
+tag23 = Tag.create!(tag: 'Zoology' , category_id: cat4.id)
+
+# Computer Science tags
+tag24 = Tag.create!(tag: 'Algorithms' , category_id: cat5.id)
+tag25 = Tag.create!(tag: 'Data Structures' , category_id: cat5.id)
+tag26 = Tag.create!(tag: 'Programming Languages' , category_id: cat5.id)
+tag27 = Tag.create!(tag: 'Operating Systems' , category_id: cat5.id)
+tag28 = Tag.create!(tag: 'Computer Architecture' , category_id: cat5.id)
+tag29 = Tag.create!(tag: 'Artificial Intelligence' , category_id: cat5.id)
+
+# Engineering tags
+tag30 = Tag.create!(tag: 'Mechanical Engineering' , category_id: cat6.id)
+tag31 = Tag.create!(tag: 'Electrical Engineering' , category_id: cat6.id)
+tag32 = Tag.create!(tag: 'Civil Engineering' , category_id: cat6.id)
+
+# Law tags
+tag33 = Tag.create!(tag: 'Criminal Law' , category_id: cat13.id)
+tag34 = Tag.create!(tag: 'Civil Law' , category_id: cat13.id)
+tag35 = Tag.create!(tag: 'Constitutional Law' , category_id: cat13.id)
+tag36 = Tag.create!(tag: 'Administrative Law' , category_id: cat13.id)
+tag37 = Tag.create!(tag: 'International Law' , category_id: cat13.id)
+tag38 = Tag.create!(tag: 'Tax Law' , category_id: cat13.id)
+
+
+
 
 
 
