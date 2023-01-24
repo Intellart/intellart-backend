@@ -3,8 +3,8 @@ module Api
     module Pubweave
       class BlogArticleTagsController < ApplicationController
         skip_before_action :authenticate_api_user!, only: [:index]
-        before_action :require_owner, only: [:destroy]
         before_action :set_article_tag, only: [:destroy]
+        before_action :require_owner, only: [:destroy]
 
         def index
           tags = BlogArticleTag.all
@@ -20,13 +20,14 @@ module Api
 
         # DELETE api/v1/pubweave/blog_article_tags/:id
         def destroy
-          render json: @article_tag.id, status: ok if @article_tag.destroy
+          render json: @article_tag.id, status: :ok if @article_tag.destroy
         end
 
         private
 
         def set_article_tag
           @article_tag = BlogArticleTag.find(params[:id])
+          p @article_tag.blog_article
         end
 
         def require_owner
