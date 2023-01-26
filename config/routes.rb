@@ -53,6 +53,7 @@ Rails.application.routes.draw do
     end
     get '/user_blog_articles', to: 'blog_articles#index_by_user'
     get '/status_blog_articles', to: 'blog_articles#index_by_status'
+    resources :blog_article_likes
     resources :blog_article_comments do
       member do
         put :like

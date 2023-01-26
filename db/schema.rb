@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_23_101514) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_26_103139) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -56,6 +56,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_101514) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
+  create_table "blog_article_comment_dislikes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "blog_article_comment_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_article_comment_id"], name: "index_blog_article_comment_dislikes_on_blog_article_comment_id"
+    t.index ["user_id"], name: "index_blog_article_comment_dislikes_on_user_id"
+  end
+
+  create_table "blog_article_comment_likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "blog_article_comment_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_article_comment_id"], name: "index_blog_article_comment_likes_on_blog_article_comment_id"
+    t.index ["user_id"], name: "index_blog_article_comment_likes_on_user_id"
+  end
+
   create_table "blog_article_comments", force: :cascade do |t|
     t.bigint "blog_article_id", null: false
     t.bigint "commenter_id"
@@ -63,11 +81,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_101514) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "likes", default: 0
-    t.integer "dislikes", default: 0
     t.index ["blog_article_id"], name: "index_blog_article_comments_on_blog_article_id"
     t.index ["commenter_id"], name: "index_blog_article_comments_on_commenter_id"
     t.index ["reply_to_id"], name: "index_blog_article_comments_on_reply_to_id"
+  end
+
+  create_table "blog_article_likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "blog_article_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_article_id"], name: "index_blog_article_likes_on_blog_article_id"
+    t.index ["user_id"], name: "index_blog_article_likes_on_user_id"
   end
 
   create_table "blog_article_tags", force: :cascade do |t|
@@ -85,7 +110,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_101514) do
     t.text "subtitle"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "likes", default: 0
     t.string "status"
     t.text "description"
     t.string "image"
@@ -264,9 +288,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_23_101514) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "blog_article_comment_dislikes", "blog_article_comments"
+  add_foreign_key "blog_article_comment_dislikes", "users"
+  add_foreign_key "blog_article_comment_likes", "blog_article_comments"
+  add_foreign_key "blog_article_comment_likes", "users"
   add_foreign_key "blog_article_comments", "blog_article_comments", column: "reply_to_id"
   add_foreign_key "blog_article_comments", "blog_articles"
   add_foreign_key "blog_article_comments", "users", column: "commenter_id"
+  add_foreign_key "blog_article_likes", "blog_articles"
+  add_foreign_key "blog_article_likes", "users"
   add_foreign_key "blog_article_tags", "blog_articles"
   add_foreign_key "blog_article_tags", "tags"
   add_foreign_key "blog_articles", "categories"

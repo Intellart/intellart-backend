@@ -2,6 +2,7 @@ class BlogArticle < ApplicationRecord
   belongs_to :user
   has_many :blog_article_comments, class_name: 'BlogArticleComment', dependent: :destroy
   has_many :tags, class_name: 'BlogArticleTag', foreign_key: :blog_article_id, dependent: :destroy
+  has_many :likes, class_name: 'BlogArticleLike', foreign_key: :blog_article_id, dependent: :destroy
 
   include AASM
   aasm column: :status do
