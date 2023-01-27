@@ -49,7 +49,7 @@ module Api
 
         private
 
-        def set_nft_like
+        def set_article_like
           @like = BlogArticleLike.find(params[:id])
         end
 

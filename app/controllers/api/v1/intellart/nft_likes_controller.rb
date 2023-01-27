@@ -10,7 +10,7 @@ module Api
           render_json_error :not_found, :nft_not_found
         end
         rescue_from ActiveRecord::RecordNotDestroyed do
-          render_json_error :not_destroyed, :nft_not_found
+          render_json_error :not_destroyed, :nft_not_destroyed
         end
 
         # GET api/nft_likes/

@@ -74,7 +74,7 @@ module Api
         end
 
         def comment_update_params
-          params.require(:blog_article_comment).permit(:comment, :likes, :dislikes)
+          params.require(:blog_article_comment).permit(:comment)
         end
       end
     end

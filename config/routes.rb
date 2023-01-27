@@ -60,6 +60,8 @@ Rails.application.routes.draw do
         put :dislike
       end
     end
+    resources :blog_article_comment_likes
+    resources :blog_article_comment_dislikes
     resources :blog_article_tags
   end
 
