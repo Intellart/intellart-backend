@@ -56,7 +56,7 @@ module Api
 
         # DELETE api/v1/pubweave/blog_article_comments/:id
         def destroy
-          head :no_content if @comment.destroy
+          render json: @comment.id, status: ok if @comment.destroy
         end
 
         private
