@@ -1,6 +1,6 @@
 class BlogArticleCommentDislike < ApplicationRecord
   belongs_to :user
-  belongs_to :blog_article_comment
+  belongs_to :blog_article_comment, dependent: :destroy
 
   validates :blog_article_comment_id, uniqueness: { scope: :user_id, message: 'This user has already disliked this comment.' }
 
