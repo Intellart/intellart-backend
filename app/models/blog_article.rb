@@ -1,8 +1,8 @@
 class BlogArticle < ApplicationRecord
-  belongs_to :user, dependent: :destroy
-  has_many :blog_article_comments, class_name: 'BlogArticleComment', dependent: :destroy
-  has_many :tags, class_name: 'BlogArticleTag', foreign_key: :blog_article_id, dependent: :destroy
-  has_many :likes, class_name: 'BlogArticleLike', foreign_key: :blog_article_id, dependent: :destroy
+  belongs_to :user
+  has_many :blog_article_comments, class_name: 'BlogArticleComment', dependent: :delete_all
+  has_many :tags, class_name: 'BlogArticleTag', dependent: :delete_all
+  has_many :likes, class_name: 'BlogArticleLike', dependent: :delete_all
 
   include AASM
   aasm column: :status do
