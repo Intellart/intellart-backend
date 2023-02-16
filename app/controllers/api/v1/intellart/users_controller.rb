@@ -49,7 +49,8 @@ module Api
         end
 
         def user_update_params
-          params.require(:user).permit(:first_name, :last_name, :orcid_id, :study_field_id, :profile_img, :social_web, :social_ln, :social_fb, :social_tw)
+          params.require(:user).permit(:first_name, :last_name, :orcid_id, :study_field_id, :profile_img,
+            :social_web, :social_ln, :social_fb, :social_tw, :username)
         end
       end
     end
