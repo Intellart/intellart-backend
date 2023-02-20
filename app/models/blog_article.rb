@@ -20,7 +20,7 @@ class BlogArticle < ApplicationRecord
     end
 
     event :reject_publishing, after: :publishing_rejected_notification do
-      transitions from: :requested, to: :rejected
+      transitions from: [:requested, :published], to: :rejected
     end
   end
 
