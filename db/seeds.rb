@@ -115,46 +115,48 @@ tag38 = Tag.create!(tag: 'Tax Law' , category_id: cat13.id)
 rating1 = Rating.create!(user_id: 1, rated_user_id: 2, rating: 5)
 rating2 = Rating.create!(user_id: 2, rated_user_id: 1, rating: 1)
 
-article1 = BlogArticle.create!(
-  user_id: user1.id, 
-  title: "Vector Spaces",
-  subtitle: "Vector Spaces and Subspaces",
-  content: {"blocks": "", "time": 0}, 
-  description: "Vector spaces are a very important topic in mathematics.",
-  status: 'draft', 
-  star: false, 
-  category_id: 1)
-article2 = BlogArticle.create!(
-  user_id: user1.id, 
-  title: "Animal Behavior",
-  subtitle: "Animal Behavior and Evolution",
-  content: {"blocks": "", "time": 1}, 
-  description: "Animal behavior is a very important topic in biology.",
-  status: 'draft', 
-  star: false, 
-  category_id: 1)
+# article1 = BlogArticle.create!(
+#   user_id: user1.id, 
+#   title: "Vector Spaces",
+#   subtitle: "Vector Spaces and Subspaces",
+#   content: {"blocks": "", "time": 0}, 
+#   description: "Vector spaces are a very important topic in mathematics.",
+#   status: 'draft', 
+#   star: false, 
+#   category_id: 1)
+# article2 = BlogArticle.create!(
+#   user_id: user1.id, 
+#   title: "Animal Behavior",
+#   subtitle: "Animal Behavior and Evolution",
+#   content: {"blocks": "", "time": 1}, 
+#   description: "Animal behavior is a very important topic in biology.",
+#   status: 'draft', 
+#   star: false, 
+#   category_id: 1)
 
-art_tag1 = BlogArticleTag.create!(tag_id: 1, blog_article_id: 1)
-art_tag2 = BlogArticleTag.create!(tag_id: 2, blog_article_id: 1)
-art_tag3 = BlogArticleTag.create!(tag_id: 1, blog_article_id: 2)
+# art_tag1 = BlogArticleTag.create!(tag_id: 1, blog_article_id: 1)
+# art_tag2 = BlogArticleTag.create!(tag_id: 2, blog_article_id: 1)
+# art_tag3 = BlogArticleTag.create!(tag_id: 1, blog_article_id: 2)
 
-comment1 = BlogArticleComment.create!(
-  blog_article_id: article1.id, 
-  commenter_id: user3.id, 
-  comment: "What is a vector space?"
-)
+# comment1 = BlogArticleComment.create!(
+#   blog_article_id: article1.id, 
+#   commenter_id: user3.id, 
+#   comment: "What is a vector space?"
+# )
 
-comment2 = BlogArticleComment.create!(
-  blog_article_id: article1.id, 
-  commenter_id: user4.id, 
-  comment: "A vector space is a set of vectors that satisfy certain properties.",
-  reply_to_id: 1
-)
+# comment2 = BlogArticleComment.create!(
+#   blog_article_id: article1.id, 
+#   commenter_id: user4.id, 
+#   comment: "A vector space is a set of vectors that satisfy certain properties.",
+#   reply_to_id: 1
+# )
 
 
-comment3 = BlogArticleComment.create!(
-  blog_article_id: article2.id, 
-  commenter_id: user3.id, 
-  comment: "What is animal behavior?",
-  reply_to_id: 2
-)
+# comment3 = BlogArticleComment.create!(
+#   blog_article_id: article2.id, 
+#   commenter_id: user3.id, 
+#   comment: "What is animal behavior?",
+#   reply_to_id: 2
+# )
+
+Admin.create!(email: 'a@a.com', password: '123456')
