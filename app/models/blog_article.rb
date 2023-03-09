@@ -12,7 +12,7 @@ class BlogArticle < ApplicationRecord
     state :published
 
     event :request_publishing, after: :publishing_requested_notification do
-      transitions from: :draft, to: :requested
+      transitions from: [:draft, :rejected], to: :requested
     end
 
     event :accept_publishing, after: :publishing_accepted_notification do

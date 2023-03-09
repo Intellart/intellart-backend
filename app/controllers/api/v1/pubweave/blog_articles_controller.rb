@@ -2,8 +2,9 @@ module Api
   module V1
     module Pubweave
       class BlogArticlesController < ApplicationController
-        before_action :set_article, only: [:show, :like, :update, :destroy, :request_publishing, :accept_publishing, :reject_publishing]
+        before_action :set_article, except: [:index, :index_by_user, :index_by_status]
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
+        before_action :deny_published_article_update, only: [:update]
         after_action :refresh_jwt, only: [:create, :update, :destroy]
         before_action :require_owner, only: [:update, :destroy]
         before_action :authenticate_domain, except: [:index, :show, :index_by_user, :index_by_status]
@@ -84,8 +85,12 @@ module Api
 
         private
 
+        def deny_published_article_update
+          render json: { message: 'You can not edit a published article.' } and return if @article.status == 'published'
+        end
+
         def require_owner
-          head :unauthorized unless @current_user.id == @article.user_id
+          head :unauthorized unless @current_user.id == @article.user_id || @current_user.super?
         end
 
         def set_article
