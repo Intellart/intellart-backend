@@ -2,7 +2,7 @@ module Api
   module V1
     module Pubweave
       class BlogArticlesController < ApplicationController
-        before_action :set_article, except: [:index, :index_by_user, :index_by_status]
+        before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :deny_published_article_update, only: [:update]
         after_action :refresh_jwt, only: [:create, :update, :destroy]

@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   respond_to :json
   before_action :authenticate_api_user!
   skip_before_action :verify_authenticity_token
+  before_action :set_paper_trail_whodunnit
 
   helper_method :render_json_error, :render_json_validation_error, :unauthorized!, :authenticate_api_user!, :authenticate_domain
 

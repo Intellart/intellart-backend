@@ -63,6 +63,17 @@ Rails.application.routes.draw do
     resources :blog_article_comment_likes
     resources :blog_article_comment_dislikes
     resources :blog_article_tags
+
+    resources :preprints do
+      member do
+        put :request_publishing
+        put :accept_publishing
+        put :reject_publishing
+        # put :like
+      end
+    end
+    get '/status_preprints', to: 'preprints#index_by_status'
+    resources :preprint_comments
   end
 
   namespace :api, defaults: { format: :json } do

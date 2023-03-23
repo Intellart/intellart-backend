@@ -1,7 +1,8 @@
 class NotificationMailer < ApplicationMailer
   default from: 'no-reply@intellart.com'
   before_action :set_article_and_user, only: [:publishing_requested, :publishing_accepted, :publishing_rejected]
-  before_action :set_nft_and_user, except: [:publishing_requested, :publishing_accepted, :publishing_rejected]
+  before_action :set_nft_and_user, except: [:publishing_requested, :publishing_accepted, :publishing_rejected, :preprint_publishing_requested, :preprint_publishing_rejected, :preprint_publishing_accepted]
+  before_action :set_preprint_and_users, only: [:preprint_publishing_accepted, :preprint_publishing_rejected]
 
   def request_for_minting
     @email = Admin.all.pluck(:email)
@@ -39,6 +40,7 @@ class NotificationMailer < ApplicationMailer
   end
 
   # PUBWEAVE #
+  # Blog articles
   def publishing_requested
     @email = Admin.all.pluck(:email)
     mail(to: @email, subject: 'New request for article publishing!')
@@ -55,11 +57,33 @@ class NotificationMailer < ApplicationMailer
     mail(to: @email, subject: 'Your article publishing request has been rejected!')
   end
 
+  # Preprints
+  def preprint_publishing_requested
+    @email = Admin.all.pluck(:email)
+    mail(to: @email, subject: 'New request for preprint publishing!')
+  end
+
+  def preprint_publishing_accepted
+    @emails = (@users.map(&:email) << Admin.all.pluck(:email)).flatten
+    puts @emails
+    mail(to: @emails, subject: 'Preprint published!')
+  end
+
+  def preprint_publishing_rejected
+    @emails = @users.map(&:email)
+    mail(to: @emails, subject: 'Your preprint publishing request has been rejected!')
+  end
+
   private
 
   def set_article_and_user
     @article = params[:blog_article]
     @user = User.find_by_id(@article.user_id)
+  end
+
+  def set_preprint_and_users
+    @preprint = params[:preprint]
+    @users = @preprint.users
   end
 
   def set_nft_and_user

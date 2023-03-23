@@ -3,6 +3,8 @@ class BlogArticle < ApplicationRecord
   has_many :blog_article_comments, class_name: 'BlogArticleComment', dependent: :destroy
   has_many :tags, class_name: 'BlogArticleTag', dependent: :destroy
   has_many :likes, class_name: 'BlogArticleLike', dependent: :destroy
+  # paper_trail versioning
+  has_paper_trail
 
   include AASM
   aasm column: :status do

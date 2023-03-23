@@ -3,6 +3,9 @@ class UserSerializer < ActiveModel::Serializer
              :profile_img, :social_web, :social_fb, :social_ln, :social_tw, :created_at, :updated_at,
              :username, :bio
 
+  #has_many :preprint_users, class_name: 'PreprintUser', foreign_key: 'user_id'
+  #has_many :preprints, through: :preprint_users, foreign_key: 'user_id'
+
   def full_name
     "#{object.first_name} #{object.last_name}"
   end

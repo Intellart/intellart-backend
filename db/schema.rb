@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_20_142954) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_21_105536) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -238,6 +238,41 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_142954) do
     t.index ["owner_id"], name: "index_nfts_on_owner_id"
   end
 
+  create_table "preprint_comments", force: :cascade do |t|
+    t.bigint "preprint_id", null: false
+    t.bigint "commenter_id"
+    t.bigint "reply_to_id"
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["commenter_id"], name: "index_preprint_comments_on_commenter_id"
+    t.index ["preprint_id"], name: "index_preprint_comments_on_preprint_id"
+    t.index ["reply_to_id"], name: "index_preprint_comments_on_reply_to_id"
+  end
+
+  create_table "preprint_users", force: :cascade do |t|
+    t.bigint "preprint_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["preprint_id"], name: "index_preprint_users_on_preprint_id"
+    t.index ["user_id"], name: "index_preprint_users_on_user_id"
+  end
+
+  create_table "preprints", force: :cascade do |t|
+    t.text "title"
+    t.text "subtitle"
+    t.string "status"
+    t.text "description"
+    t.string "image"
+    t.boolean "star"
+    t.jsonb "content"
+    t.bigint "category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_preprints_on_category_id"
+  end
+
   create_table "ratings", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "rated_user_id"
@@ -292,6 +327,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_142954) do
     t.index ["study_field_id"], name: "index_users_on_study_field_id"
   end
 
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.bigint "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object"
+    t.datetime "created_at"
+    t.text "object_changes"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "blog_article_comment_dislikes", "blog_article_comments"
@@ -313,6 +359,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_142954) do
   add_foreign_key "nft_tags", "users"
   add_foreign_key "nfts", "categories"
   add_foreign_key "nfts", "users", column: "owner_id"
+  add_foreign_key "preprint_comments", "preprint_comments", column: "reply_to_id"
+  add_foreign_key "preprint_comments", "preprints"
+  add_foreign_key "preprint_comments", "users", column: "commenter_id"
+  add_foreign_key "preprint_users", "preprints"
+  add_foreign_key "preprint_users", "users"
+  add_foreign_key "preprints", "categories"
   add_foreign_key "ratings", "users"
   add_foreign_key "ratings", "users", column: "rated_user_id"
   add_foreign_key "tags", "categories"
