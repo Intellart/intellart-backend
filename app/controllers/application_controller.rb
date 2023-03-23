@@ -5,8 +5,9 @@ class ApplicationController < ActionController::Base
   respond_to :json
   before_action :authenticate_api_user!
   skip_before_action :verify_authenticity_token
+  before_action :set_paper_trail_whodunnit
 
-  helper_method :render_json_error, :render_json_validation_error, :unauthorized!, :authenticate_api_user!
+  helper_method :render_json_error, :render_json_validation_error, :unauthorized!, :authenticate_api_user!, :authenticate_domain
 
   private
 
@@ -32,8 +33,16 @@ class ApplicationController < ActionController::Base
     unauthorized!
   end
 
+  def authenticate_domain
+    token, = token_and_options(request)
+    payload = AuthTokenService.decode_jwt(token)
+    head :unauthorized unless payload[0]['domain'] == @domain
+  end
+
   def jwt_valid?(token)
     jwt_payload = AuthTokenService.decode_jwt(token)
+    @domain = jwt_payload[0]['domain']
+
     if jwt_payload[0]['admin_id']
       user_id = jwt_payload[0]['admin_id']
       @current_user = Admin.find(user_id)

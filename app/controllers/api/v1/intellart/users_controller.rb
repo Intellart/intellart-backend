@@ -6,7 +6,7 @@ module Api
         before_action :require_same_user, only: [:update, :destroy]
         before_action :authenticate_api_admin!, only: [:index]
         after_action :refresh_jwt, except: [:show, :index]
-        skip_before_action :authenticate_api_user!, only: [:index]
+        skip_before_action :authenticate_api_user!, only: [:index, :show]
 
         rescue_from ActiveRecord::RecordNotFound do
           render_json_error :not_found, :user_not_found
@@ -49,7 +49,8 @@ module Api
         end
 
         def user_update_params
-          params.require(:user).permit(:first_name, :last_name, :orcid_id, :study_field_id, :profile_img, :social_links)
+          params.require(:user).permit(:first_name, :last_name, :orcid_id, :study_field_id, :profile_img,
+                                       :social_web, :social_ln, :social_fb, :social_tw, :username, :bio)
         end
       end
     end

@@ -43,9 +43,37 @@ Rails.application.routes.draw do
 
   # PUBWEAVE
   pubweave_routes = lambda do
-    resources :blogs
-    resources :blog_articles
-    resources :blog_article_comments
+    resources :blog_articles do
+      member do
+        put :request_publishing
+        put :accept_publishing
+        put :reject_publishing
+        put :like
+      end
+    end
+    get '/user_blog_articles', to: 'blog_articles#index_by_user'
+    get '/status_blog_articles', to: 'blog_articles#index_by_status'
+    resources :blog_article_likes
+    resources :blog_article_comments do
+      member do
+        put :like
+        put :dislike
+      end
+    end
+    resources :blog_article_comment_likes
+    resources :blog_article_comment_dislikes
+    resources :blog_article_tags
+
+    resources :preprints do
+      member do
+        put :request_publishing
+        put :accept_publishing
+        put :reject_publishing
+        # put :like
+      end
+    end
+    get '/status_preprints', to: 'preprints#index_by_status'
+    resources :preprint_comments
   end
 
   namespace :api, defaults: { format: :json } do
@@ -63,6 +91,9 @@ Rails.application.routes.draw do
 
       namespace :intellart, &intellart_routes
       namespace :pubweave, &pubweave_routes
+
+      resources :categories
+      resources :tags
     end
   end
 end

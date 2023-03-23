@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_19_093547) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_21_105536) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -56,38 +56,75 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_093547) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
+  create_table "blog_article_comment_dislikes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "blog_article_comment_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_article_comment_id"], name: "index_blog_article_comment_dislikes_on_blog_article_comment_id"
+    t.index ["user_id"], name: "index_blog_article_comment_dislikes_on_user_id"
+  end
+
+  create_table "blog_article_comment_likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "blog_article_comment_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_article_comment_id"], name: "index_blog_article_comment_likes_on_blog_article_comment_id"
+    t.index ["user_id"], name: "index_blog_article_comment_likes_on_user_id"
+  end
+
   create_table "blog_article_comments", force: :cascade do |t|
     t.bigint "blog_article_id", null: false
     t.bigint "commenter_id"
+    t.bigint "reply_to_id"
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["blog_article_id"], name: "index_blog_article_comments_on_blog_article_id"
     t.index ["commenter_id"], name: "index_blog_article_comments_on_commenter_id"
+    t.index ["reply_to_id"], name: "index_blog_article_comments_on_reply_to_id"
+  end
+
+  create_table "blog_article_likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "blog_article_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_article_id"], name: "index_blog_article_likes_on_blog_article_id"
+    t.index ["user_id"], name: "index_blog_article_likes_on_user_id"
+  end
+
+  create_table "blog_article_tags", force: :cascade do |t|
+    t.bigint "tag_id", null: false
+    t.bigint "blog_article_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_article_id"], name: "index_blog_article_tags_on_blog_article_id"
+    t.index ["tag_id"], name: "index_blog_article_tags_on_tag_id"
   end
 
   create_table "blog_articles", force: :cascade do |t|
-    t.bigint "blog_id", null: false
+    t.bigint "user_id", null: false
     t.text "title"
     t.text "subtitle"
-    t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["blog_id"], name: "index_blog_articles_on_blog_id"
-  end
-
-  create_table "blogs", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text "name"
-    t.index ["user_id"], name: "index_blogs_on_user_id"
+    t.string "status"
+    t.text "description"
+    t.string "image"
+    t.boolean "star"
+    t.jsonb "content"
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_blog_articles_on_category_id"
+    t.index ["user_id"], name: "index_blog_articles_on_user_id"
   end
 
   create_table "categories", force: :cascade do |t|
     t.string "category_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
   end
 
   create_table "exchange_rates", force: :cascade do |t|
@@ -191,7 +228,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_093547) do
     t.bigint "owner_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.serial "nft_id", null: false
+    t.serial "nft_id"
     t.string "tx_id"
     t.string "witness"
     t.string "seller_address"
@@ -199,6 +236,41 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_093547) do
     t.index ["category_id"], name: "index_nfts_on_category_id"
     t.index ["fingerprint"], name: "index_nfts_on_fingerprint", unique: true
     t.index ["owner_id"], name: "index_nfts_on_owner_id"
+  end
+
+  create_table "preprint_comments", force: :cascade do |t|
+    t.bigint "preprint_id", null: false
+    t.bigint "commenter_id"
+    t.bigint "reply_to_id"
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["commenter_id"], name: "index_preprint_comments_on_commenter_id"
+    t.index ["preprint_id"], name: "index_preprint_comments_on_preprint_id"
+    t.index ["reply_to_id"], name: "index_preprint_comments_on_reply_to_id"
+  end
+
+  create_table "preprint_users", force: :cascade do |t|
+    t.bigint "preprint_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["preprint_id"], name: "index_preprint_users_on_preprint_id"
+    t.index ["user_id"], name: "index_preprint_users_on_user_id"
+  end
+
+  create_table "preprints", force: :cascade do |t|
+    t.text "title"
+    t.text "subtitle"
+    t.string "status"
+    t.text "description"
+    t.string "image"
+    t.boolean "star"
+    t.jsonb "content"
+    t.bigint "category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_preprints_on_category_id"
   end
 
   create_table "ratings", force: :cascade do |t|
@@ -222,6 +294,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_093547) do
     t.string "tag"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_tags_on_category_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -236,31 +310,63 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_093547) do
     t.string "unconfirmed_email"
     t.string "first_name"
     t.string "last_name"
-    t.text "social_links"
+    t.text "social_web"
     t.text "profile_img"
     t.string "orcid_id"
     t.bigint "study_field_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "social_fb"
+    t.text "social_tw"
+    t.text "social_ln"
+    t.text "username"
+    t.text "bio"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["study_field_id"], name: "index_users_on_study_field_id"
   end
 
+  create_table "versions", force: :cascade do |t|
+    t.string "item_type", null: false
+    t.bigint "item_id", null: false
+    t.string "event", null: false
+    t.string "whodunnit"
+    t.text "object"
+    t.datetime "created_at"
+    t.text "object_changes"
+    t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "blog_article_comment_dislikes", "blog_article_comments"
+  add_foreign_key "blog_article_comment_dislikes", "users"
+  add_foreign_key "blog_article_comment_likes", "blog_article_comments"
+  add_foreign_key "blog_article_comment_likes", "users"
+  add_foreign_key "blog_article_comments", "blog_article_comments", column: "reply_to_id"
   add_foreign_key "blog_article_comments", "blog_articles"
   add_foreign_key "blog_article_comments", "users", column: "commenter_id"
-  add_foreign_key "blog_articles", "blogs"
-  add_foreign_key "blogs", "users"
+  add_foreign_key "blog_article_likes", "blog_articles"
+  add_foreign_key "blog_article_likes", "users"
+  add_foreign_key "blog_article_tags", "blog_articles"
+  add_foreign_key "blog_article_tags", "tags"
+  add_foreign_key "blog_articles", "categories"
+  add_foreign_key "blog_articles", "users"
   add_foreign_key "nft_endorsers", "users"
   add_foreign_key "nft_likes", "users"
   add_foreign_key "nft_tags", "tags"
   add_foreign_key "nft_tags", "users"
   add_foreign_key "nfts", "categories"
   add_foreign_key "nfts", "users", column: "owner_id"
+  add_foreign_key "preprint_comments", "preprint_comments", column: "reply_to_id"
+  add_foreign_key "preprint_comments", "preprints"
+  add_foreign_key "preprint_comments", "users", column: "commenter_id"
+  add_foreign_key "preprint_users", "preprints"
+  add_foreign_key "preprint_users", "users"
+  add_foreign_key "preprints", "categories"
   add_foreign_key "ratings", "users"
   add_foreign_key "ratings", "users", column: "rated_user_id"
+  add_foreign_key "tags", "categories"
   add_foreign_key "users", "study_fields"
 end
