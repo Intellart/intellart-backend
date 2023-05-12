@@ -55,6 +55,12 @@ module Api
 
         # PUT/PATCH api/v1/pubweave/blog_articles/:id
         def update
+          # if article_update_params.key?(:content)
+          #   content = article_update_params[:content]
+          #   content.each do |content_key, content_data|
+          #   end
+          # end
+          article_update_params[:content] = JSON.parse(article_update_params[:content].to_json) if article_update_params.key?(:content)
           render_json_validation_error(@article) and return unless @article.update(article_update_params)
 
           render json: @article, status: :ok
@@ -97,12 +103,22 @@ module Api
           @article = BlogArticle.find(params[:id])
         end
 
+        def content_params
+          [:time, :version,
+           { blocks: [:id, :type,
+                      { data: [:text, :html, :content, :with_headings, :style, :message, :title, :code, :link, :meta, :caption, :streched, :withBackground, :withBorder, :alignment,
+                               { items: [:checked, :text] },
+                               { file: [:url] }] }] }]
+        end
+
         def article_params
-          params.require(:blog_article).permit(:user_id, :title, :subtitle, :content, :description, :status, :image, :star, :category_id)
+          params.require(:blog_article).permit(:user_id, :title, :subtitle, :description, :status, :image, :star, :category_id,
+                                               content: content_params)
         end
 
         def article_update_params
-          params.require(:blog_article).permit(:title, :subtitle, :content, :likes, :description, :status, :image, :star, :category_id)
+          params.require(:blog_article).permit(:title, :subtitle, :likes, :description, :status, :image, :star, :category_id,
+                                               content: content_params)
         end
       end
     end
