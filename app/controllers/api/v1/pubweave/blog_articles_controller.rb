@@ -2,6 +2,8 @@ module Api
   module V1
     module Pubweave
       class BlogArticlesController < ApplicationController
+        helper BlogArticlesParamsHelper
+
         before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :deny_published_article_update, only: [:update]
@@ -106,9 +108,8 @@ module Api
         def content_params
           [:time, :version,
            { blocks: [:id, :type,
-                      { data: [:text, :html, :content, :with_headings, :style, :message, :title, :code, :link, :meta, :caption, :streched, :withBackground, :withBorder, :alignment,
-                               { items: [:checked, :text] },
-                               { file: [:url] }] }] }]
+                      { data: [helpers.paragraph_and_heading_params, helpers.math_and_html_params, helpers.table_params, helpers.list_params, helpers.checklist_params,
+                               helpers.warning_params, helpers.code_params, helpers.link_params, helpers.image_params, helpers.quote_params].flatten }] }]
         end
 
         def article_params
