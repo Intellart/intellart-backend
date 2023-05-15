@@ -109,7 +109,13 @@ module Api
           [:time, :version,
            { blocks: [:id, :type,
                       { data: [helpers.paragraph_and_heading_params, helpers.math_and_html_params, helpers.table_params, helpers.list_params, helpers.checklist_params,
-                               helpers.warning_params, helpers.code_params, helpers.link_params, helpers.image_params, helpers.quote_params].flatten }] }]
+                               helpers.warning_params, helpers.code_params, helpers.link_params, helpers.image_params, helpers.quote_params, helpers.all_arrays_in_params].flatten }] }]
+        end
+
+        def permit_table_data(whitelist)
+          whitelist[:content][:blocks].each_with_index do |block, index|
+            block[:data][:content] = params[:blog_article][:content][:blocks][index][:data][:content] if block[:type] == 'table'
+          end
         end
 
         def article_params
@@ -119,7 +125,7 @@ module Api
 
         def article_update_params
           params.require(:blog_article).permit(:title, :subtitle, :likes, :description, :status, :image, :star, :category_id,
-                                               content: content_params)
+                                               content: content_params).tap { |whitelist| permit_table_data(whitelist) }
         end
       end
     end
