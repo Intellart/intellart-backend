@@ -113,6 +113,8 @@ module Api
         end
 
         def permit_table_data(whitelist)
+          return unless params[:blog_article][:content].present?
+
           whitelist[:content][:blocks].each_with_index do |block, index|
             block[:data][:content] = params[:blog_article][:content][:blocks][index][:data][:content] if block[:type] == 'table'
           end
