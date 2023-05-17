@@ -108,13 +108,6 @@ tag37 = Tag.create!(tag: 'International Law' , category_id: cat13.id)
 tag38 = Tag.create!(tag: 'Tax Law' , category_id: cat13.id)
 
 
-
-
-
-
-rating1 = Rating.create!(user_id: 1, rated_user_id: 2, rating: 5)
-rating2 = Rating.create!(user_id: 2, rated_user_id: 1, rating: 1)
-
 # article1 = BlogArticle.create!(
 #   user_id: user1.id, 
 #   title: "Vector Spaces",

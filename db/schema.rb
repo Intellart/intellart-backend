@@ -56,13 +56,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
     t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
   end
 
-  create_table "article_tags", force: :cascade do |t|
-    t.bigint "tag_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["tag_id"], name: "index_article_tags_on_tag_id"
-  end
-
   create_table "articles", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.text "title"
@@ -77,6 +70,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
     t.bigint "category_id"
     t.index ["category_id"], name: "index_articles_on_category_id"
     t.index ["user_id"], name: "index_articles_on_user_id"
+  end
+
+  create_table "articles_tags", id: false, force: :cascade do |t|
+    t.bigint "article_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_articles_tags_on_article_id"
+    t.index ["tag_id"], name: "index_articles_tags_on_tag_id"
+  end
+
+  create_table "articles_users", id: false, force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "article_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_articles_users_on_article_id"
+    t.index ["user_id"], name: "index_articles_users_on_user_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -209,12 +220,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
 
   create_table "ratings", force: :cascade do |t|
     t.bigint "user_id"
-    t.bigint "rated_user_id"
     t.integer "rating"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["rated_user_id"], name: "index_ratings_on_rated_user_id"
-    t.index ["user_id", "rated_user_id"], name: "index_ratings_on_user_id_and_rated_user_id", unique: true
+    t.string "rating_subject_type"
+    t.bigint "rating_subject_id"
+    t.index ["rating_subject_type", "rating_subject_id"], name: "index_ratings_on_rating_subject"
     t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
@@ -274,7 +285,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "article_tags", "tags"
   add_foreign_key "articles", "categories"
   add_foreign_key "articles", "users"
   add_foreign_key "comments", "comments", column: "reply_to_id"
@@ -286,7 +296,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
   add_foreign_key "nfts", "categories"
   add_foreign_key "nfts", "users", column: "owner_id"
   add_foreign_key "ratings", "users"
-  add_foreign_key "ratings", "users", column: "rated_user_id"
   add_foreign_key "tags", "categories"
   add_foreign_key "users", "study_fields"
 end

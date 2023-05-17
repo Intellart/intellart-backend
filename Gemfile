@@ -57,7 +57,6 @@ gem 'bootsnap', '>= 1.4.4', require: false
 
 group :development, :test do
   gem 'factory_bot_rails'
-  gem 'pry-rails'
   gem 'rspec-rails'
   gem 'vcr'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
