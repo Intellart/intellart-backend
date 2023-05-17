@@ -3,7 +3,7 @@ class BlogArticleSerializer < ActiveModel::Serializer
              :versions, :first_version, :last_version
 
   belongs_to :user
-  has_many :blog_article_comments
+  has_many :article_comments
   has_many :tags
 
   def category

@@ -5,7 +5,6 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-
   devise_for :admins, defaults: { format: :json }
 
   intellart_routes = lambda do
@@ -43,7 +42,7 @@ Rails.application.routes.draw do
 
   # PUBWEAVE
   pubweave_routes = lambda do
-    resources :blog_articles do
+    resources :articles do
       member do
         put :request_publishing
         put :accept_publishing
@@ -51,29 +50,15 @@ Rails.application.routes.draw do
         put :like
       end
     end
-    get '/user_blog_articles', to: 'blog_articles#index_by_user'
-    get '/status_blog_articles', to: 'blog_articles#index_by_status'
-    resources :blog_article_likes
-    resources :blog_article_comments do
+    get '/user_articles', to: 'articles#index_by_user'
+    get '/status_articles', to: 'articles#index_by_status'
+    resources :comments do
       member do
         put :like
         put :dislike
       end
     end
-    resources :blog_article_comment_likes
-    resources :blog_article_comment_dislikes
-    resources :blog_article_tags
-
-    resources :preprints do
-      member do
-        put :request_publishing
-        put :accept_publishing
-        put :reject_publishing
-        # put :like
-      end
-    end
     get '/status_preprints', to: 'preprints#index_by_status'
-    resources :preprint_comments
   end
 
   namespace :api, defaults: { format: :json } do

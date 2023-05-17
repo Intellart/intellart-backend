@@ -1,4 +1,4 @@
-module BlogArticlesParamsHelper
+module ArticlesParamsHelper
   def all_arrays_in_params
     [{ items: [] },
      #  { meta: {} },

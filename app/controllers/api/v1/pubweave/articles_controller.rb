@@ -1,8 +1,8 @@
 module Api
   module V1
     module Pubweave
-      class BlogArticlesController < ApplicationController
-        helper BlogArticlesParamsHelper
+      class ArticlesController < ApplicationController
+        helper ArticlesParamsHelper
 
         before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
@@ -13,41 +13,41 @@ module Api
         before_action :authenticate_api_admin!, only: [:accept_publishing, :reject_publishing]
 
         rescue_from ActiveRecord::RecordNotFound do
-          render_json_error :not_found, :blog_article_not_found
+          render_json_error :not_found, :article_not_found
         end
 
-        # GET api/v1/pubweave/blog_articles/
+        # GET api/v1/pubweave/articles/
         def index
-          articles = BlogArticle.all
+          articles = Article.all
           render json: articles, status: :ok
         end
 
-        # GET api/v1/pubweave/user_blog_articles/:user_id
+        # GET api/v1/pubweave/user_articles/:user_id
         def index_by_user
-          articles = BlogArticle.all.where(user_id: article_params[:user_id])
+          articles = Article.all.where(user_id: article_params[:user_id])
           render json: articles, status: :ok
         end
 
-        # GET api/v1/pubweave/status_blog_articles/:status
+        # GET api/v1/pubweave/status_articles/:status
         def index_by_status
-          articles = BlogArticle.all.where(status: article_params[:status])
+          articles = Article.all.where(status: article_params[:status])
           render json: articles, status: :ok
         end
 
-        # GET api/v1/pubweave/blog_articles/:id
+        # GET api/v1/pubweave/articles/:id
         def show
           render json: @article, status: :ok
         end
 
-        # POST api/v1/pubweave/blog_articles/
+        # POST api/v1/pubweave/articles/
         def create
-          @article = BlogArticle.new(article_params)
+          @article = Article.new(article_params)
           render_json_validation_error(@article) and return unless @article.save
 
           render json: @article, status: :created
         end
 
-        # PUT/PATCH api/v1/pubweave/blog_articles/:id/like/
+        # PUT/PATCH api/v1/pubweave/articles/:id/like/
         def like
           @article.likes += 1
           render_json_validation_error(@article) and return unless @article.save
@@ -55,7 +55,7 @@ module Api
           render json: @article, status: :ok
         end
 
-        # PUT/PATCH api/v1/pubweave/blog_articles/:id
+        # PUT/PATCH api/v1/pubweave/articles/:id
         def update
           # if article_update_params.key?(:content)
           #   content = article_update_params[:content]
@@ -68,24 +68,24 @@ module Api
           render json: @article, status: :ok
         end
 
-        # DELETE api/v1/pubweave/blog_articles/:id
+        # DELETE api/v1/pubweave/articles/:id
         def destroy
           render json: @article.id, status: :ok if @article.destroy
         end
 
-        # PUT api/v1/pubweave/blog_articles/:id/request_publishing
+        # PUT api/v1/pubweave/articles/:id/request_publishing
         def request_publishing
           @article.request_publishing!
           render json: @article, status: :ok if @article.requested?
         end
 
-        # PUT api/v1/pubweave/blog_articles/:id/accept_publishing
+        # PUT api/v1/pubweave/articles/:id/accept_publishing
         def accept_publishing
           @article.accept_publishing!
           render json: @article, status: :ok if @article.published?
         end
 
-        # PUT api/v1/pubweave/blog_articles/:id/reject_publishing
+        # PUT api/v1/pubweave/articles/:id/reject_publishing
         def reject_publishing
           @article.reject_publishing!
           render json: @article, status: :ok if @article.rejected?
@@ -102,32 +102,42 @@ module Api
         end
 
         def set_article
-          @article = BlogArticle.find(params[:id])
+          @article = Article.find(params[:id])
         end
 
         def content_params
           [:time, :version,
            { blocks: [:id, :type,
-                      { data: [helpers.paragraph_and_heading_params, helpers.math_and_html_params, helpers.table_params, helpers.list_params, helpers.checklist_params,
-                               helpers.warning_params, helpers.code_params, helpers.link_params, helpers.image_params, helpers.quote_params, helpers.all_arrays_in_params].flatten }] }]
+                      { data: [helpers.paragraph_and_heading_params,
+                               helpers.math_and_html_params,
+                               helpers.table_params,
+                               helpers.list_params,
+                               helpers.checklist_params,
+                               helpers.warning_params,
+                               helpers.code_params,
+                               helpers.link_params,
+                               helpers.image_params,
+                               helpers.quote_params,
+                               helpers.all_arrays_in_params].flatten }] }]
         end
 
         def permit_table_data(whitelist)
-          return unless params[:blog_article][:content].present?
+          return unless params[:article][:content].present?
 
           whitelist[:content][:blocks].each_with_index do |block, index|
-            block[:data][:content] = params[:blog_article][:content][:blocks][index][:data][:content] if block[:type] == 'table'
+            block[:data][:content] = params[:article][:content][:blocks][index][:data][:content] if block[:type] == 'table'
           end
         end
 
         def article_params
-          params.require(:blog_article).permit(:user_id, :title, :subtitle, :description, :status, :image, :star, :category_id,
-                                               content: content_params)
+          params.require(:article).permit(:user_id, :title, :subtitle, :description, :status, :image, :star, :category_id,
+                                          content: content_params)
         end
 
         def article_update_params
-          params.require(:blog_article).permit(:title, :subtitle, :likes, :description, :status, :image, :star, :category_id,
-                                               content: content_params).tap { |whitelist| permit_table_data(whitelist) }
+          params.require(:article).permit(:title, :subtitle, :likes, :description, :status, :image, :star, :category_id,
+                                          content: content_params).tap { |whitelist| permit_table_data(whitelist) }
+          # We are using tap because as of now Rails' strong params still don't permit an array of arrays
         end
       end
     end

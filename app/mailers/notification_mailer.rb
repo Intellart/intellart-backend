@@ -40,7 +40,6 @@ class NotificationMailer < ApplicationMailer
   end
 
   # PUBWEAVE #
-  # Blog articles
   def publishing_requested
     @email = Admin.all.pluck(:email)
     mail(to: @email, subject: 'New request for article publishing!')
@@ -77,7 +76,7 @@ class NotificationMailer < ApplicationMailer
   private
 
   def set_article_and_user
-    @article = params[:blog_article]
+    @article = params[:article]
     @user = User.find_by_id(@article.user_id)
   end
 

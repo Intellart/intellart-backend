@@ -1,0 +1,2 @@
+class ScientificArticle < Article
+end
