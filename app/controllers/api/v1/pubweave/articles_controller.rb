@@ -57,11 +57,14 @@ module Api
 
         # PUT/PATCH api/v1/pubweave/articles/:id
         def update
-          # if article_update_params.key?(:content)
-          #   content = article_update_params[:content]
-          #   content.each do |content_key, content_data|
-          #   end
-          # end
+          if article_update_params.key?(:content)
+            section_params = JSON.parse(article_update_params[:content].to_json)
+            article_update_params[:content] = section_params.first(2) # keep just the time and version
+            section_params[:blocks].each do |block|
+              block['article_id'] = @article.id
+              Section.create!(block)
+            end
+          end
           article_update_params[:content] = JSON.parse(article_update_params[:content].to_json) if article_update_params.key?(:content)
           render_json_validation_error(@article) and return unless @article.update(article_update_params)
 
@@ -130,8 +133,7 @@ module Api
         end
 
         def article_params
-          params.require(:article).permit(:user_id, :title, :subtitle, :description, :status, :image, :star, :category_id,
-                                          content: content_params)
+          params.require(:article).permit(:user_id, :title, :subtitle, :description, :status, :image, :star, :category_id)
         end
 
         def article_update_params

@@ -1,9 +1,8 @@
 class BlogArticleSerializer < ActiveModel::Serializer
-  attributes :id, :title, :subtitle, :content, :user, :likes, :status, :description, :image, :star, :category, :created_at, :updated_at,
-             :versions, :first_version, :last_version
+  attributes :id, :title, :subtitle, :content, :user, :likes, :status, :description, :image, :category, :created_at, :updated_at, :versions, :first_version, :last_version
 
   belongs_to :user
-  has_many :article_comments
+  has_many :comments
   has_many :tags
 
   def category

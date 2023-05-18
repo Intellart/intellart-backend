@@ -229,6 +229,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
     t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
+  create_table "sections", id: false, force: :cascade do |t|
+    t.string "id"
+    t.string "type"
+    t.jsonb "data"
+    t.bigint "article_id"
+    t.index ["article_id"], name: "index_sections_on_article_id"
+    t.index ["id"], name: "index_sections_on_id", unique: true
+  end
+
   create_table "study_fields", force: :cascade do |t|
     t.string "field_name"
     t.datetime "created_at", null: false

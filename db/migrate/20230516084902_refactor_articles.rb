@@ -27,5 +27,12 @@ class RefactorArticles < ActiveRecord::Migration[7.0]
       t.index :tag_id
       t.timestamps
     end
+
+    create_table :sections, id: false, primary_key: :id do |table|
+      table.string :id, index: { unique: true }
+      table.string :type
+      table.jsonb :data
+      table.references :article
+    end
   end
 end
