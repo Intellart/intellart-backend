@@ -68,19 +68,19 @@ module Api
         # PUT api/v1/pubweave/blog_articles/:id/request_publishing
         def request_publishing
           @article.request_publishing!
-          render json: @article, status: :ok if @article.requested?
+          render json: @article, status: :ok
         end
 
         # PUT api/v1/pubweave/blog_articles/:id/accept_publishing
         def accept_publishing
           @article.accept_publishing!
-          render json: @article, status: :ok if @article.published?
+          render json: @article, status: :ok
         end
 
         # PUT api/v1/pubweave/blog_articles/:id/reject_publishing
         def reject_publishing
           @article.reject_publishing!
-          render json: @article, status: :ok if @article.rejected?
+          render json: @article, status: :ok
         end
 
         private
