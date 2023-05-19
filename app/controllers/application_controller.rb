@@ -17,7 +17,8 @@ class ApplicationController < ActionController::Base
   end
 
   def refresh_jwt
-    new_token = AuthTokenService.generate_jwt(@current_user.id, @domain)
+    is_admin = @current_user.class.name == 'Admin'
+    new_token = AuthTokenService.generate_jwt(@current_user.id, @domain, admin: is_admin)
     response.set_header('_jwt', new_token)
   end
 
