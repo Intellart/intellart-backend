@@ -57,7 +57,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
   end
 
   create_table "articles", force: :cascade do |t|
-    t.bigint "user_id", null: false
     t.text "title"
     t.text "subtitle"
     t.datetime "created_at", null: false
@@ -68,8 +67,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
     t.boolean "star"
     t.jsonb "content"
     t.bigint "category_id"
+    t.string "article_type"
+    t.bigint "author_id"
+    t.index ["author_id"], name: "index_articles_on_author_id"
     t.index ["category_id"], name: "index_articles_on_category_id"
-    t.index ["user_id"], name: "index_articles_on_user_id"
   end
 
   create_table "articles_tags", id: false, force: :cascade do |t|
@@ -234,7 +235,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
     t.string "type"
     t.jsonb "data"
     t.bigint "article_id"
+    t.bigint "collaborator_id"
     t.index ["article_id"], name: "index_sections_on_article_id"
+    t.index ["collaborator_id"], name: "index_sections_on_collaborator_id"
     t.index ["id"], name: "index_sections_on_id", unique: true
   end
 
@@ -295,7 +298,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "categories"
-  add_foreign_key "articles", "users"
+  add_foreign_key "articles", "users", column: "author_id"
   add_foreign_key "comments", "comments", column: "reply_to_id"
   add_foreign_key "comments", "users", column: "commenter_id"
   add_foreign_key "nft_endorsers", "users"
@@ -305,6 +308,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
   add_foreign_key "nfts", "categories"
   add_foreign_key "nfts", "users", column: "owner_id"
   add_foreign_key "ratings", "users"
+  add_foreign_key "sections", "users", column: "collaborator_id"
   add_foreign_key "tags", "categories"
   add_foreign_key "users", "study_fields"
 end

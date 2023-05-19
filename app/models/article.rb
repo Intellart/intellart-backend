@@ -1,5 +1,5 @@
 class Article < ApplicationRecord
-  belongs_to :user
+  belongs_to :author, class_name: 'User'
   has_many :comments, dependent: :destroy
   has_many :ratings, as: :rating_subject, dependent: :destroy
   has_many :sections, dependent: :destroy
@@ -25,6 +25,20 @@ class Article < ApplicationRecord
 
     event :reject_publishing, after: :publishing_rejected_notification do
       transitions from: [:requested, :published], to: :rejected
+    end
+  end
+
+  aasm column: :article_type do
+    state :blog_article
+    state :preprint
+    state :scientific_article
+
+    event :convert_to_preprint do
+      transitions from: :blog_article, to: :preprint
+    end
+
+    event :convert_to_scientific_article do
+      transitions from: :preprint, to: :scientific_article
     end
   end
 

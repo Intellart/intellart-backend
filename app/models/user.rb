@@ -7,10 +7,10 @@ class User < ApplicationRecord
   validates :first_name, :last_name, presence: true
   validates :orcid_id, uniqueness: true, allow_nil: true
 
-  has_many :articles, dependent: :destroy
+  has_many :articles, foreign_key: 'author_id', dependent: :destroy
   has_many :comments, as: :commenter, dependent: :destroy
 
-  has_many :evaluations, class_name: 'Rating', as: :rating_subject, dependent: :destroy
+  has_many :evaluations, foreign_key: 'rating_subject_id', class_name: 'Rating', dependent: :destroy
   has_many :ratings, dependent: :destroy
   has_and_belongs_to_many :collaborations, class_name: 'Article', join_table: 'articles_users', foreign_key: 'user_id'
 

@@ -62,7 +62,12 @@ module Api
             article_update_params[:content] = section_params.first(2) # keep just the time and version
             section_params[:blocks].each do |block|
               block['article_id'] = @article.id
-              Section.create!(block)
+              block['collaborator_id'] = @current_user.id
+              if (section = Section.find(block['id'])).present?
+                section.update!(block)
+              else
+                Section.create!(block)
+              end
             end
           end
           article_update_params[:content] = JSON.parse(article_update_params[:content].to_json) if article_update_params.key?(:content)
