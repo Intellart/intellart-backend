@@ -1,8 +1,0 @@
-:concurrency: 5 # should be the same as pool size in database.yml
-:queues:
-  - critical
-  - default
-  - low
-:schedule:
-  GetCurrentExchangeRatesJob:
-    every: 5m

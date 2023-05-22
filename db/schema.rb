@@ -63,7 +63,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
     t.datetime "updated_at", null: false
     t.string "status"
     t.text "description"
-    t.string "image"
+    t.string "image_url"
     t.boolean "star"
     t.jsonb "content"
     t.bigint "category_id"
@@ -104,6 +104,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "article_id"
+    t.index ["article_id"], name: "index_comments_on_article_id"
     t.index ["commenter_id"], name: "index_comments_on_commenter_id"
     t.index ["reply_to_id"], name: "index_comments_on_reply_to_id"
   end

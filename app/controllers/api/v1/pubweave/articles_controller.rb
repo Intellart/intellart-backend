@@ -18,19 +18,13 @@ module Api
 
         # GET api/v1/pubweave/articles/
         def index
-          articles = Article.all
-          render json: articles, status: :ok
-        end
-
-        # GET api/v1/pubweave/user_articles/:user_id
-        def index_by_user
-          articles = Article.all.where(user_id: article_params[:user_id])
-          render json: articles, status: :ok
-        end
-
-        # GET api/v1/pubweave/status_articles/:status
-        def index_by_status
-          articles = Article.all.where(status: article_params[:status])
+          articles = if article_params.keys.include? 'user_id'
+                       Article.where(author_id: article_params[:user_id])
+                     elsif article_params.keys.include? 'status'
+                       Article.where(status: article_params[:status])
+                     else
+                       Article.all
+                     end
           render json: articles, status: :ok
         end
 

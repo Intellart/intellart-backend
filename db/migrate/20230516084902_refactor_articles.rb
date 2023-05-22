@@ -10,6 +10,7 @@ class RefactorArticles < ActiveRecord::Migration[7.0]
 
     rename_table :blog_articles, :articles
     rename_table :blog_article_comments, :comments
+    rename_column :articles, :image, :image_url
 
     remove_reference :comments, :blog_article
     remove_reference :ratings, :rated_user
@@ -19,6 +20,7 @@ class RefactorArticles < ActiveRecord::Migration[7.0]
 
     add_reference :ratings, :rating_subject, polymorphic: true
     add_reference :articles, :author, foreign_key: { to_table: :users }
+    add_reference :comments, :article
 
     create_join_table :users, :articles do |t|
       t.index :user_id

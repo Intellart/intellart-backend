@@ -11,7 +11,7 @@ class Section < ApplicationRecord
   belongs_to :collaborator, class_name: 'User'
 
   def collaborator_invited?
-    return if article.collaborators.pluck(:id).include?(collaborator_id)
+    return if article.collaborators.pluck(:id).include?(collaborator_id) || collaborator_id == article.author_id
 
     errors.add(:user_id, "You aren't a collaborator of this document.")
   end
