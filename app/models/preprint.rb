@@ -15,17 +15,17 @@ class Preprint < ApplicationRecord
     state :rejected
     state :published
 
-    # event :request_publishing, after: :preprint_publishing_requested_notification do
-    #   transitions from: [:draft, :rejected], to: :requested
-    # end
+    event :request_publishing, after: :preprint_publishing_requested_notification do
+      transitions from: [:draft, :rejected], to: :requested
+    end
 
-    # event :accept_publishing, after: :preprint_publishing_accepted_notification do
-    #   transitions from: :requested, to: :published
-    # end
+    event :accept_publishing, after: :preprint_publishing_accepted_notification do
+      transitions from: :requested, to: :published
+    end
 
-    # event :reject_publishing, after: :preprint_publishing_rejected_notification do
-    #   transitions from: [:requested, :published], to: :rejected
-    # end
+    event :reject_publishing, after: :preprint_publishing_rejected_notification do
+      transitions from: [:requested, :published], to: :rejected
+    end
 
     event :request_publishing do
       transitions from: :draft, to: :published
