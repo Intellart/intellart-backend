@@ -2,7 +2,7 @@ class ArticleSerializer < ActiveModel::Serializer
   attributes :id, :title, :subtitle, :content, :author, :likes, :status, :description, :image, :category, :created_at, :updated_at, :star, :comments, :tags
 
   def author
-    UserSerializer.new(object.author).to_h.slice(:id, :email, :first_name, :last_name, :full_name)
+    UserSerializer.new(object.author).to_h.slice(:id, :email, :username, :first_name, :last_name, :full_name)
   end
 
   def category
