@@ -18,9 +18,9 @@ module Api
 
         # GET api/v1/pubweave/articles/
         def index
-          articles = if article_params.keys.include? 'user_id'
+          articles = if params[:article]&.keys&.include? 'user_id'
                        Article.where(author_id: article_params[:user_id])
-                     elsif article_params.keys.include? 'status'
+                     elsif params[:article]&.keys&.include? 'status'
                        Article.where(status: article_params[:status])
                      else
                        Article.all
@@ -41,12 +41,38 @@ module Api
           render json: @article, status: :created
         end
 
-        # PUT/PATCH api/v1/pubweave/articles/:id/like/
-        def like
-          @article.likes += 1
-          render_json_validation_error(@article) and return unless @article.save
+        # POST api/v1/pubweave/articles/:id/add_tag/
+        def add_tag
+          tag = Tag.find(params[:tag_id])
+          @article.tags << tag
+          render json: @article
+        rescue StandardError
+          render json: :unprocessable_entity
+        end
 
+        # PUT/PATCH api/v1/pubweave/articles/:id/remove_tag/
+        def remove_tag
+          tag = @article.tags.find(params[:tag_id])
+          @article.tags.delete(tag)
+          render json: @article
+        rescue StandardError
+          render json: :unprocessable_entity
+        end
+
+        # POST api/v1/pubweave/articles/:id/like/
+        def like
+          @article.rate!(@current_user, :like)
           render json: @article, status: :ok
+        rescue StandardError
+          render json: @article.errors, status: :unprocessable_entity
+        end
+
+        # POST api/v1/pubweave/articles/:id/dislike/
+        def dislike
+          @article.rate!(@current_user, :dislike)
+          render json: @article, status: :ok
+        rescue StandardError
+          render json: @article.errors, status: :unprocessable_entity
         end
 
         # PUT/PATCH api/v1/pubweave/articles/:id
@@ -54,10 +80,10 @@ module Api
           if article_update_params.key?(:content)
             section_params = JSON.parse(article_update_params[:content].to_json)
             article_update_params[:content] = section_params.first(2) # keep just the time and version
-            section_params[:blocks].each do |block|
+            section_params['blocks'].each do |block|
               block['article_id'] = @article.id
               block['collaborator_id'] = @current_user.id
-              if (section = Section.find(block['id'])).present?
+              if (section = Section.find_by(id: block['id'])).present?
                 section.update!(block)
               else
                 Section.create!(block)
@@ -100,7 +126,7 @@ module Api
         end
 
         def require_owner
-          head :unauthorized unless @current_user.id == @article.user_id || @current_user.super?
+          head :unauthorized unless @current_user.id == @article.author_id || @current_user.super?
         end
 
         def set_article
@@ -124,7 +150,7 @@ module Api
         end
 
         def permit_table_data(whitelist)
-          return unless params[:article][:content].present?
+          return unless whitelist[:content].present?
 
           whitelist[:content][:blocks].each_with_index do |block, index|
             block[:data][:content] = params[:article][:content][:blocks][index][:data][:content] if block[:type] == 'table'
@@ -132,11 +158,12 @@ module Api
         end
 
         def article_params
-          params.require(:article).permit(:user_id, :title, :subtitle, :description, :status, :image, :star, :category_id)
+          params.require(:article).permit(:author_id, :title, :subtitle, :description, :status, :image, :star, :category_id, :tag_id,
+                                          content: content_params).tap { |whitelist| permit_table_data(whitelist) }
         end
 
         def article_update_params
-          params.require(:article).permit(:title, :subtitle, :likes, :description, :status, :image, :star, :category_id,
+          params.require(:article).permit(:title, :subtitle, :likes, :description, :status, :image, :star, :category_id, :tag_id,
                                           content: content_params).tap { |whitelist| permit_table_data(whitelist) }
           # We are using tap because as of now Rails' strong params still don't permit an array of arrays
         end

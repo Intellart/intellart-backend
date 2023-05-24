@@ -8,6 +8,10 @@ class Article < ApplicationRecord
   # paper_trail versioning
   has_paper_trail
 
+  accepts_nested_attributes_for :tags
+
+  include Rateable
+
   include AASM
   aasm column: :status do
     state :draft, initial: true

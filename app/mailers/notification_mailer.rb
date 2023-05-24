@@ -77,7 +77,7 @@ class NotificationMailer < ApplicationMailer
 
   def set_article_and_user
     @article = params[:article]
-    @user = User.find_by_id(@article.user_id)
+    @user = User.find_by_id(@article.author_id)
   end
 
   def set_preprint_and_users

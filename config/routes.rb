@@ -48,11 +48,11 @@ Rails.application.routes.draw do
         put :accept_publishing
         put :reject_publishing
         put :like
+        post :add_tag
+        put :remove_tag
       end
     end
-    get '/user_articles', to: 'articles#index_by_user'
-    get '/status_articles', to: 'articles#index_by_status'
-    resources :comments do
+    resources :comments, only: [:create, :destroy] do
       member do
         put :like
         put :dislike

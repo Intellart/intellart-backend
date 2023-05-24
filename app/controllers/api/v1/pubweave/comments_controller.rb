@@ -12,17 +12,6 @@ module Api
           render_json_error :not_found, :comment_not_found
         end
 
-        # GET api/v1/pubweave/comments/
-        def index
-          comments = Comment.all
-          render json: comments, status: :ok
-        end
-
-        # GET api/v1/pubweave/comments/:id
-        def show
-          render json: @comment, status: :ok
-        end
-
         # POST api/v1/pubweave/comments/
         def create
           @comment = Comment.new(comment_params)
@@ -38,20 +27,20 @@ module Api
           render json: @comment, status: :ok
         end
 
-        # PUT/PATCH api/v1/pubweave/commentss/:id/like/
+        # POST api/v1/pubweave/comments/:id/like/
         def like
-          @comment.likes += 1
-          render_json_validation_error(@comment) and return unless @comment.save
-
+          comment.rate!(@current_user, :like)
           render json: @comment, status: :ok
+        rescue StandardError
+          render json: @comment.errors, status: :unprocessable_entity
         end
 
-        # PUT/PATCH api/v1/pubweave/commentss/:id/dislike/
+        # POST api/v1/pubweave/comments/:id/dislike/
         def dislike
-          @comment.dislikes += 1
-          render_json_validation_error(@comment) and return unless @comment.save
-
+          comment.rate!(@current_user, :dislike)
           render json: @comment, status: :ok
+        rescue StandardError
+          render json: @comment.errors, status: :unprocessable_entity
         end
 
         # DELETE api/v1/pubweave/comments/:id
