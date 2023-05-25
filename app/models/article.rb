@@ -5,8 +5,6 @@ class Article < ApplicationRecord
   has_many :sections, dependent: :destroy
   has_and_belongs_to_many :collaborators, class_name: 'User', join_table: 'articles_users', foreign_key: 'article_id'
   has_and_belongs_to_many :tags, join_table: 'articles_tags', foreign_key: 'article_id'
-  # paper_trail versioning
-  has_paper_trail
 
   accepts_nested_attributes_for :tags
 

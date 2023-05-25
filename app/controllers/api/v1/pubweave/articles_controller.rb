@@ -11,6 +11,7 @@ module Api
         before_action :require_owner, only: [:update, :destroy]
         before_action :authenticate_domain, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :authenticate_api_admin!, only: [:accept_publishing, :reject_publishing]
+        before_action :set_paper_trail_whodunnit
 
         rescue_from ActiveRecord::RecordNotFound do
           render_json_error :not_found, :article_not_found
@@ -83,6 +84,7 @@ module Api
             section_params['blocks'].each do |block|
               block['article_id'] = @article.id
               block['collaborator_id'] = @current_user.id
+              block['version_number'] = article_update_params['version_number'] if article_update_params.key?(:version_number)
               if (section = Section.find_by(id: block['id'])).present?
                 section.update!(block)
               else
@@ -158,12 +160,12 @@ module Api
         end
 
         def article_params
-          params.require(:article).permit(:author_id, :title, :subtitle, :description, :status, :image, :star, :category_id, :tag_id,
+          params.require(:article).permit(:author_id, :title, :subtitle, :description, :status, :image, :star, :category_id, :tag_id, :version_number,
                                           content: content_params).tap { |whitelist| permit_table_data(whitelist) }
         end
 
         def article_update_params
-          params.require(:article).permit(:title, :subtitle, :likes, :description, :status, :image, :star, :category_id, :tag_id,
+          params.require(:article).permit(:title, :subtitle, :likes, :description, :status, :image, :star, :category_id, :tag_id, :version_number,
                                           content: content_params).tap { |whitelist| permit_table_data(whitelist) }
           # We are using tap because as of now Rails' strong params still don't permit an array of arrays
         end

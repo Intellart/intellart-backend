@@ -1,11 +1,10 @@
 class Section < ApplicationRecord
-  # The id and type come from the editor, so we need to override active record for ids and types
+  # The type come from the editor, so we need to override active record for types
   self.inheritance_column = nil
-  self.primary_key = :id
 
   validate :collaborator_invited?
 
-  has_paper_trail
+  has_paper_trail if: ->(section) { section.new_version? }
 
   belongs_to :article
   belongs_to :collaborator, class_name: 'User'
@@ -14,5 +13,9 @@ class Section < ApplicationRecord
     return if article.collaborators.pluck(:id).include?(collaborator_id) || collaborator_id == article.author_id
 
     errors.add(:user_id, "You aren't a collaborator of this document.")
+  end
+
+  def new_version?
+    version_number != versions.last.object.match(/version_number: (\d+\.\d+)/)[1].to_f
   end
 end

@@ -34,10 +34,11 @@ class RefactorArticles < ActiveRecord::Migration[7.0]
       t.timestamps
     end
 
-    create_table :sections, id: false, primary_key: :id do |table|
-      table.string :id, index: { unique: true }
+    create_table :sections do |table|
+      table.string :editor_section_id, index: { unique: true }
       table.string :type
       table.jsonb :data
+      table.float :version_number, default: 1.0
       table.references :article
       table.references :collaborator, foreign_key: { to_table: :users }
     end

@@ -232,15 +232,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
     t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
-  create_table "sections", id: false, force: :cascade do |t|
-    t.string "id"
+  create_table "sections", force: :cascade do |t|
+    t.string "editor_section_id"
     t.string "type"
     t.jsonb "data"
+    t.float "version_number", default: 1.0
     t.bigint "article_id"
     t.bigint "collaborator_id"
     t.index ["article_id"], name: "index_sections_on_article_id"
     t.index ["collaborator_id"], name: "index_sections_on_collaborator_id"
-    t.index ["id"], name: "index_sections_on_id", unique: true
+    t.index ["editor_section_id"], name: "index_sections_on_editor_section_id", unique: true
   end
 
   create_table "study_fields", force: :cascade do |t|
