@@ -29,7 +29,7 @@ module Api
 
         # POST api/v1/pubweave/comments/:id/like/
         def like
-          comment.rate!(@current_user, :like)
+          @comment.rate!(@current_user, :like)
           render json: @comment, status: :ok
         rescue StandardError
           render json: @comment.errors, status: :unprocessable_entity
@@ -37,7 +37,7 @@ module Api
 
         # POST api/v1/pubweave/comments/:id/dislike/
         def dislike
-          comment.rate!(@current_user, :dislike)
+          @comment.rate!(@current_user, :dislike)
           render json: @comment, status: :ok
         rescue StandardError
           render json: @comment.errors, status: :unprocessable_entity
