@@ -84,15 +84,17 @@ module Api
             section_params['blocks'].each do |block|
               block['article_id'] = @article.id
               block['collaborator_id'] = @current_user.id
+              block['editor_section_id'] = block['id']
               block['version_number'] = article_update_params['version_number'] if article_update_params.key?(:version_number)
-              if (section = Section.find_by(id: block['id'])).present?
+              if (section = Section.find_by(editor_section_id: block['id'])).present?
+                block.delete('id')
                 section.update!(block)
               else
+                block.delete('id')
                 Section.create!(block)
               end
             end
           end
-          article_update_params[:content] = JSON.parse(article_update_params[:content].to_json) if article_update_params.key?(:content)
           render_json_validation_error(@article) and return unless @article.update(article_update_params)
 
           render json: @article, status: :ok

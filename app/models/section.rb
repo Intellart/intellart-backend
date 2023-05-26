@@ -16,6 +16,8 @@ class Section < ApplicationRecord
   end
 
   def new_version?
+    return true if versions.last&.event == 'create'
+
     version_number != versions.last.object.match(/version_number: (\d+\.\d+)/)[1].to_f
   end
 end
