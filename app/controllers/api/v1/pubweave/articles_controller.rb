@@ -84,14 +84,21 @@ module Api
             section_params['blocks'].each do |block|
               block['article_id'] = @article.id
               block['collaborator_id'] = @current_user.id
+
               block['editor_section_id'] = block['id']
+              block.delete('id')
+
               block['version_number'] = article_update_params['version_number'] if article_update_params.key?(:version_number)
-              if (section = Section.find_by(editor_section_id: block['id'])).present?
-                block.delete('id')
+              action = block['action']
+              block.delete('action')
+
+              if %w[updated moved].include?(action)
+                section = Section.find_by(editor_section_id: block['editor_section_id'])
                 section.update!(block)
-              else
-                block.delete('id')
+              elsif action == 'created'
                 Section.create!(block)
+              elsif action == 'deleted'
+                section.destroy!
               end
             end
           end
@@ -139,7 +146,7 @@ module Api
 
         def content_params
           [:time, :version,
-           { blocks: [:id, :type,
+           { blocks: [:id, :type, :position, :action,
                       { data: [helpers.paragraph_and_heading_params,
                                helpers.math_and_html_params,
                                helpers.table_params,

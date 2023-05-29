@@ -10,13 +10,12 @@ class ArticleSerializer < ActiveModel::Serializer
   end
 
   def comments
-    ActiveModelSerializers::SerializableResource.new(object.comments,
-                                                     each_serializer: CommentSerializer).as_json
+    ActiveModelSerializers::SerializableResource.new(object.comments, each_serializer: CommentSerializer).as_json
   end
 
   def content
     payload = object.content
-    payload['blocks'] = JSON.parse(object.sections.to_json)
+    payload['blocks'] = JSON.parse(ActiveModelSerializers::SerializableResource.new(object.sections, each_serializer: SectionSerializer).to_json)
     payload
   end
 

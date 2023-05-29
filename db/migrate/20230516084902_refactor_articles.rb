@@ -39,6 +39,7 @@ class RefactorArticles < ActiveRecord::Migration[7.0]
       table.string :type
       table.jsonb :data
       table.float :version_number, default: 1.0
+      table.integer :position, unsigned: true
       table.references :article
       table.references :collaborator, foreign_key: { to_table: :users }
     end

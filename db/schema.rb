@@ -237,6 +237,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_16_084902) do
     t.string "type"
     t.jsonb "data"
     t.float "version_number", default: 1.0
+    t.integer "position"
     t.bigint "article_id"
     t.bigint "collaborator_id"
     t.index ["article_id"], name: "index_sections_on_article_id"
