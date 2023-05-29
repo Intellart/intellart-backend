@@ -98,6 +98,7 @@ module Api
               elsif action == 'created'
                 Section.create!(block)
               elsif action == 'deleted'
+                section = Section.find_by(editor_section_id: block['editor_section_id'])
                 section.destroy!
               end
             end
