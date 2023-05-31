@@ -10,7 +10,8 @@ class RefactorArticles < ActiveRecord::Migration[7.0]
 
     rename_table :blog_articles, :articles
     rename_table :blog_article_comments, :comments
-    rename_column :articles, :image, :image_url
+
+    remove_column :articles, :image
 
     remove_reference :comments, :blog_article
     remove_reference :ratings, :rated_user

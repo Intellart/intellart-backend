@@ -51,6 +51,13 @@ Rails.application.routes.draw do
         post :add_tag
         put :remove_tag
       end
+      collection do
+        resources :sections do
+          member do
+            put :image_asset_save
+          end
+        end
+      end
     end
     resources :comments, only: [:create, :destroy] do
       member do

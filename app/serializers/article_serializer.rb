@@ -14,13 +14,13 @@ class ArticleSerializer < ActiveModel::Serializer
   end
 
   def content
-    payload = object.content
+    payload = object.content.to_h
     payload['blocks'] = JSON.parse(ActiveModelSerializers::SerializableResource.new(object.sections, each_serializer: SectionSerializer).to_json)
     payload
   end
 
   def image
-    object.image_url
+    object.image.url if object.image.present?
   end
 
   def likes

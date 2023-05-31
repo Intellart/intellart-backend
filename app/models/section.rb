@@ -6,6 +6,8 @@ class Section < ApplicationRecord
 
   has_paper_trail if: ->(section) { section.new_version? }
 
+  has_one :image, as: :owner, dependent: :destroy
+
   belongs_to :article
   belongs_to :collaborator, class_name: 'User'
 
@@ -13,6 +15,14 @@ class Section < ApplicationRecord
     return if article.collaborators.pluck(:id).include?(collaborator_id) || collaborator_id == article.author_id
 
     errors.add(:user_id, "You aren't a collaborator of this document.")
+  end
+
+  def self.find(id)
+    if id.instance_of?(String)
+      find_by(editor_section_id: id)
+    else
+      super
+    end
   end
 
   def new_version?

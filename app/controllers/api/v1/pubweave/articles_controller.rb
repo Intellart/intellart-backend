@@ -4,6 +4,8 @@ module Api
       class ArticlesController < ApplicationController
         helper ArticlesParamsHelper
 
+        include Imageable
+
         before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :deny_published_article_update, only: [:update]
@@ -36,7 +38,12 @@ module Api
 
         # POST api/v1/pubweave/articles/
         def create
-          @article = Article.new(article_params)
+          parameters = article_params
+          if article_params['image'].present?
+            parameters = article_params.except(:image)
+            save_and_upload_image(article_params, @article)
+          end
+          @article = Article.new(parameters)
           render_json_validation_error(@article) and return unless @article.save
 
           render json: @article, status: :created
@@ -78,34 +85,49 @@ module Api
 
         # PUT/PATCH api/v1/pubweave/articles/:id
         def update
-          if article_update_params.key?(:content)
-            section_params = JSON.parse(article_update_params[:content].to_json)
-            article_update_params[:content] = section_params.first(2) # keep just the time and version
-            section_params['blocks'].each do |block|
-              block['article_id'] = @article.id
-              block['collaborator_id'] = @current_user.id
-
-              block['editor_section_id'] = block['id']
-              block.delete('id')
-
-              block['version_number'] = article_update_params['version_number'] if article_update_params.key?(:version_number)
-              action = block['action']
-              block.delete('action')
-
-              if %w[updated moved].include?(action)
-                section = Section.find_by(editor_section_id: block['editor_section_id'])
-                section.update!(block)
-              elsif action == 'created'
-                Section.create!(block)
-              elsif action == 'deleted'
-                section = Section.find_by(editor_section_id: block['editor_section_id'])
-                section.destroy!
+          parameters = article_update_params
+          if parameters['image'].present?
+            Image.transaction do
+              if @article.image.present?
+                Cloudinary::Api.delete_resources(@article.image.public_id)
+                @article.image.destroy!
               end
+              save_and_upload_image(parameters, @article) unless parameters['image'] == 'null'
+              parameters = parameters.except(:image)
             end
           end
-          render_json_validation_error(@article) and return unless @article.update(article_update_params)
+          if parameters.key?(:content)
+            section_params = JSON.parse(parameters[:content].to_json)
+            parameters[:content] = section_params.first(2) # keep just the time and version
+            section_params['blocks'].each do |block|
+              update_block(block, parameters)
+            end
+          end
+          render_json_validation_error(@article) and return unless @article.update(parameters)
 
           render json: @article, status: :ok
+        end
+
+        # PUT/PATCH api/v1/pubweave/articles/sections/:id/image_asset_save
+        def image_asset_save
+          @section = Section.find(params[:id])
+          return unless params['section']['image'].present?
+
+          Image.transaction do
+            if @section.image.present?
+              Cloudinary::Api.delete_resources(@section.image.public_id)
+              @section.image.destroy
+              @section.data.delete('file')
+            end
+            unless parameters['image'] == 'null'
+              save_and_upload_image(params, @section)
+              @section.data['file'] ||= {}
+              @section.data['file']['url'] = @section.image.url if section.image.present?
+            end
+          end
+          @section.save!
+
+          render json: @section, status: :ok
         end
 
         # DELETE api/v1/pubweave/articles/:id
@@ -143,6 +165,28 @@ module Api
 
         def set_article
           @article = Article.find(params[:id])
+        end
+
+        def update_block(block, parameters)
+          block['article_id'] = @article.id
+          block['collaborator_id'] = @current_user.id
+
+          block['editor_section_id'] = block['id']
+          block.delete('id')
+
+          block['version_number'] = parameters['version_number'] if parameters.key?(:version_number)
+          action = block['action']
+          block.delete('action')
+
+          if %w[updated moved].include?(action)
+            section = Section.find(block['editor_section_id'])
+            section.update!(block)
+          elsif action == 'created'
+            Section.create!(block)
+          elsif action == 'deleted'
+            section = Section.find(block['editor_section_id'])
+            section.destroy!
+          end
         end
 
         def content_params
