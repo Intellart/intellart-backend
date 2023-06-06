@@ -133,7 +133,7 @@ module Api
         # GET api/v1/pubweave/articles/sections/:id/version_data
         def version_data
           @section = Section.find(params[:id])
-          versions = @section.versions.to_a.map(&:reify)
+          versions = @section.versions.to_a.map(&:reify).drop(1)
           render json: ActiveModelSerializers::SerializableResource.new(versions,
                                                                         each_serializer: RatingSerializer,
                                                                         fields: [:data, :version_number, :collaborator_id]).as_json
