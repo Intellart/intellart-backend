@@ -130,6 +130,15 @@ module Api
           render json: @section, status: :ok
         end
 
+        # GET api/v1/pubweave/articles/sections/:id/version_data
+        def version_data
+          @section = Section.find(params[:id])
+          versions = @section.versions.to_a.map(&:reify)
+          render json: ActiveModelSerializers::SerializableResource.new(versions,
+                                                                        each_serializer: RatingSerializer,
+                                                                        fields: [:data, :version_number, :collaborator_id]).as_json
+        end
+
         # DELETE api/v1/pubweave/articles/:id
         def destroy
           render json: @article.id, status: :ok if @article.destroy

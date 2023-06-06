@@ -54,6 +54,7 @@ Rails.application.routes.draw do
       collection do
         resources :sections do
           member do
+            get :version_data
             put :image_asset_save
           end
         end
