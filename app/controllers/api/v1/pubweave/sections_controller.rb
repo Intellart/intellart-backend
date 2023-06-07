@@ -57,10 +57,12 @@ module Api
         # GET api/v1/pubweave/sections/:editor_section_id/version_data
         def version_data
           @section = Section.find(params[:editor_section_id])
-          versions = @section.versions.to_a.map(&:reify).drop(1)
+          versions = @section.versions.to_a.map(&:reify).dup
+          versions << @section
+          versions = versions.drop(1)
           render json: ActiveModelSerializers::SerializableResource.new(versions,
                                                                         each_serializer: SectionSerializer,
-                                                                        fields: [:data, :version_number, :collaborator_id]).as_json
+                                                                        fields: [:data, :version_number, :collaborator_id, :collaborator]).as_json(root: 'versions')
         end
       end
     end
