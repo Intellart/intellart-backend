@@ -62,6 +62,7 @@ Rails.application.routes.draw do
       member do
         get :version_data
         put :image_asset_save
+        put :file_asset_save
       end
     end
     get '/status_preprints', to: 'preprints#index_by_status'

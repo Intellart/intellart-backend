@@ -6,7 +6,8 @@ class Section < ApplicationRecord
 
   has_paper_trail if: ->(section) { section.new_version? }
 
-  has_one :image, as: :owner, dependent: :destroy
+  has_one :image, class_name: 'Image', as: :owner, dependent: :destroy
+  has_one :file, class_name: 'Attachment', as: :owner, dependent: :destroy
 
   belongs_to :article
   belongs_to :collaborator, class_name: 'User'

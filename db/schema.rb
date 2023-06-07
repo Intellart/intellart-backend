@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_29_140107) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_07_093658) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -63,7 +63,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_29_140107) do
     t.datetime "updated_at", null: false
     t.string "status"
     t.text "description"
-    t.string "image_url"
     t.boolean "star"
     t.jsonb "content"
     t.bigint "category_id"
@@ -89,6 +88,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_29_140107) do
     t.datetime "updated_at", null: false
     t.index ["article_id"], name: "index_articles_users_on_article_id"
     t.index ["user_id"], name: "index_articles_users_on_user_id"
+  end
+
+  create_table "attachments", force: :cascade do |t|
+    t.string "asset_id"
+    t.string "public_id"
+    t.string "format"
+    t.integer "version"
+    t.string "resource_type"
+    t.datetime "created_at"
+    t.integer "bytes"
+    t.integer "width"
+    t.integer "height"
+    t.string "folder"
+    t.string "url"
+    t.string "secure_url"
+    t.string "name"
+    t.string "owner_type"
+    t.bigint "owner_id"
+    t.index ["owner_type", "owner_id"], name: "index_attachments_on_owner"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -159,25 +177,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_29_140107) do
     t.index ["priority", "created_at"], name: "index_good_jobs_jobs_on_priority_created_at_when_unfinished", order: { priority: "DESC NULLS LAST" }, where: "(finished_at IS NULL)"
     t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
-  end
-
-  create_table "images", force: :cascade do |t|
-    t.string "asset_id"
-    t.string "public_id"
-    t.string "format"
-    t.integer "version"
-    t.string "resource_type"
-    t.datetime "created_at"
-    t.integer "bytes"
-    t.integer "width"
-    t.integer "height"
-    t.string "folder"
-    t.string "url"
-    t.string "secure_url"
-    t.string "name"
-    t.string "owner_type"
-    t.bigint "owner_id"
-    t.index ["owner_type", "owner_id"], name: "index_images_on_owner"
   end
 
   create_table "jwt_denylist", force: :cascade do |t|
