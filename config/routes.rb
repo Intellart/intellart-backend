@@ -44,18 +44,19 @@ Rails.application.routes.draw do
   pubweave_routes = lambda do
     resources :articles do
       member do
-        put :request_publishing
         put :accept_publishing
-        put :reject_publishing
-        put :like
+        put :add_collaborator
         post :add_tag
+        put :like
+        put :reject_publishing
         put :remove_tag
+        put :request_publishing
       end
     end
     resources :comments, only: [:create, :destroy] do
       member do
-        put :like
         put :dislike
+        put :like
       end
     end
     resources :sections, param: :editor_section_id do

@@ -50,6 +50,11 @@ module Api
           render json: @article, status: :created
         end
 
+        def add_collaborator
+          @article.collaborators << User.find(params[:collaborator_id])
+          render json: @article, status: :ok
+        end
+
         # POST api/v1/pubweave/articles/:id/add_tag/
         def add_tag
           tag = Tag.find(params[:tag_id])
