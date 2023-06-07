@@ -51,19 +51,17 @@ Rails.application.routes.draw do
         post :add_tag
         put :remove_tag
       end
-      collection do
-        resources :sections do
-          member do
-            get :version_data
-            put :image_asset_save
-          end
-        end
-      end
     end
     resources :comments, only: [:create, :destroy] do
       member do
         put :like
         put :dislike
+      end
+    end
+    resources :sections, params: :editor_section_id do
+      member do
+        get :version_data
+        put :image_asset_save
       end
     end
     get '/status_preprints', to: 'preprints#index_by_status'
