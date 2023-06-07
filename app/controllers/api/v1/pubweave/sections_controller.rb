@@ -8,7 +8,7 @@ module Api
         before_action :authenticate_domain, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :authenticate_api_admin!, only: [:accept_publishing, :reject_publishing]
         before_action :set_paper_trail_whodunnit
-        after_action :refresh_jwt, only: [:image_asset_save, :file_asset_save„]
+        after_action :refresh_jwt, only: [:image_asset_save, :file_asset_save]
 
         # PUT/PATCH api/v1/pubweave/sections/:editor_section_id/file_asset_save
         def file_asset_save
