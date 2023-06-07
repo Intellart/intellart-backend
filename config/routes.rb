@@ -61,8 +61,11 @@ Rails.application.routes.draw do
     resources :sections, param: :editor_section_id do
       member do
         get :version_data
-        put :image_asset_save
-        put :file_asset_save
+      end
+    end
+    resources :uploads do
+      collection do
+        post :upload_asset
       end
     end
     get '/status_preprints', to: 'preprints#index_by_status'

@@ -33,7 +33,7 @@ module Api
         end
 
         # PUT/PATCH api/v1/pubweave/sections/:editor_section_id/image_asset_save
-        def image_asset_save
+        def image_upload
           @section = Section.find(params[:editor_section_id])
           return unless params['section']['image'].present?
 

@@ -13,7 +13,7 @@ class Attachment < ApplicationRecord
   # secure_url
   # owner
 
-  belongs_to :owner, polymorphic: true
+  belongs_to :owner, polymorphic: true, optional: true
 
   after_destroy -> { Cloudinary::Api.delete_resources(public_id) }
 end
