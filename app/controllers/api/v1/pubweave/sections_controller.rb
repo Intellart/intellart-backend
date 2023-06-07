@@ -1,7 +1,7 @@
 module Api
   module V1
     module Pubweave
-      class ArticlesController < ApplicationController
+      class SectionsController < ApplicationController
         include Imageable
 
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
@@ -12,7 +12,7 @@ module Api
 
         # PUT/PATCH api/v1/pubweave/sections/:editor_section_id/image_asset_save
         def image_asset_save
-          @section = Section.find(params[:id])
+          @section = Section.find(params[:editor_section_id])
           return unless params['section']['image'].present?
 
           Image.transaction do
@@ -34,7 +34,7 @@ module Api
 
         # GET api/v1/pubweave/sections/:editor_section_id/version_data
         def version_data
-          @section = Section.find(params[:id])
+          @section = Section.find(params[:editor_section_id])
           versions = @section.versions.to_a.map(&:reify).drop(1)
           render json: ActiveModelSerializers::SerializableResource.new(versions,
                                                                         each_serializer: SectionSerializer,

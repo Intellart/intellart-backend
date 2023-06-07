@@ -58,7 +58,7 @@ Rails.application.routes.draw do
         put :dislike
       end
     end
-    resources :sections, params: :editor_section_id do
+    resources :sections, param: :editor_section_id do
       member do
         get :version_data
         put :image_asset_save
