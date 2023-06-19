@@ -3,12 +3,14 @@ module Api
     module Pubweave
       class SectionsController < ApplicationController
         include Imageable
+        include Broadcastable
 
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :authenticate_domain, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :authenticate_api_admin!, only: [:accept_publishing, :reject_publishing]
         before_action :set_paper_trail_whodunnit
         after_action :refresh_jwt, only: [:image_asset_save, :file_asset_save]
+        after_update -> { broadcast('article_channel', 'section', 'update', SectionSerializer.new(self)) }
 
         # PUT/PATCH api/v1/pubweave/sections/:editor_section_id/file_asset_save
         def file_asset_save
@@ -58,7 +60,7 @@ module Api
         def version_data
           @section = Section.find(params[:editor_section_id])
           versions = @section.versions.to_a.map(&:reify).dup
-          versions << @section
+          versions << @section # TODO: keeep only published versions so it works like a git commit
           versions = versions.drop(1)
           render json: ActiveModelSerializers::SerializableResource.new(versions,
                                                                         each_serializer: SectionSerializer,
