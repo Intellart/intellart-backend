@@ -1,6 +1,8 @@
 class ArticleChannel < ApplicationCable::Channel
   def subscribed
-    stream_from 'article_channel'
+    return unless params[:article_id].present?
+
+    stream_from "ArticleChannel-#{params[:article_id]}"
   end
 
   def unsubscribed

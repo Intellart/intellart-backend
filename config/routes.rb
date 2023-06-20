@@ -62,6 +62,8 @@ Rails.application.routes.draw do
     resources :sections, param: :editor_section_id do
       member do
         get :version_data
+        put :lock
+        put :unlock
       end
     end
     resources :uploads do

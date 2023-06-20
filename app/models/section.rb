@@ -2,6 +2,8 @@ class Section < ApplicationRecord
   # The type come from the editor, so we need to override active record for types
   self.inheritance_column = nil
 
+  include Broadcastable
+
   validate :collaborator_invited?
 
   has_paper_trail if: ->(section) { section.new_version? }
@@ -12,10 +14,35 @@ class Section < ApplicationRecord
   belongs_to :article
   belongs_to :collaborator, class_name: 'User'
 
+  after_update lambda {
+                 payload = JSON.parse(SectionSerializer.new(self).to_json)
+                 payload[:time] = article.content.to_h['time'] if article.content.present?
+                 broadcast("ArticleChannel-#{article_id}", 'section', 'update', payload)
+               }
+
   def collaborator_invited?
     return if article.collaborators.pluck(:id).include?(collaborator_id) || collaborator_id == article.author_id
 
     errors.add(:user_id, "You aren't a collaborator of this document.")
+  end
+
+  def lock(user_id)
+    editor = User.find(user_id)
+    self.current_editor = editor
+    save!
+  end
+
+  def locked?
+    current_editor.present?
+  end
+
+  def unlock
+    self.current_editor = nil
+    save!
+  end
+
+  def unlocked?
+    current_editor.nil?
   end
 
   def self.find(id)

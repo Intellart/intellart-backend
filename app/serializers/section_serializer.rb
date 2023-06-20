@@ -1,5 +1,5 @@
 class SectionSerializer < ActiveModel::Serializer
-  attributes :id, :type, :position, :data, :version_number, :collaborator_id, :collaborator
+  attributes :id, :type, :position, :data, :version_number, :collaborator_id, :collaborator, :current_editor
 
   def collaborator
     object.collaborator.username
