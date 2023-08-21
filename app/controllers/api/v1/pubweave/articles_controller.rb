@@ -11,7 +11,7 @@ module Api
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :deny_published_article_update, only: [:update]
         after_action :refresh_jwt, only: [:create, :update, :destroy]
-        before_action :require_owner, only: [:update, :destroy]
+        before_action :require_owner, only: [:destroy]
         before_action :authenticate_domain, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :authenticate_api_admin!, only: [:accept_publishing, :reject_publishing]
         before_action :set_paper_trail_whodunnit
@@ -144,7 +144,7 @@ module Api
         end
 
         def require_owner
-          head :unauthorized unless @current_user.id == @article.author_id || @current_user.super?
+          head :unauthorized unless @current_user.id == @article.author_id || @current_admin.super?
         end
 
         def set_article

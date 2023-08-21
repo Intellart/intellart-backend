@@ -15,19 +15,19 @@ class Section < ApplicationRecord
   belongs_to :collaborator, class_name: 'User'
 
   after_create lambda {
-                 payload = JSON.parse(SectionSerializer.new(self).to_json)
+                 payload = SectionSerializer.new(self).to_h
                  payload[:time] = article.content.to_h['time'] if article.content.present?
                  broadcast("ArticleChannel-#{article.id}", 'section', 'create', payload)
                }
 
   after_destroy lambda {
-                  payload = JSON.parse(SectionSerializer.new(self).to_json)
+                  payload = SectionSerializer.new(self).to_h
                   payload[:time] = article.content.to_h['time'] if article.content.present?
                   broadcast("ArticleChannel-#{article.id}", 'section', 'destroy', payload)
                 }
 
   after_update lambda {
-                 payload = JSON.parse(SectionSerializer.new(self).to_json)
+                 payload = SectionSerializer.new(self).to_h
                  payload[:time] = article.content.to_h['time'] if article.content.present?
                  broadcast("ArticleChannel-#{article.id}", 'section', 'update', payload)
                }
@@ -42,6 +42,7 @@ class Section < ApplicationRecord
     editor = User.find(user_id)
     self.current_editor_id = editor.id
     save!
+    broadcast("ArticleChannel-#{article.id}", 'section', 'lock', SectionSerializer.new(self).to_h)
   end
 
   def locked?
@@ -51,6 +52,7 @@ class Section < ApplicationRecord
   def unlock
     self.current_editor_id = nil
     save!
+    broadcast("ArticleChannel-#{article.id}", 'section', 'unlock', SectionSerializer.new(self).to_h)
   end
 
   def unlocked?

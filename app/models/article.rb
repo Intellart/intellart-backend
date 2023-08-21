@@ -49,6 +49,14 @@ class Article < ApplicationRecord
     end
   end
 
+  def active_sections
+    payload = {}
+    sections.where.not(current_editor_id: nil).each do |section|
+      payload[section.id] = section.current_editor_id
+    end
+    payload
+  end
+
   private
 
   def publishing_requested_notification
