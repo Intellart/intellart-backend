@@ -167,7 +167,7 @@ module Api
             section.update!(block)
             payload = SectionSerializer.new(section).to_h
             payload[:time] = @article.content.to_h['time'] if @article.content.present?
-            broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
+            section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
           elsif action == 'created'
             Section.create!(block)
           elsif action == 'deleted'
