@@ -26,16 +26,11 @@ class Section < ApplicationRecord
                   broadcast("ArticleChannel-#{article.id}", 'section', 'destroy', payload)
                 }
 
-  after_update lambda {
-                 payload = SectionSerializer.new(self).to_h
-                 payload[:time] = article.content.to_h['time'] if article.content.present?
-                 broadcast("ArticleChannel-#{article.id}", 'section', 'update', payload)
-               }
-
   def collaborator_invited?
     return if article.collaborators.pluck(:id).include?(collaborator_id) || collaborator_id == article.author_id
 
-    errors.add(:user_id, "You aren't a collaborator of this document.")
+    # Commented out until frontend is done
+    # errors.add(:user_id, "You aren't a collaborator of this document.")
   end
 
   def lock(user_id)

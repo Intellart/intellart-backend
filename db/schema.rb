@@ -258,6 +258,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_122234) do
     t.integer "position"
     t.bigint "article_id"
     t.bigint "collaborator_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "current_editor_id"
     t.index ["article_id"], name: "index_sections_on_article_id"
     t.index ["collaborator_id"], name: "index_sections_on_collaborator_id"

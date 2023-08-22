@@ -12,6 +12,9 @@ module Api
 
         # PUT/PATCH api/v1/pubweave/sections/:section_id/lock
         def lock
+          # find locked section with user_id
+          @section = Section.find_by(current_editor_id: params['user_id'])
+          @section.unlock if @section.present?
           @section = Section.find(params[:section_id])
           @section.lock(params['user_id'])
         end

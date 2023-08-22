@@ -165,6 +165,9 @@ module Api
           if %w[updated moved].include?(action)
             section = Section.find(block['editor_section_id'])
             section.update!(block)
+            payload = SectionSerializer.new(section).to_h
+            payload[:time] = @article.content.to_h['time'] if @article.content.present?
+            broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
           elsif action == 'created'
             Section.create!(block)
           elsif action == 'deleted'

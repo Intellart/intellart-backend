@@ -15,7 +15,7 @@ class ArticleSerializer < ActiveModel::Serializer
 
   def content
     payload = object.content.to_h
-    payload['blocks'] = ActiveModelSerializers::SerializableResource.new(object.sections, each_serializer: SectionSerializer).to_h
+    payload['blocks'] = JSON.parse(ActiveModelSerializers::SerializableResource.new(object.sections, each_serializer: SectionSerializer).to_json)
     payload
   end
 

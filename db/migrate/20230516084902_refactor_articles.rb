@@ -43,6 +43,7 @@ class RefactorArticles < ActiveRecord::Migration[7.0]
       table.integer :position, unsigned: true
       table.references :article
       table.references :collaborator, foreign_key: { to_table: :users }
+      table.timestamps
     end
   end
 end
