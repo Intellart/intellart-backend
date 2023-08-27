@@ -169,6 +169,12 @@ module Api
             payload[:time] = @article.content.to_h['time'] if @article.content.present?
             section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
           elsif action == 'created'
+            @sections = Section.where(current_editor_id: @current_user.id)
+            @sections.each do |section|
+              section.unlock if section.present?
+            end
+
+            block['current_editor_id'] = @current_user.id
             Section.create!(block)
           elsif action == 'deleted'
             section = Section.find(block['editor_section_id'])
