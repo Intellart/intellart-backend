@@ -140,7 +140,7 @@ module Api
         private
 
         def deny_published_article_update
-          render json: { message: 'You can not edit a published article.' } and return if @article.status == 'published'
+          render json: { message: 'You cannot edit a published article.' }, status: :forbidden and return if @article.status == 'published'
         end
 
         def require_owner
