@@ -6,6 +6,7 @@ class ArticleChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    Section.where(current_editor_id: @current_user.id).each(&:unlock)
+    stop_all_streams
+    Section.where(current_editor_id: current_user.id).each(&:unlock)
   end
 end
