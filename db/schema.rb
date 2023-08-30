@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_20_122234) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_07_093658) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -260,10 +260,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_122234) do
     t.bigint "collaborator_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "current_editor_id"
     t.index ["article_id"], name: "index_sections_on_article_id"
     t.index ["collaborator_id"], name: "index_sections_on_collaborator_id"
-    t.index ["current_editor_id"], name: "index_sections_on_current_editor_id"
     t.index ["editor_section_id"], name: "index_sections_on_editor_section_id", unique: true
   end
 
@@ -335,7 +333,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_20_122234) do
   add_foreign_key "nfts", "users", column: "owner_id"
   add_foreign_key "ratings", "users"
   add_foreign_key "sections", "users", column: "collaborator_id"
-  add_foreign_key "sections", "users", column: "current_editor_id"
   add_foreign_key "tags", "categories"
   add_foreign_key "users", "study_fields"
 end

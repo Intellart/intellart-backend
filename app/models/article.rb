@@ -51,8 +51,8 @@ class Article < ApplicationRecord
 
   def active_sections
     payload = {}
-    sections.where.not(current_editor_id: nil).each do |section|
-      payload[section.editor_section_id] = section.current_editor_id
+    sections.where.not(collaborator: nil).each do |section|
+      payload[section.editor_section_id] = section.collaborator_id
     end
     payload
   end

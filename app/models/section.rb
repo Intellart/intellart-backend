@@ -12,7 +12,7 @@ class Section < ApplicationRecord
   has_one :file, class_name: 'Attachment', as: :owner, dependent: :destroy
 
   belongs_to :article
-  belongs_to :collaborator, class_name: 'User'
+  belongs_to :collaborator, class_name: 'User', optional: true
 
   after_create lambda {
                  payload = SectionSerializer.new(self).to_h
@@ -34,24 +34,27 @@ class Section < ApplicationRecord
   end
 
   def lock(user_id)
-    editor = User.find(user_id)
-    self.current_editor_id = editor.id
+    return unless unlocked?
+
+    self.collaborator_id = user_id
     save!
     broadcast("ArticleChannel-#{article.id}", 'section', 'lock', SectionSerializer.new(self).to_h)
   end
 
   def locked?
-    current_editor_id.present?
+    collaborator_id.present?
   end
 
   def unlock
-    self.current_editor_id = nil
+    return unless locked?
+
+    self.collaborator_id = nil
     save!
     broadcast("ArticleChannel-#{article.id}", 'section', 'unlock', SectionSerializer.new(self).to_h)
   end
 
   def unlocked?
-    current_editor_id.nil?
+    collaborator_id.nil?
   end
 
   def self.find(id)

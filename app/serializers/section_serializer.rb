@@ -6,7 +6,11 @@ class SectionSerializer < ActiveModel::Serializer
   end
 
   def collaborator
-    object.collaborator.username
+    object.collaborator&.username
+  end
+
+  def current_editor_id
+    object.collaborator_id
   end
 
   def id

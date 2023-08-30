@@ -140,7 +140,7 @@ module Api
         private
 
         def deny_published_article_update
-          render json: { message: 'You can not edit a published article.' } and return if @article.status == 'published'
+          render json: { message: 'You cannot edit a published article.' }, status: :forbidden and return if @article.status == 'published'
         end
 
         def require_owner
@@ -169,7 +169,8 @@ module Api
             payload[:time] = @article.content.to_h['time'] if @article.content.present?
             section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
           elsif action == 'created'
-            Section.create!(block)
+            section = Section.create!(block)
+            section.lock(@current_user.id)
           elsif action == 'deleted'
             section = Section.find(block['editor_section_id'])
             section.destroy!
