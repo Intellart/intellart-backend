@@ -23,7 +23,7 @@ module Api
         # GET api/v1/pubweave/articles/
         def index
           articles = if params[:article]&.keys&.include? 'user_id'
-                       Article.where(author_id: article_params[:user_id])
+                       Article.where(author_id: article_params[:user_id]) + User.find(article_params[:user_id]).collaborations
                      elsif params[:article]&.keys&.include? 'status'
                        Article.where(status: article_params[:status])
                      else
@@ -51,13 +51,13 @@ module Api
         end
 
         def add_collaborator
-          @article.collaborators << User.find(params[:collaborator_id])
+          @article.collaborators << User.find_by(email: article_params[:collaborator_email])
           render json: @article, status: :ok
         end
 
         # POST api/v1/pubweave/articles/:id/add_tag/
         def add_tag
-          tag = Tag.find(params[:tag_id])
+          tag = Tag.find(article_params[:tag_id])
           @article.tags << tag
           render json: @article
         rescue StandardError
@@ -66,7 +66,7 @@ module Api
 
         # PUT/PATCH api/v1/pubweave/articles/:id/remove_tag/
         def remove_tag
-          tag = @article.tags.find(params[:tag_id])
+          tag = @article.tags.find(article_params[:tag_id])
           @article.tags.delete(tag)
           render json: @article
         rescue StandardError
@@ -171,6 +171,7 @@ module Api
           block.delete('action')
 
           if %w[updated moved].include?(action)
+            Section.find_by(collaborator_id: @current_user.id).unlock
             section = Section.find(block['editor_section_id'])
             section.update!(block)
             payload = SectionSerializer.new(section).to_h
@@ -211,7 +212,7 @@ module Api
         end
 
         def article_params
-          params.require(:article).permit(:author_id, :title, :subtitle, :description, :status, :image, :star, :category_id, :tag_id, :version_number,
+          params.require(:article).permit(:author_id, :title, :subtitle, :description, :status, :image, :star, :category_id, :tag_id, :version_number, :user_id,
                                           content: content_params).tap { |whitelist| permit_table_data(whitelist) }
         end
 
