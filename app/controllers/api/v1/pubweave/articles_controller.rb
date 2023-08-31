@@ -7,7 +7,7 @@ module Api
         include Imageable
         include Fileable
 
-        before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
+        before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status, :convert]
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :deny_published_article_update, only: [:update]
         after_action :refresh_jwt, only: [:create, :update, :destroy]
@@ -89,18 +89,26 @@ module Api
           render json: @article.errors, status: :unprocessable_entity
         end
 
+        # PUT/PATCH api/v1/pubweave/articles/:id/convert/
+        def convert
+          if @article.blog_article?
+            @article.convert_to_preprint
+          elsif @article.preprint?
+            @article.convert_to_scientific_article
+          end
+
+          render json: @article, status: :ok
+        rescue StandardError
+          render json: @article.errors, status: :unprocessable_entity
+        end
+
         # PUT/PATCH api/v1/pubweave/articles/:id
         def update
           parameters = article_update_params
           if parameters['image'].present?
-            Image.transaction do
-              if @article.image.present?
-                Cloudinary::Api.delete_resources(@article.image.public_id)
-                @article.image.destroy!
-              end
-              save_and_upload_image(parameters, @article) unless parameters['image'] == 'null'
-              parameters = parameters.except(:image)
-            end
+            img = Image.find_by(url: parameters['image'])
+            img.update!(owner: @article)
+            parameters = parameters.except(:image)
           end
           if parameters.key?(:content)
             section_params = JSON.parse(parameters[:content].to_json)

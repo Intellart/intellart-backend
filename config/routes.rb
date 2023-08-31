@@ -47,6 +47,7 @@ Rails.application.routes.draw do
         put :accept_publishing
         put :add_collaborator
         post :add_tag
+        put :convert
         put :like
         put :reject_publishing
         put :remove_tag
