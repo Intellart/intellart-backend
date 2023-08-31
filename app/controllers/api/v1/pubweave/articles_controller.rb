@@ -7,7 +7,7 @@ module Api
         include Imageable
         include Fileable
 
-        before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status, :convert]
+        before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :deny_published_article_update, only: [:update]
         after_action :refresh_jwt, only: [:create, :update, :destroy]
@@ -92,9 +92,9 @@ module Api
         # PUT/PATCH api/v1/pubweave/articles/:id/convert/
         def convert
           if @article.blog_article?
-            @article.convert_to_preprint
+            @article.convert_to_preprint!
           elsif @article.preprint?
-            @article.convert_to_scientific_article
+            @article.convert_to_scientific_article!
           end
 
           render json: @article, status: :ok
