@@ -212,7 +212,7 @@ module Api
         end
 
         def article_params
-          params.require(:article).permit(:author_id, :title, :subtitle, :description, :status, :image, :star, :category_id, :tag_id, :version_number, :user_id,
+          params.require(:article).permit(:author_id, :title, :collaborator_email, :subtitle, :description, :status, :image, :star, :category_id, :tag_id, :version_number, :user_id,
                                           content: content_params).tap { |whitelist| permit_table_data(whitelist) }
         end
 
