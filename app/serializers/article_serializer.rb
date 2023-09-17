@@ -3,7 +3,7 @@ class ArticleSerializer < ActiveModel::Serializer
              :collaborators
 
   def author
-    UserSerializer.new(object.author).to_h.slice(:id, :email, :username, :first_name, :last_name, :full_name)
+    UserSerializer.new(object.author)
   end
 
   def category
