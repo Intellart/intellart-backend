@@ -548,22 +548,22 @@ tag38 = Tag.create!(tag: 'Tax Law' , category_id: cat13.id)
 # art_tag3 = BlogArticleTag.create!(tag_id: 1, blog_article_id: 2)
 
 # comment1 = BlogArticleComment.create!(
-#   blog_article_id: article1.id, 
-#   commenter_id: user3.id, 
+#   blog_article_id: article1.id,
+#   commenter_id: user3.id,
 #   comment: "What is a vector space?"
 # )
 
 # comment2 = BlogArticleComment.create!(
-#   blog_article_id: article1.id, 
-#   commenter_id: user4.id, 
+#   blog_article_id: article1.id,
+#   commenter_id: user4.id,
 #   comment: "A vector space is a set of vectors that satisfy certain properties.",
 #   reply_to_id: 1
 # )
 
 
 # comment3 = BlogArticleComment.create!(
-#   blog_article_id: article2.id, 
-#   commenter_id: user3.id, 
+#   blog_article_id: article2.id,
+#   commenter_id: user3.id,
 #   comment: "What is animal behavior?",
 #   reply_to_id: 2
 # )

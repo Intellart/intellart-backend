@@ -8,6 +8,7 @@ Bundler.require(*Rails.groups)
 
 module Veritheum
   class Application < Rails::Application
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
@@ -26,5 +27,6 @@ module Veritheum
     # Skip views, helpers and assets when generating a new resource.
     config.active_job.queue_adapter = :good_job
     config.api_only = true
+
   end
 end
