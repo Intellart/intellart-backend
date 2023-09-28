@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   devise_for :admins, defaults: { format: :json }
 
+  # VERITHEUM
   intellart_routes = lambda do
     mount ActionCable.server => '/cable'
 

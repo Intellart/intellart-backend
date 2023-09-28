@@ -6,7 +6,7 @@ module Api
       protected
 
       def after_confirmation_path_for(_resource_name, _resource)
-        ENV.fetch('FRONTEND_BASE_URL')
+        ENV.fetch('PUBWEAVE_BASE_URL')
       end
     end
   end

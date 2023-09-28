@@ -1,4 +1,4 @@
-#Rails.application.config.hosts << /.*\.(intellart)\.com/
+#Rails.application.config.hosts << /.*\.(intellart)\.ca/
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   require 'dotenv/load'

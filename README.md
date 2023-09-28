@@ -1,4 +1,4 @@
-# Veritheum API
+# Intellart API
 
 ## Getting Started
 

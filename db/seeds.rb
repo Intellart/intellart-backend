@@ -79,7 +79,7 @@ tag17 = Tag.create!(tag: 'Biochemistry')
 
 
 # Biology tags
-tag18 = Tag.create!(tag: 'Cell Biology' , category_id: cat4.id)
+tag18 = Tag.create!(tag: 'Cellular Biology' , category_id: cat4.id)
 tag19 = Tag.create!(tag: 'Molecular Biology' , category_id: cat4.id)
 tag20 = Tag.create!(tag: 'Genetics' , category_id: cat4.id)
 tag21 = Tag.create!(tag: 'Ecology' , category_id: cat4.id)
