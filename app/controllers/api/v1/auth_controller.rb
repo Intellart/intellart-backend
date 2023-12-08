@@ -116,7 +116,7 @@ module Api
       end
 
       def user_create_params
-        params.require(:user).permit(:first_name, :last_name, :email, :password, :study_field_id, :orcid_id, :domain)
+        params.require(:user).permit(:first_name, :last_name, :username, :email, :password, :study_field_id, :orcid_id, :domain)
       end
 
       def auth_orcid_params
