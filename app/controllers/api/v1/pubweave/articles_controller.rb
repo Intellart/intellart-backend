@@ -106,9 +106,9 @@ module Api
         def update
           parameters = article_update_params
           if parameters['image'].present?
-            img = Image.find_by(url: parameters['image'])
-            img.update!(owner: @article)
-            parameters = parameters.except(:image)
+            img = Image.find_by!(url: parameters['image'])
+            parameters['image'] = img
+            # img.update!(owner: @article)
           end
           if parameters.key?(:content)
             section_params = JSON.parse(parameters[:content].to_json)
