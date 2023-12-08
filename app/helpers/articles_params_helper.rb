@@ -14,11 +14,11 @@ module ArticlesParamsHelper
   end
 
   def image_params
-    [:caption, :withBackground, :withBorder, :stretched, { file: [:url] }]
+    [:caption, :center, :withBackground, :withBorder, :stretched, { file: [:url] }]
   end
 
   def inline_image_params
-    [:caption, :withBackground, :withBorder, :stretched, :url, { usplash: [:author, :profileLink] }]
+    [:caption, :center, :withBackground, :withBorder, :stretched, :url, { usplash: [:author, :profileLink] }]
   end
 
   def link_params
