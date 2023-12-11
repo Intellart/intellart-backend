@@ -108,7 +108,7 @@ module Api
             img = Image.find_by!(url: parameters['image'])
             parameters = parameters.except(:image)
             
-            @article.update!(image: image.dup)
+            @article.update!(image: img.dup)
             return render json: @article, status: :ok
           end
           if parameters.key?(:content)
@@ -186,6 +186,10 @@ module Api
             section.lock(@current_user.id)
           elsif action == 'deleted'
             section = Section.find(block['editor_section_id'])
+            if section.type == 'image' && section.image.url == @article.image.url
+              @article.image = nil
+              @article.save!
+            end
             section.destroy!
           end
         end
