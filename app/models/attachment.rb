@@ -15,5 +15,9 @@ class Attachment < ApplicationRecord
 
   belongs_to :owner, polymorphic: true, optional: true
 
-  after_destroy -> { Cloudinary::Api.delete_resources(public_id) }
+  after_destroy -> {
+    if owner.present? && owner.is_a?(Section)
+      Cloudinary::Api.delete_resources(public_id)
+    end
+  }
 end

@@ -4,8 +4,7 @@ module Api
       class ArticlesController < ApplicationController
         helper ArticlesParamsHelper
 
-        include Imageable
-        include Fileable
+        include Assetable
 
         before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
@@ -107,8 +106,10 @@ module Api
           parameters = article_update_params
           if parameters['image'].present?
             img = Image.find_by!(url: parameters['image'])
-            parameters['image'] = img
-            # img.update!(owner: @article)
+            parameters = parameters.except(:image)
+            
+            @article.update!(image: image.dup)
+            return render json: @article, status: :ok
           end
           if parameters.key?(:content)
             section_params = JSON.parse(parameters[:content].to_json)
@@ -178,6 +179,9 @@ module Api
             payload[:time] = @article.content.to_h['time'] if @article.content.present?
             section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
           elsif action == 'created'
+            if block['type'] == 'image'
+              block["image"] = Image.find_by!(url: block["data"]["file"]["url"])
+            end
             section = Section.create!(block)
             section.lock(@current_user.id)
           elsif action == 'deleted'
