@@ -180,13 +180,19 @@ module Api
             section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
           elsif action == 'created'
             if block['type'] == 'image'
-              block["image"] = Image.find_by!(url: block["data"]["file"]["url"])
+              img = Image.find_by(url: block["data"]["file"]["url"])
+              if img.present?
+                block["image"] = img
+              end
             end
             section = Section.create!(block)
             section.lock(@current_user.id)
           elsif action == 'deleted'
             section = Section.find(block['editor_section_id'])
-            if section.type == 'image' && section.image.url == @article.image.url
+            if section.type == 'image' &&
+               section.image.present? && 
+               @article.image.present? &&
+               section.image.url == @article.image.url
               @article.image = nil
               @article.save!
             end

@@ -31,3 +31,8 @@
 
 en:
   hello: "Hello world"
+  error_messages:
+    article_not_found:
+      title: "Article not found"
+      message: "The article you are looking for does not exist."
+      code: "404"
