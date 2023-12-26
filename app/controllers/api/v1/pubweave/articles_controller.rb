@@ -4,7 +4,7 @@ module Api
       class ArticlesController < ApplicationController
         helper ArticlesParamsHelper
 
-        include Assetable
+        include AssetHandler
 
         before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]

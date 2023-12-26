@@ -8,7 +8,7 @@ module Api
         before_action :set_paper_trail_whodunnit
         after_action :refresh_jwt, only: [:upload_asset]
 
-        include Assetable
+        include AssetHandler
 
         # POST api/v1/pubweave/uploads/upload_asset
         # 
