@@ -1,4 +1,4 @@
-module Assetable
+module AssetHandler
   def save_and_upload_image(parameters, owner = nil)
     return unless parameters[:image].present? || parameters[:file].present?
 

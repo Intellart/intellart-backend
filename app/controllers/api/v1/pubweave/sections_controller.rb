@@ -2,7 +2,7 @@ module Api
   module V1
     module Pubweave
       class SectionsController < ApplicationController
-        include Assetable
+        include AssetHandler
 
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :authenticate_domain, except: [:index, :show, :index_by_user, :index_by_status]
