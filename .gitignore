@@ -41,3 +41,7 @@ yarn-debug.log*
 dump.rdb
 # Ignore application configuration
 /config/application.yml
+
+JetBrains
+.idea/
+

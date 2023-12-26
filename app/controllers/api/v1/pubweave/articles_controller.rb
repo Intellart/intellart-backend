@@ -4,8 +4,7 @@ module Api
       class ArticlesController < ApplicationController
         helper ArticlesParamsHelper
 
-        include Imageable
-        include Fileable
+        include Assetable
 
         before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
         before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
@@ -106,9 +105,11 @@ module Api
         def update
           parameters = article_update_params
           if parameters['image'].present?
-            img = Image.find_by(url: parameters['image'])
-            img.update!(owner: @article)
+            img = Image.find_by!(url: parameters['image'])
             parameters = parameters.except(:image)
+            
+            @article.update!(image: img.dup)
+            return render json: @article, status: :ok
           end
           if parameters.key?(:content)
             section_params = JSON.parse(parameters[:content].to_json)
@@ -148,7 +149,7 @@ module Api
         private
 
         def deny_published_article_update
-          render json: { message: 'You cannot edit a published article.' }, status: :forbidden and return if @article.status == 'published'
+          render json: { message: 'You cannot edit a published article.' }, status: :forbidden and return if @article.status == 'published' && !@current_user.is_a?(Admin)
         end
 
         def require_owner
@@ -178,10 +179,23 @@ module Api
             payload[:time] = @article.content.to_h['time'] if @article.content.present?
             section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
           elsif action == 'created'
+            if block['type'] == 'image'
+              img = Image.find_by(url: block["data"]["file"]["url"])
+              if img.present?
+                block["image"] = img
+              end
+            end
             section = Section.create!(block)
             section.lock(@current_user.id)
           elsif action == 'deleted'
             section = Section.find(block['editor_section_id'])
+            if section.type == 'image' &&
+               section.image.present? && 
+               @article.image.present? &&
+               section.image.url == @article.image.url
+              @article.image = nil
+              @article.save!
+            end
             section.destroy!
           end
         end
