@@ -27,7 +27,7 @@ Rails.application.routes.draw do
       end
     end
     resources :nft_likes, only: [:index, :create, :destroy]
-    resources :users, only: [:show, :index, :update, :destroy]
+    resources :users, only: [:show, :index, :update, :destroy, :reviewers]
     get '/exchange_rates', to: 'exchange_rates#latest'
     get '/categories', to: 'categories#index'
     get '/study_fields', to: 'study_fields#index'

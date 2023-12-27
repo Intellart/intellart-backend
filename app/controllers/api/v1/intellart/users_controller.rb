@@ -26,6 +26,12 @@ module Api
           render json: users, status: :ok
         end
 
+        # GET /api/v1/reviewers
+        def reviewers
+          reviewers = User.where.not(wallet_address: nil)
+          render json: reviewers, status: :ok
+        end
+
         # PUT/PATCH /api/v1/users/:id
         def update
           render_json_validation_error(@user) and return unless @user.update(user_update_params)
@@ -50,7 +56,7 @@ module Api
 
         def user_update_params
           params.require(:user).permit(:first_name, :last_name, :orcid_id, :study_field_id, :profile_img,
-                                       :social_web, :social_ln, :social_fb, :social_tw, :username, :bio)
+                                       :social_web, :social_ln, :social_fb, :social_tw, :username, :bio, :wallet_address)
         end
       end
     end
