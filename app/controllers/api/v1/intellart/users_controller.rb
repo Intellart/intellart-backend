@@ -2,7 +2,7 @@ module Api
   module V1
     module Intellart
       class UsersController < ApplicationController
-        before_action :set_user, except: [:index]
+        before_action :set_user, except: [:index, :reviewers]
         before_action :require_same_user, only: [:update, :destroy]
         before_action :authenticate_api_admin!, only: [:index]
         after_action :refresh_jwt, except: [:show, :index]
@@ -28,7 +28,7 @@ module Api
 
         # GET /api/v1/reviewers
         def reviewers
-          reviewers = User.where.not(wallet_address: nil)
+          reviewers = User.where.not(wallet_address: nil).where.not(id: @current_user.id)
           render json: reviewers, status: :ok
         end
 
