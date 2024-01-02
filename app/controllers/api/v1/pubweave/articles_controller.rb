@@ -172,9 +172,14 @@ module Api
           block.delete('action')
 
           if %w[updated moved].include?(action)
-            Section.find_by(collaborator_id: @current_user.id).unlock
+            # Unlock the previous section if it exists
+            section = Section.find_by(collaborator_id: @current_user.id)
+            section.unlock if section.present?
+            
+            # Update the section
             section = Section.find(block['editor_section_id'])
             section.update!(block)
+
             payload = SectionSerializer.new(section).to_h
             payload[:time] = @article.content.to_h['time'] if @article.content.present?
             section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
