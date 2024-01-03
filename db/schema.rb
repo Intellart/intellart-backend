@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_26_230955) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_03_152707) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -250,6 +250,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_26_230955) do
     t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.decimal "amount", null: false
+    t.date "deadline", null: false
+    t.bigint "article_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_reviews_on_article_id"
+  end
+
   create_table "sections", force: :cascade do |t|
     t.string "editor_section_id"
     t.string "type"
@@ -277,6 +286,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_26_230955) do
     t.datetime "updated_at", null: false
     t.bigint "category_id"
     t.index ["category_id"], name: "index_tags_on_category_id"
+  end
+
+  create_table "user_reviews", force: :cascade do |t|
+    t.bigint "review_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["review_id"], name: "index_user_reviews_on_review_id"
+    t.index ["user_id"], name: "index_user_reviews_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -333,7 +351,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_26_230955) do
   add_foreign_key "nfts", "categories"
   add_foreign_key "nfts", "users", column: "owner_id"
   add_foreign_key "ratings", "users"
+  add_foreign_key "reviews", "articles"
   add_foreign_key "sections", "users", column: "collaborator_id"
   add_foreign_key "tags", "categories"
+  add_foreign_key "user_reviews", "reviews"
+  add_foreign_key "user_reviews", "users"
   add_foreign_key "users", "study_fields"
 end

@@ -76,6 +76,7 @@ Rails.application.routes.draw do
         post :upload_asset
       end
     end
+    resources :reviews
     get '/status_preprints', to: 'preprints#index_by_status'
   end
 

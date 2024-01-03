@@ -3,9 +3,10 @@ class Article < ApplicationRecord
   has_many :comments, dependent: :destroy
   has_many :ratings, as: :rating_subject, dependent: :destroy
   has_many :sections, dependent: :destroy
+  has_many :reviews, dependent: :destroy
   has_and_belongs_to_many :collaborators, class_name: 'User', join_table: 'articles_users', foreign_key: 'article_id'
   has_and_belongs_to_many :tags, join_table: 'articles_tags', foreign_key: 'article_id'
-  has_one :image, class_name: 'Image', as: :owner, dependent: :destroy  
+  has_one :image, class_name: 'Image', as: :owner, dependent: :destroy
 
   accepts_nested_attributes_for :tags
 
