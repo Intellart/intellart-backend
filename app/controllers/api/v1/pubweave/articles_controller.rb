@@ -206,7 +206,7 @@ module Api
         end
 
         def content_params
-          [:time, :version,
+          [:time, :version, :tool, :time, :tunes,
            { blocks: [:id, :type, :position, :action,
                       { data: [helpers.paragraph_and_heading_params,
                                helpers.math_and_html_params,

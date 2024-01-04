@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_03_152707) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_04_182912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -293,6 +293,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_03_152707) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status"
     t.index ["review_id"], name: "index_user_reviews_on_review_id"
     t.index ["user_id"], name: "index_user_reviews_on_user_id"
   end
