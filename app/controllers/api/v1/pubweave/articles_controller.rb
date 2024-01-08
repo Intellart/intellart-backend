@@ -46,6 +46,17 @@ module Api
           @article = Article.new(parameters)
           render_json_validation_error(@article) and return unless @article.save
 
+          # Temp. solution, because Editor doesnt send block-create event on first block
+          section = Section.create!(
+            editor_section_id: "initial_" + @article.id.to_s,
+            type: "paragraph", 
+            position: 0, 
+            article_id: @article.id, 
+            version_number: 1, 
+            data: { text: "Start writing here..." }
+          )
+          section.lock(@current_user.id)
+
           render json: @article, status: :created
         end
 
