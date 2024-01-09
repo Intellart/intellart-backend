@@ -7,7 +7,7 @@ module Api
         include AssetHandler
 
         before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
-        before_action :authenticate_api_user!, except: [:index, :index_by_user, :index_by_status]
+        before_action :authenticate_api_user!, except: [:index, :index_by_user, :index_by_status, :show]
         before_action :deny_published_article_update, only: [:update]
         after_action :refresh_jwt, only: [:create, :update, :destroy]
         before_action :require_owner, only: [:destroy]
@@ -33,8 +33,8 @@ module Api
 
         # GET api/v1/pubweave/articles/:id
         def show
-          sections = @article.sections.where(collaborator_id: @current_user.id) if @current_user.present?
-          sections.each(&:unlock) if sections.present?
+          # sections = @article.sections.where(collaborator_id: @current_user.id) if @current_user.present?
+          # sections.each(&:unlock) if sections.present?
 
 
           render json: @article, status: :ok
