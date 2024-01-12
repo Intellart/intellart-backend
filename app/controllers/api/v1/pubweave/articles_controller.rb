@@ -33,11 +33,13 @@ module Api
 
         # GET api/v1/pubweave/articles/:id
         def show
-          # sections = @article.sections.where(collaborator_id: @current_user.id) if @current_user.present?
-          # sections.each(&:unlock) if sections.present?
-
-
           render json: @article, status: :ok
+        end
+
+        def unlock_article
+          sections = @article.sections.where(collaborator_id: @current_user.id) if @current_user.present?
+          sections.each(&:unlock) if sections.present?
+          render json: { message: 'Article unlocked' }, status: :ok
         end
 
         # POST api/v1/pubweave/articles/

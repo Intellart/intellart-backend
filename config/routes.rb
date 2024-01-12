@@ -56,6 +56,7 @@ Rails.application.routes.draw do
         put :reject_publishing
         put :remove_tag
         put :request_publishing
+        put :unlock_article
       end
     end
     resources :comments, only: [:create, :destroy] do
