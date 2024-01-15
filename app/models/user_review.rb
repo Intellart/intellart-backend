@@ -1,6 +1,7 @@
 class UserReview < ApplicationRecord
   belongs_to :user
   belongs_to :review
+  has_one :review_content, class_name: 'Article', dependent: :destroy
 
   include AASM
   aasm :status, column: :status do

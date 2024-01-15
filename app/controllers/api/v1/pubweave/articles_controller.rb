@@ -174,6 +174,7 @@ module Api
         end
 
         def set_article
+          # id = params[:id].split('-').last
           @article = Article.find(params[:id])
         end
 
@@ -248,7 +249,7 @@ module Api
         end
 
         def article_params
-          params.require(:article).permit(:author_id, :title, :collaborator_email, :subtitle, :description, :status, :image, :star, :category_id, :tag_id, :version_number, :user_id,
+          params.require(:article).permit(:author_id, :title, :collaborator_email, :user_review_id, :subtitle, :description, :status, :image, :star, :category_id, :tag_id, :version_number, :user_id,
                                           content: content_params).tap { |whitelist| permit_table_data(whitelist) }
         end
 

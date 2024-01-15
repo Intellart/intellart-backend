@@ -1,5 +1,6 @@
 class Article < ApplicationRecord
   belongs_to :author, class_name: 'User'
+  belongs_to :user_review, optional: true
   has_many :comments, dependent: :destroy
   has_many :ratings, as: :rating_subject, dependent: :destroy
   has_many :sections, dependent: :destroy

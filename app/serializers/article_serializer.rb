@@ -1,6 +1,6 @@
 class ArticleSerializer < ActiveModel::Serializer
   attributes :id, :title, :subtitle, :content, :author, :likes, :status, :description, :image, :category, :created_at, :updated_at, :star, :comments, :tags, :active_sections, :article_type,
-             :collaborators, :reviewers
+             :collaborators, :reviewers, :user_review_id
 
   def author
     UserSerializer.new(object.author)
@@ -37,6 +37,7 @@ class ArticleSerializer < ActiveModel::Serializer
   def reviewers
     reviews = object.reviews
     user_reviews = reviews.map(&:user_reviews).flatten
-    user_reviews
+    ActiveModelSerializers::SerializableResource.new(user_reviews, 
+                                                    each_serializer: UserReviewSerializer).as_json
   end
 end

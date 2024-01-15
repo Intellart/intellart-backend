@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_04_182912) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_15_102133) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -68,8 +68,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_04_182912) do
     t.bigint "category_id"
     t.string "article_type"
     t.bigint "author_id"
+    t.bigint "user_review_id"
     t.index ["author_id"], name: "index_articles_on_author_id"
     t.index ["category_id"], name: "index_articles_on_category_id"
+    t.index ["user_review_id"], name: "index_articles_on_user_review_id"
   end
 
   create_table "articles_tags", id: false, force: :cascade do |t|
@@ -342,6 +344,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_04_182912) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "categories"
+  add_foreign_key "articles", "user_reviews"
   add_foreign_key "articles", "users", column: "author_id"
   add_foreign_key "comments", "comments", column: "reply_to_id"
   add_foreign_key "comments", "users", column: "commenter_id"
