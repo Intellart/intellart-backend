@@ -25,5 +25,13 @@ class UserReview < ApplicationRecord
     event :revert do
       transitions from: [:awaiting_approval, :rejected, :accepted], to: :in_progress
     end
+
+    event :accept_review do
+      transitions from: :in_progress, to: :accepted
+    end
+
+    event :reject_review do
+      transitions from: :in_progress, to: :rejected
+    end
   end
 end
