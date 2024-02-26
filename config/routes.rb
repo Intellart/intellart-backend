@@ -85,6 +85,7 @@ Rails.application.routes.draw do
     end
     resources :reviews
     get '/status_preprints', to: 'preprints#index_by_status'
+    post '/cardanoops/build_tx', to: 'cardanoops#build_tx'
   end
 
   namespace :api, defaults: { format: :json } do
