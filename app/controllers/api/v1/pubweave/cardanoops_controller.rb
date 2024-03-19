@@ -42,7 +42,7 @@ module Api
           end
         end
 
-        # POST api/v1/cardano/treasury_spend_build
+        # POST api/v1/cardano/treasury_spend_build_tx
         def treasury_spend_build_tx
           url = "#{ENV['CARDANOOPS_BASE_URL']}/pubweave/spend/build_tx"
           article_id = cardanoops_params['article_id']
@@ -67,6 +67,24 @@ module Api
           end
         end
 
+        # POST api/v1/cardano/treasury_spend_submit_tx
+        def treasury_spend_submit_tx
+          url = "#{ENV['CARDANOOPS_BASE_URL']}/pubweave/spend/submit_tx"
+          tx = cardanoops_params['tx']
+          witness = cardanoops_params['witness']
+          witness_set = cardanoops_params['witness_set']
+
+          json = { tx: tx, witness: witness, witness_set: witness_set }
+          headers = { 'Content-Type' => 'application/json' }
+          response = HTTParty.post(url, body: json.to_json, headers: headers)
+
+          if response.ok?
+            render json: response, status: :ok
+          else
+            render json: response, status: :unprocessable_entity
+          end
+        end
+
         # GET api/v1/cardano/treasury_status
         def treasury_status
           article_id = params['article_id']
@@ -80,7 +98,7 @@ module Api
         private
 
         def cardanoops_params
-          params.require(:article).permit(:article_id, :transaction_limit, :total_amount, :price_cap, :tx, :witness)
+          params.require(:article).permit(:article_id, :transaction_limit, :total_amount, :price_cap, :tx, :witness, :witness_set)
         end
       end
     end
