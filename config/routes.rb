@@ -88,6 +88,7 @@ Rails.application.routes.draw do
     post '/cardanoops/build_tx', to: 'cardanoops#build_tx'
     post '/cardanoops/submit_tx', to: 'cardanoops#submit_tx'
     get '/cardanoops/treasury_status', to: 'cardanoops#treasury_status'
+    post '/cardanoops/treasury_spend_build_tx', to: 'cardanoops#treasury_spend_build_tx'
   end
 
   namespace :api, defaults: { format: :json } do
