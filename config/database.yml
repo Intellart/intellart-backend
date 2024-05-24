@@ -5,22 +5,20 @@ default: &default
 
 development:
   <<: *default
-  database: veritheum_development
-
+  database: intellart_development
 
 test:
   <<: *default
-  database: veritheum_test
-
+  database: intellart_test
 
 production:
   <<: *default
-  database: veritheum_production
-  username: veritheum
-  password: <%= ENV['VERITHEUM_DATABASE_PASSWORD'] %>
+  database: intellart_production
+  username: intellart
+  password: <%= ENV['INTELLART_DATABASE_PASSWORD'] %>
 
 staging:
   <<: *default
   database: intellart_be_staging
   username: deploy
-  password: <%= ENV['VERITHEUM_DATABASE_PASSWORD'] %>
+  password: <%= ENV['INTELLART_DATABASE_PASSWORD'] %>
