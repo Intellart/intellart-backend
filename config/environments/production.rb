@@ -20,6 +20,20 @@ Rails.application.configure do
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
   # config.require_master_key = true
 
+  # ActionMailer options
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { host: 'pubweave.com' }
+
+  # SMTP settings for GMail
+  config.action_mailer.smtp_settings = {
+    :address              => "smtp.gmail.com",
+    :port                 => 587,
+    :user_name            => "pubweave",
+    :password             => "",
+    :authentication       => "plain",
+    :enable_starttls_auto => true
+  }
+
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
