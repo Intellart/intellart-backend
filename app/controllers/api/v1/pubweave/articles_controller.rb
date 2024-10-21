@@ -124,13 +124,13 @@ module Api
           if parameters['image'].present?
             img = Image.find_by!(url: parameters['image'])
             parameters = parameters.except(:image)
-            
             @article.update!(image: img.dup)
             return render json: @article, status: :ok
           end
           if parameters.key?(:content)
             section_params = JSON.parse(parameters[:content].to_json)
             parameters[:content] = section_params.first(2) # keep just the time and version
+
             section_params['blocks'].each do |block|
               update_block(block, parameters)
             end
@@ -189,11 +189,12 @@ module Api
           action = block['action']
           block.delete('action')
 
+
           if %w[updated moved].include?(action)
             # Unlock the previous section if it exists
             section = Section.find_by(collaborator_id: @current_user.id)
             section.unlock if section.present?
-            
+
             # Update the section
             section = Section.find(block['editor_section_id'])
             section.update!(block)
@@ -208,6 +209,10 @@ module Api
                 block["image"] = img
               end
             end
+
+            # shift the position of the sections below
+            Section.where('position >= ?', block['position']).update_all('position = position + 1')
+
             section = Section.create!(block)
             section.lock(@current_user.id)
           elsif action == 'deleted'
@@ -219,12 +224,14 @@ module Api
               @article.image = nil
               @article.save!
             end
+            # shift the position of the sections below
+            Section.where('position > ?', block['position']).update_all('position = position - 1')
             section.destroy!
           end
         end
 
         def content_params
-          [:time, :version, :tool, :time, :tunes,
+          [:time, :version, :tool, :time, :tunes, :auto_save,
            { blocks: [:id, :type, :position, :action,
                       { data: [helpers.paragraph_and_heading_params,
                                helpers.math_and_html_params,
