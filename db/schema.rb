@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_17_113205) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_19_100105) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -70,6 +70,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_17_113205) do
     t.bigint "author_id"
     t.bigint "user_review_id"
     t.string "tx_id"
+    t.integer "tx_amount_in_treasury"
     t.index ["author_id"], name: "index_articles_on_author_id"
     t.index ["category_id"], name: "index_articles_on_category_id"
     t.index ["user_review_id"], name: "index_articles_on_user_review_id"
