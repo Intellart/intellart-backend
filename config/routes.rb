@@ -53,6 +53,7 @@ Rails.application.routes.draw do
         post :add_tag
         put :convert
         put :like
+        put :update_all_sections
         put :reject_publishing
         put :remove_tag
         put :request_publishing
