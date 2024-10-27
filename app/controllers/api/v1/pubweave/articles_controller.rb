@@ -8,8 +8,8 @@ module Api
 
         before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
         before_action :authenticate_api_user!, except: [:index, :index_by_user, :index_by_status, :show]
-        before_action :deny_published_article_update, only: [:update, :update_all_sections]
-        after_action :refresh_jwt, only: [:create, :update, :destroy, :update_all_sections]
+        before_action :deny_published_article_update, only: [:update]
+        after_action :refresh_jwt, only: [:create, :update, :destroy]
         before_action :require_owner, only: [:destroy]
         before_action :authenticate_domain, except: [:index, :show, :index_by_user, :index_by_status]
         before_action :authenticate_api_admin!, only: [:accept_publishing, :reject_publishing]
@@ -132,101 +132,11 @@ module Api
             parameters[:content] = section_params.first(2) # keep just the time and version
 
             section_params['blocks'].each_with_index do |block, index|
-              update_block(block, parameters, index)
+              update_block(block, parameters)
             end
 
             Section.where('position >= ?', section_params['blocks'].length).destroy_all
           end
-          render_json_validation_error(@article) and return unless @article.update(parameters)
-
-          render json: @article, status: :ok
-        end
-
-        def update_all_sections
-          parameters = article_update_params
-          if parameters.key?(:content)
-
-            section_params = JSON.parse(parameters[:content].to_json)
-            parameters[:content] = section_params.first(2) # keep just the time and version
-            events = section_params['events']
-
-            # this ordering is correct
-            section_params['blocks'].each_with_index do |block, index|
-
-              # if no event is present, then it is a new block
-
-              block['article_id'] = @article.id
-              block['collaborator_id'] = @current_user.id
-              block['editor_section_id'] = block['id']
-              block.delete('id')
-              block['version_number'] = parameters['version_number'] if parameters.key?(:version_number)
-              block['position'] = index
-
-              # section = Section.find_by(collaborator_id: @current_user.id)
-              #   section.unlock if section.present?
-
-              section = Section.find(block['editor_section_id'])
-              if section.present?
-                section.update!(block)
-              end
-
-
-
-              # case action
-              # when 'block-changed'
-              #   unlock_previous_section
-
-              # when 'block-moved'
-              #   unlock_previous_section
-
-              # when 'block-added'
-
-              # when 'block-moved'
-              # end
-
-              # if %w[updated moved].include?(action)
-              #   # Unlock the previous section if it exists
-              #   section = Section.find_by(collaborator_id: @current_user.id)
-              #   section.unlock if section.present?
-
-              #   # Update the section
-              #   section = Section.find(block['editor_section_id'])
-              #   section.update!(block)
-
-              #   payload = SectionSerializer.new(section).to_h
-              #   payload[:time] = @article.content.to_h['time'] if @article.content.present?
-              #   section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
-              # elsif action == 'created'
-              #   if block['type'] == 'image'
-              #     img = Image.find_by(url: block["data"]["file"]["url"])
-              #     if img.present?
-              #       block["image"] = img
-              #     end
-              #   end
-
-              #   # shift the position of the sections below
-              #   Section.where('position >= ?', block['position']).update_all('position = position + 1')
-
-              #   section = Section.create!(block)
-              #   section.lock(@current_user.id)
-              # elsif action == 'deleted'
-              #   section = Section.find(block['editor_section_id'])
-              #   if section.type == 'image' &&
-              #     section.image.present? && 
-              #     @article.image.present? &&
-              #     section.image.url == @article.image.url
-              #     @article.image = nil
-              #     @article.save!
-              #   end
-              #   # shift the position of the sections below
-              #   Section.where('position > ?', block['position']).update_all('position = position - 1')
-              #   section.destroy!
-              # end
-            end
-             
-
-          end
-
           render_json_validation_error(@article) and return unless @article.update(parameters)
 
           render json: @article, status: :ok
@@ -290,7 +200,7 @@ module Api
           @article = Article.find(params[:id])
         end
 
-        def update_block(block, parameters, index)
+        def update_block(block, parameters)
           block['article_id'] = @article.id
           block['collaborator_id'] = @current_user.id
           block['editor_section_id'] = block['id']
@@ -302,7 +212,7 @@ module Api
           section = Section.find_by(editor_section_id: block['editor_section_id'])
 
           case action
-          when 'block-added', 'block-filled'
+          when 'block-added'
             # receives new data
 
             if block['type'] == 'image'
@@ -322,29 +232,26 @@ module Api
 
           when 'block-changed'
             # receives new data
-            unlock_previous_section
+            # unlock_previous_section
 
-            if section.present?
-              section.update!(block)
-            else
-              section = Section.create!(block)
-            end
-          when 'block-replaced', 'block-cleared' # block-removed (old) + block-added (new) + block-changed
-            # receives new data
-            unlock_previous_section
-
-            section.destroy! if section.present?
-
-            if block['type'] == 'image'
-              img = Image.find_by(url: block["data"]["file"]["url"])
-              if img.present?
-                block["image"] = img
-              end
-            end
-
-            section = Section.create!(block)
+            section.update!(block)
             section.lock(@current_user.id)
+
+            payload = SectionSerializer.new(section).to_h
+            payload[:time] = @article.content.to_h['time'] if @article.content.present?
+            section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
+
           when 'block-ok'
+
+            if block['position'] != section.position
+              unlock_previous_section
+              # update just the position
+              section.update!(position: block['position'])
+
+              payload = SectionSerializer.new(section).to_h
+              payload[:time] = @article.content.to_h['time'] if @article.content.present?
+              section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload) 
+            end
           end
 
 
