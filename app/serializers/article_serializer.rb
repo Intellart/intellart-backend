@@ -1,6 +1,6 @@
 class ArticleSerializer < ActiveModel::Serializer
   attributes :id, :title, :subtitle, :content, :author, :likes, :status, :description, :image, :category, :created_at, :updated_at, :star, :comments, :tags, :active_sections, :article_type,
-             :collaborators, :reviewers, :user_review_id, :tx_id, :tx_amount_in_treasury
+             :collaborators, :reviewers, :user_review_id, :tx_id, :tx_amount_in_treasury, :slug
 
   def author
     UserSerializer.new(object.author)

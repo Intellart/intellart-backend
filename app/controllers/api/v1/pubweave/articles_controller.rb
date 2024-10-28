@@ -131,7 +131,7 @@ module Api
             section_params = JSON.parse(parameters[:content].to_json)
             parameters[:content] = section_params.first(2) # keep just the time and version
 
-            section_params['blocks'].each_with_index do |block, index|
+            section_params['blocks'].each do |block|
               update_block(block, parameters)
             end
 
@@ -196,8 +196,8 @@ module Api
         end 
 
         def set_article
-          # id = params[:id].split('-').last
-          @article = Article.find(params[:id])
+          id = params['id']
+          @article =  Article.find_by_id(id) || Article.friendly.find(id)
         end
 
         def update_block(block, parameters)
@@ -253,46 +253,6 @@ module Api
               section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload) 
             end
           end
-
-
-
-          # if %w[updated moved].include?(action)
-          #   # Unlock the previous section if it exists
-          #   unlock_previous_section
-
-          #   # Update the section
-          #   section = Section.find(block['editor_section_id'])
-          #   section.update!(block)
-
-          #   payload = SectionSerializer.new(section).to_h
-          #   payload[:time] = @article.content.to_h['time'] if @article.content.present?
-          #   section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
-          # elsif action == 'created'
-          #   if block['type'] == 'image'
-          #     img = Image.find_by(url: block["data"]["file"]["url"])
-          #     if img.present?
-          #       block["image"] = img
-          #     end
-          #   end
-
-          #   # shift the position of the sections below
-          #   Section.where('position >= ?', block['position']).update_all('position = position + 1')
-
-          #   section = Section.create!(block)
-          #   section.lock(@current_user.id)
-          # elsif action == 'deleted'
-          #   section = Section.find(block['editor_section_id'])
-          #   if section.type == 'image' &&
-          #      section.image.present? && 
-          #      @article.image.present? &&
-          #      section.image.url == @article.image.url
-          #     @article.image = nil
-          #     @article.save!
-          #   end
-          #   # shift the position of the sections below
-          #   Section.where('position > ?', block['position']).update_all('position = position - 1')
-          #   section.destroy!
-          # end
         end
 
         def content_params
