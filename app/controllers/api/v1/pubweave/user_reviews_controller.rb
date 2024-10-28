@@ -2,9 +2,7 @@ module Api
   module V1
     module Pubweave
       class UserReviewsController < ApplicationController
-        before_action :authenticate_api_admin!, only: [:accept_review, :reject_review]
         before_action :set_user_review
-
 
         # PUT api/v1/pubweave/user_reviews/:id/accept_review
         def accept_review
@@ -23,8 +21,6 @@ module Api
         def set_user_review
           @user_review = UserReview.find(params[:id])
         end
-
-        
       end
     end
   end

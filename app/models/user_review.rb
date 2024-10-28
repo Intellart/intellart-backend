@@ -9,7 +9,9 @@ class UserReview < ApplicationRecord
     state :awaiting_approval
     state :rejected
     state :accepted
-    
+    state :awaiting_payout
+    state :paid
+
     event :finish do
       transitions from: :in_progress, to: :awaiting_approval
     end
@@ -20,6 +22,14 @@ class UserReview < ApplicationRecord
 
     event :accept do
       transitions from: :awaiting_approval, to: :accepted
+    end
+
+    event :process do
+      transitions from: :accepted, to: :awaiting_payout
+    end
+
+    event :pay do
+      transitions from: :awaiting_payout, to: :paid
     end
 
     event :revert do

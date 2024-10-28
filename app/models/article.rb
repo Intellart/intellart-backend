@@ -12,6 +12,8 @@ class Article < ApplicationRecord
   accepts_nested_attributes_for :tags
 
   include Rateable
+  extend FriendlyId
+  friendly_id :slug_candidates, use: :slugged
 
   include AASM
   aasm :status, column: :status do
@@ -58,6 +60,17 @@ class Article < ApplicationRecord
     event :convert_to_scientific_article do
       transitions from: :preprint, to: :scientific_article
     end
+  end
+
+  def slug_candidates
+    [
+      :title,
+      %i[title id]
+    ]
+  end
+
+  def should_generate_new_friendly_id?
+    title_changed? || super
   end
 
   def active_sections
