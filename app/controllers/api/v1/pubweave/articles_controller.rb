@@ -7,7 +7,7 @@ module Api
         include AssetHandler
 
         before_action :set_article, except: [:index, :create, :index_by_user, :index_by_status]
-        before_action :authenticate_api_user!, except: [:index, :show, :index_by_user, :index_by_status]
+        before_action :authenticate_api_user!, except: [:index, :index_by_user, :index_by_status, :show]
         before_action :deny_published_article_update, only: [:update]
         after_action :refresh_jwt, only: [:create, :update, :destroy]
         before_action :require_owner, only: [:destroy]
@@ -36,6 +36,12 @@ module Api
           render json: @article, status: :ok
         end
 
+        def unlock_article
+          sections = @article.sections.where(collaborator_id: @current_user.id) if @current_user.present?
+          sections.each(&:unlock) if sections.present?
+          render json: { message: 'Article unlocked' }, status: :ok
+        end
+
         # POST api/v1/pubweave/articles/
         def create
           parameters = article_params
@@ -45,6 +51,17 @@ module Api
           end
           @article = Article.new(parameters)
           render_json_validation_error(@article) and return unless @article.save
+
+          # Temp. solution, because Editor doesnt send block-create event on first block
+          section = Section.create!(
+            editor_section_id: "initial_" + @article.id.to_s,
+            type: "paragraph", 
+            position: 0, 
+            article_id: @article.id, 
+            version_number: 1, 
+            data: { text: "Start writing here..." }
+          )
+          section.lock(@current_user.id)
 
           render json: @article, status: :created
         end
@@ -157,6 +174,7 @@ module Api
         end
 
         def set_article
+          # id = params[:id].split('-').last
           @article = Article.find(params[:id])
         end
 
@@ -172,9 +190,14 @@ module Api
           block.delete('action')
 
           if %w[updated moved].include?(action)
-            Section.find_by(collaborator_id: @current_user.id).unlock
+            # Unlock the previous section if it exists
+            section = Section.find_by(collaborator_id: @current_user.id)
+            section.unlock if section.present?
+            
+            # Update the section
             section = Section.find(block['editor_section_id'])
             section.update!(block)
+
             payload = SectionSerializer.new(section).to_h
             payload[:time] = @article.content.to_h['time'] if @article.content.present?
             section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
@@ -201,7 +224,7 @@ module Api
         end
 
         def content_params
-          [:time, :version,
+          [:time, :version, :tool, :time, :tunes,
            { blocks: [:id, :type, :position, :action,
                       { data: [helpers.paragraph_and_heading_params,
                                helpers.math_and_html_params,
@@ -226,7 +249,7 @@ module Api
         end
 
         def article_params
-          params.require(:article).permit(:author_id, :title, :collaborator_email, :subtitle, :description, :status, :image, :star, :category_id, :tag_id, :version_number, :user_id,
+          params.require(:article).permit(:author_id, :title, :collaborator_email, :user_review_id, :subtitle, :description, :status, :image, :star, :category_id, :tag_id, :version_number, :user_id,
                                           content: content_params).tap { |whitelist| permit_table_data(whitelist) }
         end
 

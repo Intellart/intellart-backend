@@ -27,7 +27,11 @@ Rails.application.routes.draw do
       end
     end
     resources :nft_likes, only: [:index, :create, :destroy]
-    resources :users, only: [:show, :index, :update, :destroy]
+    resources :users, only: [:show, :index, :update, :destroy] do
+      collection do
+        get :reviewers
+      end
+    end
     get '/exchange_rates', to: 'exchange_rates#latest'
     get '/categories', to: 'categories#index'
     get '/study_fields', to: 'study_fields#index'
@@ -52,6 +56,7 @@ Rails.application.routes.draw do
         put :reject_publishing
         put :remove_tag
         put :request_publishing
+        put :unlock_article
       end
     end
     resources :comments, only: [:create, :destroy] do
@@ -72,6 +77,13 @@ Rails.application.routes.draw do
         post :upload_asset
       end
     end
+    resources :user_reviews do
+      member do
+        put :accept_review
+        put :reject_review
+      end
+    end
+    resources :reviews
     get '/status_preprints', to: 'preprints#index_by_status'
   end
 

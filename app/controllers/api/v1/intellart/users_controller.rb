@@ -2,7 +2,7 @@ module Api
   module V1
     module Intellart
       class UsersController < ApplicationController
-        before_action :set_user, except: [:index]
+        before_action :set_user, except: [:index, :reviewers]
         before_action :require_same_user, only: [:update, :destroy]
         before_action :authenticate_api_admin!, only: [:index]
         after_action :refresh_jwt, except: [:show, :index]
@@ -24,6 +24,12 @@ module Api
         def index
           users = User.all
           render json: users, status: :ok
+        end
+
+        # GET /api/v1/reviewers
+        def reviewers
+          reviewers = User.where.not(wallet_address: nil).where.not(id: @current_user.id)
+          render json: reviewers, status: :ok
         end
 
         # PUT/PATCH /api/v1/users/:id
@@ -50,7 +56,7 @@ module Api
 
         def user_update_params
           params.require(:user).permit(:first_name, :last_name, :orcid_id, :study_field_id, :profile_img,
-                                       :social_web, :social_ln, :social_fb, :social_tw, :username, :bio)
+                                       :social_web, :social_ln, :social_fb, :social_tw, :username, :bio, :wallet_address)
         end
       end
     end

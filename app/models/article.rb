@@ -1,11 +1,13 @@
 class Article < ApplicationRecord
   belongs_to :author, class_name: 'User'
+  belongs_to :user_review, optional: true
   has_many :comments, dependent: :destroy
   has_many :ratings, as: :rating_subject, dependent: :destroy
   has_many :sections, dependent: :destroy
+  has_many :reviews, dependent: :destroy
   has_and_belongs_to_many :collaborators, class_name: 'User', join_table: 'articles_users', foreign_key: 'article_id'
   has_and_belongs_to_many :tags, join_table: 'articles_tags', foreign_key: 'article_id'
-  has_one :image, class_name: 'Image', as: :owner, dependent: :destroy  
+  has_one :image, class_name: 'Image', as: :owner, dependent: :destroy
 
   accepts_nested_attributes_for :tags
 
@@ -17,6 +19,7 @@ class Article < ApplicationRecord
     state :requested
     state :rejected
     state :published
+    state :reviewing
 
     # event :request_publishing, after: :publishing_requested_notification do
     #   transitions from: [:draft, :rejected], to: :requested
@@ -32,6 +35,14 @@ class Article < ApplicationRecord
 
     event :request_publishing do
       transitions from: :draft, to: :published
+    end
+
+    event :reviewing do
+      transitions from: [:draft, :published], to: :reviewing
+    end
+
+    event :finish_reviewing do
+      transitions from: :reviewing, to: :published
     end
   end
 
@@ -51,7 +62,7 @@ class Article < ApplicationRecord
 
   def active_sections
     payload = {}
-    sections.where.not(collaborator: nil).each do |section|
+    sections.where.not(collaborator_id: nil).each do |section|
       payload[section.editor_section_id] = section.collaborator_id
     end
     payload

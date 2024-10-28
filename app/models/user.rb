@@ -10,6 +10,8 @@ class User < ApplicationRecord
   has_many :articles, foreign_key: 'author_id', dependent: :destroy
   has_many :comments, as: :commenter, dependent: :destroy
 
+  has_many :user_reviews, dependent: :destroy
+  has_many :reviews, through: :user_reviews
   has_many :evaluations, foreign_key: 'rating_subject_id', class_name: 'Rating', dependent: :destroy
   has_many :ratings, dependent: :destroy
   has_and_belongs_to_many :collaborations, class_name: 'Article', join_table: 'articles_users', foreign_key: 'user_id'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_07_093658) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_17_113205) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -68,8 +68,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_07_093658) do
     t.bigint "category_id"
     t.string "article_type"
     t.bigint "author_id"
+    t.bigint "user_review_id"
+    t.string "tx_id"
     t.index ["author_id"], name: "index_articles_on_author_id"
     t.index ["category_id"], name: "index_articles_on_category_id"
+    t.index ["user_review_id"], name: "index_articles_on_user_review_id"
   end
 
   create_table "articles_tags", id: false, force: :cascade do |t|
@@ -250,6 +253,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_07_093658) do
     t.index ["user_id"], name: "index_ratings_on_user_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.decimal "amount", null: false
+    t.date "deadline", null: false
+    t.bigint "article_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["article_id"], name: "index_reviews_on_article_id"
+  end
+
   create_table "sections", force: :cascade do |t|
     t.string "editor_section_id"
     t.string "type"
@@ -279,6 +291,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_07_093658) do
     t.index ["category_id"], name: "index_tags_on_category_id"
   end
 
+  create_table "user_reviews", force: :cascade do |t|
+    t.bigint "review_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "status"
+    t.index ["review_id"], name: "index_user_reviews_on_review_id"
+    t.index ["user_id"], name: "index_user_reviews_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -302,6 +324,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_07_093658) do
     t.text "social_ln"
     t.text "username"
     t.text "bio"
+    t.string "wallet_address"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -322,6 +345,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_07_093658) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "articles", "categories"
+  add_foreign_key "articles", "user_reviews"
   add_foreign_key "articles", "users", column: "author_id"
   add_foreign_key "comments", "comments", column: "reply_to_id"
   add_foreign_key "comments", "users", column: "commenter_id"
@@ -332,7 +356,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_07_093658) do
   add_foreign_key "nfts", "categories"
   add_foreign_key "nfts", "users", column: "owner_id"
   add_foreign_key "ratings", "users"
+  add_foreign_key "reviews", "articles"
   add_foreign_key "sections", "users", column: "collaborator_id"
   add_foreign_key "tags", "categories"
+  add_foreign_key "user_reviews", "reviews"
+  add_foreign_key "user_reviews", "users"
   add_foreign_key "users", "study_fields"
 end
