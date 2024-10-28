@@ -124,16 +124,18 @@ module Api
           if parameters['image'].present?
             img = Image.find_by!(url: parameters['image'])
             parameters = parameters.except(:image)
-            
             @article.update!(image: img.dup)
             return render json: @article, status: :ok
           end
           if parameters.key?(:content)
             section_params = JSON.parse(parameters[:content].to_json)
             parameters[:content] = section_params.first(2) # keep just the time and version
+
             section_params['blocks'].each do |block|
               update_block(block, parameters)
             end
+
+            Section.where('position >= ?', section_params['blocks'].length).destroy_all
           end
           render_json_validation_error(@article) and return unless @article.update(parameters)
 
@@ -165,6 +167,16 @@ module Api
 
         private
 
+        def shift_sections_below(block)
+          Section.where('position >= ?', block['position']).update_all('position = position + 1')
+        end
+
+        # Unlock the previous section if it exists
+        def unlock_previous_section
+          section = Section.find_by(collaborator_id: @current_user.id)
+          section.unlock if section.present?
+        end
+
         def deny_published_article_update
           render json: { message: 'You cannot edit a published article.' }, status: :forbidden and return if @article.status == 'published' && !@current_user.is_a?(Admin)
         end
@@ -173,58 +185,78 @@ module Api
           head :unauthorized unless @current_user.id == @article.author_id || @current_admin.super?
         end
 
+        def reset_article_thumbnail(section)
+          if section.type == 'image' &&
+              section.image.present? && 
+              @article.image.present? &&
+              section.image.url == @article.image.url
+            @article.image = nil
+            @article.save!
+          end
+        end 
+
         def set_article
-          # id = params[:id].split('-').last
-          @article = Article.find(params[:id])
+          id = params['id']
+          @article =  Article.find_by_id(id) || Article.friendly.find(id)
         end
 
         def update_block(block, parameters)
           block['article_id'] = @article.id
           block['collaborator_id'] = @current_user.id
-
           block['editor_section_id'] = block['id']
           block.delete('id')
-
           block['version_number'] = parameters['version_number'] if parameters.key?(:version_number)
           action = block['action']
           block.delete('action')
 
-          if %w[updated moved].include?(action)
-            # Unlock the previous section if it exists
-            section = Section.find_by(collaborator_id: @current_user.id)
-            section.unlock if section.present?
-            
-            # Update the section
-            section = Section.find(block['editor_section_id'])
-            section.update!(block)
+          section = Section.find_by(editor_section_id: block['editor_section_id'])
 
-            payload = SectionSerializer.new(section).to_h
-            payload[:time] = @article.content.to_h['time'] if @article.content.present?
-            section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
-          elsif action == 'created'
+          case action
+          when 'block-added'
+            # receives new data
+
             if block['type'] == 'image'
               img = Image.find_by(url: block["data"]["file"]["url"])
               if img.present?
                 block["image"] = img
               end
             end
+
             section = Section.create!(block)
             section.lock(@current_user.id)
-          elsif action == 'deleted'
-            section = Section.find(block['editor_section_id'])
-            if section.type == 'image' &&
-               section.image.present? && 
-               @article.image.present? &&
-               section.image.url == @article.image.url
-              @article.image = nil
-              @article.save!
-            end
+
+          when 'block-removed'
+            reset_article_thumbnail(section)
+
             section.destroy!
+
+          when 'block-changed'
+            # receives new data
+            # unlock_previous_section
+
+            section.update!(block)
+            section.lock(@current_user.id)
+
+            payload = SectionSerializer.new(section).to_h
+            payload[:time] = @article.content.to_h['time'] if @article.content.present?
+            section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload)
+
+          when 'block-ok'
+
+            if block['position'] != section.position
+              unlock_previous_section
+              # update just the position
+              section.update!(position: block['position'])
+
+              payload = SectionSerializer.new(section).to_h
+              payload[:time] = @article.content.to_h['time'] if @article.content.present?
+              section.broadcast("ArticleChannel-#{@article.id}", 'section', 'update', payload) 
+            end
           end
         end
 
         def content_params
-          [:time, :version, :tool, :time, :tunes,
+          [:time, :version, :tool, :tunes, :auto_save,
            { blocks: [:id, :type, :position, :action,
                       { data: [helpers.paragraph_and_heading_params,
                                helpers.math_and_html_params,
