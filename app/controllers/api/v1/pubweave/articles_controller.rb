@@ -121,6 +121,7 @@ module Api
         # PUT/PATCH api/v1/pubweave/articles/:id
         def update
           parameters = article_update_params
+
           if parameters['image'].present?
             img = Image.find_by!(url: parameters['image'])
             parameters = parameters.except(:image)
@@ -134,8 +135,6 @@ module Api
             section_params['blocks'].each do |block|
               update_block(block, parameters)
             end
-
-            Section.where('position >= ?', section_params['blocks'].length).destroy_all
           end
           render_json_validation_error(@article) and return unless @article.update(parameters)
 
@@ -154,16 +153,16 @@ module Api
         end
 
         # # PUT api/v1/pubweave/articles/:id/accept_publishing
-        # def accept_publishing
-        #   @article.accept_publishing!
-        #   render json: @article, status: :ok if @article.published?
-        # end
+        def accept_publishing
+          @article.accept_publishing!
+          render json: @article, status: :ok if @article.published?
+        end
 
-        # # PUT api/v1/pubweave/articles/:id/reject_publishing
-        # def reject_publishing
-        #   @article.reject_publishing!
-        #   render json: @article, status: :ok if @article.rejected?
-        # end
+        # PUT api/v1/pubweave/articles/:id/reject_publishing
+        def reject_publishing
+          @article.reject_publishing!
+          render json: @article, status: :ok if @article.rejected?
+        end
 
         private
 

@@ -27,13 +27,13 @@ class Article < ApplicationRecord
     #   transitions from: [:draft, :rejected], to: :requested
     # end
 
-    # event :accept_publishing, after: :publishing_accepted_notification do
-    #   transitions from: :requested, to: :published
-    # end
+    event :accept_publishing do  #, after: :publishing_accepted_notification do
+      transitions from: [:requested, :reviewing, :rejected], to: :published
+    end
 
-    # event :reject_publishing, after: :publishing_rejected_notification do
-    #   transitions from: [:requested, :published], to: :rejected
-    # end
+    event :reject_publishing do  #, after: :publishing_rejected_notification do
+      transitions from: [:requested, :published, :reviewing], to: :rejected
+    end
 
     event :request_publishing do
       transitions from: :draft, to: :published
