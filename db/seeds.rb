@@ -9,34 +9,34 @@
 field1 = StudyField.create(field_name: 'Physics')
 field2 = StudyField.create(field_name: 'Chemistry')
 
-user1 = User.create!(
-  email: 'test@test.com',
-  first_name: 'John',
-  last_name: 'Doe',
-  password: '123456',
-  orcid_id: '0123-4567-8901-2345',
-  study_field_id: 1
-)
-user2 = User.create!(
-  email: 'peter@test.com',
-  first_name: 'Peter',
-  last_name: 'Parker',
-  password: '123456',
-  orcid_id: '9876-5432-1098-7654',
-  study_field_id: 2
-)
-user3 = User.create!(
-  email: 'joanne@test.com',
-  first_name: 'Joanne',
-  last_name: 'Archer',
-  password: '123456',
-)
-user4 = User.create!(
-  email: 'mark@test.com',
-  first_name: 'Mark',
-  last_name: 'Smith',
-  password: '123456',
-)
+#user1 = User.create!(
+#  email: 'test@test.com',
+#  first_name: 'John',
+#  last_name: 'Doe',
+#  password: '123456',
+#  orcid_id: '0123-4567-8901-2345',
+#  study_field_id: 1
+#)
+#user2 = User.create!(
+#  email: 'peter@test.com',
+#  first_name: 'Peter',
+#  last_name: 'Parker',
+#  password: '123456',
+#  orcid_id: '9876-5432-1098-7654',
+#  study_field_id: 2
+#)
+#user3 = User.create!(
+#  email: 'joanne@test.com',
+#  first_name: 'Joanne',
+#  last_name: 'Archer',
+#  password: '123456',
+#)
+#user4 = User.create!(
+#  email: 'mark@test.com',
+#  first_name: 'Mark',
+#  last_name: 'Smith',
+#  password: '123456',
+#)
 
 
 cat1 = Category.create!(category_name: 'Mathematics')
@@ -568,4 +568,4 @@ tag38 = Tag.create!(tag: 'Tax Law' , category_id: cat13.id)
 #   reply_to_id: 2
 # )
 
-Admin.create!(email: 'a@a.com', password: '123456')
+#Admin.create!(email: 'a@a.com', password: '123456')
