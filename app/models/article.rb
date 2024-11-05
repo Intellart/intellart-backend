@@ -64,6 +64,7 @@ class Article < ApplicationRecord
 
   def slug_candidates
     [
+      :title,
       %i[id title]
     ]
   end
