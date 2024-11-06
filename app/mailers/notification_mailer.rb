@@ -1,5 +1,5 @@
 class NotificationMailer < ApplicationMailer
-  default from: 'no-reply@intellart.com'
+  default from: 'PubWeave <no-reply@pubweave.com>'
   before_action :set_article_and_user, only: [:publishing_requested, :publishing_accepted, :publishing_rejected]
   before_action :set_nft_and_user, except: [:publishing_requested, :publishing_accepted, :publishing_rejected, :preprint_publishing_requested, :preprint_publishing_rejected, :preprint_publishing_accepted]
   before_action :set_preprint_and_users, only: [:preprint_publishing_accepted, :preprint_publishing_rejected]

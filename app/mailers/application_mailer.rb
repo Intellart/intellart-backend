@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'no-reply@intellart.com'
+  default from: 'PubWeave <no-reply@pubweave.com>'
   layout 'mailer'
 end

@@ -6,7 +6,7 @@ require 'capistrano-db-tasks'
 #FIXME add your app name here
 set :application, 'intellart-be-staging'
 #FIXME replace 'git@github.com:YOUR-GIT-REPO-HERE' with your git clone url
-set :repo_url, 'git@github.com:Intellart/veritheum-backend.git'
+set :repo_url, 'git@github.com:Intellart/intellart-backend.git'
 #FIXME add location on the server here
 set :deploy_to, '/home/deploy/intellart-be'
 set :branch, :lk_capistrano_gem

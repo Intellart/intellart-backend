@@ -42,6 +42,11 @@ dump.rdb
 # Ignore application configuration
 /config/application.yml
 
-JetBrains
+# JetBrains
 .idea/
 
+# Ignore DS_Store from macOS
+*.DS_Store
+
+# Ignore coverage output
+coverage/
