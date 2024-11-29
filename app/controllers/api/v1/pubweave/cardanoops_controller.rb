@@ -46,11 +46,11 @@ module Api
           url = "#{ENV['CARDANOOPS_BASE_URL']}/pubweave/spend/build_tx"
           author_address = @article.author.wallet_address
           article_review = @article.reviews.first
-          user_reviewes = article_review.user_reviews.where(status: 'accepted')
+          user_reviews = article_review.user_reviews.where(status: 'accepted')
 
           reviewers_for_payout = []
-          user_reviewes = user_reviewes.filter { |user_review| user_review.user.wallet_address.present? }
-          user_reviewes.each do |user_review|
+          user_reviews = user_reviews.filter { |user_review| user_review.user.wallet_address.present? }
+          user_reviews.each do |user_review|
             reviewers_for_payout << [user_review.user.wallet_address, user_review.review.amount.to_i]
           end
 
@@ -58,7 +58,7 @@ module Api
           response = send_request(url, json, headers)
 
           if response.ok?
-            user_reviewes.each(&:process!)
+            user_reviews.each(&:process!)
             render json: response, status: :ok
           else
             render json: response, status: :unprocessable_entity
