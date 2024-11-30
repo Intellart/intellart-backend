@@ -12,7 +12,7 @@ module Api
           url = "#{ENV['CARDANOOPS_BASE_URL']}/pubweave/fill/build_tx"
           total_amount = cardanoops_params['total_amount']
           address = current_user.wallet_address
-          json = { change_address: address, senders: [address], recipients: [[ENV['TREASURY_ADDRESS'], total_amount.to_s]] }
+          json = { change_address: address, senders: [address], recipients: [[ENV['TREASURY_ADDRESS'], total_amount.to_s]], network: network_type }
 
           response = send_request(url, json, headers)
 
@@ -29,7 +29,7 @@ module Api
           url = "#{ENV['CARDANOOPS_BASE_URL']}/pubweave/fill/submit_tx"
           tx = cardanoops_params['tx']
           witness = cardanoops_params['witness']
-          json = { tx: tx, witness: witness }
+          json = { tx: tx, witness: witness, network: network_type }
 
           response = send_request(url, json, headers)
 
@@ -54,7 +54,7 @@ module Api
             reviewers_for_payout << [user_review.user.wallet_address, user_review.review.amount.to_i]
           end
 
-          json = { utxoID: @article.tx_id, utxoIndex: 0, senders: [author_address], change_address: author_address, recipients: reviewers_for_payout }
+          json = { utxoID: @article.tx_id, utxoIndex: 0, senders: [author_address], change_address: author_address, recipients: reviewers_for_payout, network: network_type }
           response = send_request(url, json, headers)
 
           if response.ok?
@@ -72,7 +72,7 @@ module Api
           witness = cardanoops_params['witness']
           witness_set = cardanoops_params['witness_set']
 
-          json = { tx: tx, witness: witness, witness_set: witness_set }
+          json = { tx: tx, witness: witness, witness_set: witness_set, network: network_type }
           response = send_request(url, json, headers)
 
           if response.ok?
@@ -101,6 +101,15 @@ module Api
         def cardanoops_params
           params.require(:article).permit(:article_id, :transaction_limit, :total_amount, :price_cap, :tx, :witness, :witness_set)
         end
+
+        def network_type
+          type = params.require(:networkType)
+
+          raise ActionController::BadRequest, "Invalid networkType. Use 'preview', 'preprod', 'testnet' or 'mainnet'." unless %w[preview preprod testnet mainnet].include?(type)
+
+          type == "testnet" ? "preview" : type
+        end
+
       end
     end
   end
