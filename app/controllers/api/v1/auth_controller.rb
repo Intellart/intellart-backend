@@ -57,7 +57,7 @@ module Api
 
         return unless response
 
-        render json: JSON.parse(response), status: :ok and return unless response['error']
+        render json: JSON.parse(response), status: :ok and return
 
         render json: { errors: [response['error_description']] }, status: :bad_request
       end
