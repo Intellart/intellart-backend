@@ -181,7 +181,7 @@ module Api
         end
 
         def deny_published_article_update
-          render json: { message: 'You cannot edit a published article.' }, status: :forbidden and return if @article.status == 'published' && !@current_user.is_a?(Admin)
+          render json: { error: 'You cannot edit a published article.' }, status: :forbidden and return if @article.status == 'published' && !@current_user.is_a?(Admin)
         end
 
         def require_owner
