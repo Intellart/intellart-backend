@@ -148,7 +148,11 @@ module Api
 
         # PUT api/v1/pubweave/articles/:id/request_publishing
         def request_publishing
-          @article.request_publishing!
+          if @article.status == 'reviewing'
+            @article.request_publishing!
+          else
+            @article.accept_publishing!
+          end
           render json: @article, status: :ok # if @article.requested?
         end
 

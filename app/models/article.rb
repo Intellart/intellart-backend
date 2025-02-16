@@ -23,20 +23,16 @@ class Article < ApplicationRecord
     state :published
     state :reviewing
 
-    # event :request_publishing, after: :publishing_requested_notification do
-    #   transitions from: [:draft, :rejected], to: :requested
-    # end
+    event :request_publishing do #, after: :publishing_requested_notification do
+      transitions from: [:draft, :reviewing, :rejected, :published], to: :requested
+    end
 
     event :accept_publishing do  #, after: :publishing_accepted_notification do
-      transitions from: [:requested, :reviewing, :rejected], to: :published
+      transitions from: [:draft, :requested, :reviewing, :rejected], to: :published
     end
 
     event :reject_publishing do  #, after: :publishing_rejected_notification do
       transitions from: [:requested, :published, :reviewing], to: :rejected
-    end
-
-    event :request_publishing do
-      transitions from: :draft, to: :published
     end
 
     event :reviewing do
