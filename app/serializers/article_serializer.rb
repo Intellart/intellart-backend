@@ -1,7 +1,7 @@
 class ArticleSerializer < ActiveModel::Serializer
   attributes :id, :title, :subtitle, :content, :author, :likes, :status, :description, :image, :category,
              :created_at, :updated_at, :star, :comments, :tags, :active_sections, :article_type,
-             :collaborators, :reviewers, :user_review_id, :tx_id, :tx_amount_in_treasury, :slug
+             :collaborators, :reviews, :reviewers, :user_review_id, :tx_id, :tx_amount_in_treasury, :slug
 
   def author
     UserSerializer.new(object.author)
@@ -33,6 +33,10 @@ class ArticleSerializer < ActiveModel::Serializer
     ActiveModelSerializers::SerializableResource.new(object.ratings.likes,
                                                      each_serializer: RatingSerializer,
                                                      fields: [:id, :user_id]).as_json
+  end
+
+  def reviews
+    ActiveModelSerializers::SerializableResource.new(object.reviews, each_serializer: ReviewSerializer)
   end
 
   def reviewers
