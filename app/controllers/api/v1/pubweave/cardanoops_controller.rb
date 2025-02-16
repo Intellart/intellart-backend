@@ -7,12 +7,19 @@ module Api
 
         # POST api/v1/cardanoops/treasury_fill_build_tx
         def treasury_fill_build_tx
-          # TODO: transaction_limit = cardanoops_params['transaction_limit']
-          # TODO: price_cap = cardanoops_params['price_cap']
           url = "#{ENV['CARDANOOPS_BASE_URL']}/pubweave/fill/build_tx"
           total_amount = cardanoops_params['total_amount']
+          price_cap = cardanoops_params['price_cap']
+          transaction_limit = cardanoops_params['transaction_limit']
           address = current_user.wallet_address
-          json = { change_address: address, senders: [address], recipients: [[ENV['TREASURY_ADDRESS'], total_amount.to_s]], network: network_type }
+          json = {
+            change_address: address,
+            sender: address,
+            amount: total_amount.to_s,
+            price_cap: price_cap,
+            transaction_limit: transaction_limit,
+            network: network_type
+          }
 
           response = send_request(url, json, headers)
 
