@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    confirmations: 'api/v1/confirmations',
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
@@ -10,6 +9,10 @@ Rails.application.routes.draw do
   # VERITHEUM
   intellart_routes = lambda do
     mount ActionCable.server => '/cable'
+
+    devise_for :users, controllers: {
+      confirmations: 'api/v1/confirmations'
+    }
 
     resources :nfts do
       member do
