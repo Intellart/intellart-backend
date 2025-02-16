@@ -53,6 +53,10 @@ cat11 = Category.create!(category_name: 'History')
 cat12 = Category.create!(category_name: 'Geography')
 cat13 = Category.create!(category_name: 'Law')
 cat14 = Category.create!(category_name: 'Other')
+cat15 = Category.create!(category_name: 'Metascience')
+cat16 = Category.create!(category_name: 'Blockchain')
+cat17 = Category.create!(category_name: 'Literature')
+cat18 = Category.create!(category_name: 'Marketing')
 
 # Math tags
 tag1 = Tag.create!(tag: 'Linear Algebra', category_id: cat1.id)
