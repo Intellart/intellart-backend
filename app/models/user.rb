@@ -16,6 +16,8 @@ class User < ApplicationRecord
   has_many :ratings, dependent: :destroy
   has_and_belongs_to_many :collaborations, class_name: 'Article', join_table: 'articles_users', foreign_key: 'user_id'
 
+  before_validation :normalize_orcid_id
+
   include Rateable
 
   def full_name
@@ -27,4 +29,11 @@ class User < ApplicationRecord
     self.password = password
     save!
   end
+
+  private
+
+  def normalize_orcid_id
+    self.orcid_id = nil if orcid_id.blank?
+  end
+
 end
