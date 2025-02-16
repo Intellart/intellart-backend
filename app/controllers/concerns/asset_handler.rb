@@ -24,9 +24,8 @@ module AssetHandler
     @asset
   end
 
-
-
   private
+
   def image_params_to_hash(cloudinary_asset)
     cloudinary_asset.slice("asset_id", "public_id", "format", "version", "resource_type", "created_at", "bytes", "width", "height", "folder", "url", "secure_url")
   end

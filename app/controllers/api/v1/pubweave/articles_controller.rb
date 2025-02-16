@@ -275,7 +275,9 @@ module Api
           return unless whitelist[:content].present?
 
           whitelist[:content][:blocks].each_with_index do |block, index|
-            block[:data][:content] = params[:article][:content][:blocks][index][:data][:content] if block[:type] == 'table'
+            if block[:type] == 'table'
+              block[:data][:content] = params[:article][:content][:blocks][index][:data][:content]
+            end
           end
         end
 
